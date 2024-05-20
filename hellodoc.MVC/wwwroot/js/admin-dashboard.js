@@ -1238,7 +1238,7 @@ function AdminResetPassword() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                $('#adminPassword').val("");
+                $('#floatingPassword').val("");
             },
             error: function () {
                 Swal.fire("Oops", "Something Went Wrong", "error");
@@ -3106,7 +3106,16 @@ function ConfirmApproveTimeSheet(timeSheetId) {
 
     var bonus = $('#bonusAmount').val();
     var notes = $('#adminNotes').val();
-
+    if (bonus < 0 || notes == null || notes.trim() == "") {
+        Swal.fire({
+            title: "Opps!",
+            text: "Enter Valid Inputs",
+            icon: "error",
+            timer: 3000,
+            timerProgressBar: true,
+        });
+        return;
+    }
     $.ajax({
         method: "POST",
         url: "/Admin/ConfirmApproveTimeSheet",

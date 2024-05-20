@@ -1065,7 +1065,9 @@ namespace hellodoc.BAL.Repository
                                                                        sd.Shiftdate.Date == DateTime.Today &&
                                                                        currentTime >= sd.Starttime &&
                                                                        currentTime <= sd.Endtime &&
-                                                                       sd.Isdeleted.Equals(deletedBit)) && p.Isdeleted == null).ToList();
+                                                                       sd.Isdeleted.Equals(deletedBit)) && 
+                                                                       p.Isdeleted == null &&
+                                                                       p.Physiciannotifications.FirstOrDefault().Isnotificationstopped == deletedBit).ToList();
 
                     foreach (var obj in offDutyQuery)
                     {
@@ -1463,7 +1465,6 @@ namespace hellodoc.BAL.Repository
 
             if (aspData != null)
             {
-                aspData.Email = adminProfileVm.Email;
                 aspData.Phonenumber = adminProfileVm.Phonenumber;
                 aspData.Modifieddate = DateTime.Now;
             }
@@ -1478,7 +1479,6 @@ namespace hellodoc.BAL.Repository
             {
                 adminData.Firstname = adminProfileVm.Firstname;
                 adminData.Lastname = adminProfileVm.Lastname;
-                adminData.Email = adminData.Email;
                 adminData.Mobile = adminProfileVm.Phonenumber;
                 adminData.Modifiedby = adminProfileVm.AspId;
                 adminData.Modifieddate = DateTime.Now;
@@ -1573,7 +1573,13 @@ namespace hellodoc.BAL.Repository
                 physicianId = x.Physicianid,
                 Name = x.Firstname + " " + x.Lastname,
                 Role = _context.Roles.FirstOrDefault(i => i.Roleid == x.Roleid).Name,
-                CallStatus = "Active",
+                CallStatus = _context.Physicians
+                .Where(p => !_context.Shiftdetails.Any(sd => sd.Shift.Physicianid == x.Physicianid &&
+                                                               sd.Shiftdate.Date == DateTime.Today &&
+                                                               currentTime >= sd.Starttime &&
+                                                               currentTime <= sd.Endtime &&
+                                                               sd.Isdeleted.Equals(deletedBit)) &&
+                                                               p.Isdeleted == null).Count() == 0 ? "Active" : "Not Active",
                 Status = (short)x.Status,
                 Isdeleted = x.Isdeleted == null ? null : x.Isdeleted,
                 IsNotificationStopped = _context.Physiciannotifications.FirstOrDefault(i => i.Physicianid == x.Physicianid)?.Isnotificationstopped != null && _context.Physiciannotifications.FirstOrDefault(i => i.Physicianid == x.Physicianid)?.Isnotificationstopped?[0] == true,
@@ -1814,7 +1820,6 @@ namespace hellodoc.BAL.Repository
                 if (_context.Physicianregions.Any(x => x.Physicianid == physician.Physicianid))
                 {
                     var physicianRegion = _context.Physicianregions.Where(x => x.Physicianid == physician.Physicianid).ToList();
-
                     _context.Physicianregions.RemoveRange(physicianRegion);
                     _context.SaveChanges();
                 }

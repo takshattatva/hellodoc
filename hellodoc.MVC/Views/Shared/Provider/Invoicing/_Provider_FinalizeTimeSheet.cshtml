@@ -67,8 +67,8 @@
                                 </td>
                                 <td>
                                     <input asp-for="@obj.Hours" type="number" class="form-control w-75" value="@obj.Hours"
-                                           name="providerTimeSheetDetails[@index].Hours" id="floatingTotalHours"
-                                           placeholder="Total Hours">
+                                           name="providerTimeSheetDetails[@index].Hours" id="floatingTotalHours@(index)"
+                                           placeholder="Total Hours" onkeyup="validateFinalizeForm(@(index))">
                                 </td>
                                 <td class="ps-5">
                                     <input type="checkbox" @(obj.IsWeekend == true ? "checked" : "") value="true"
@@ -78,12 +78,12 @@
                                 <td>
                                     <input asp-for="@obj.NoOfHouseCalls" type="number" class="form-control w-75"
                                            value="@obj.NoOfHouseCalls" name="providerTimeSheetDetails[@index].NoOfHouseCalls"
-                                           id="floatingNumberOfHouseCalls" placeholder="Number of HouseCalls">
+                                           id="floatingNumberOfHouseCalls@(index)" placeholder="Number of HouseCalls" onkeyup="validateFinalizeForm(@(index))">
                                 </td>
                                 <td>
                                     <input asp-for="@obj.NoOfConsults" type="number" class="form-control w-75"
                                            value="@obj.NoOfConsults" name="providerTimeSheetDetails[@index].NoOfConsults"
-                                           id="floatingNumberOfPhoneConsults" placeholder="Number of PhoneConsults">
+                                           id="floatingNumberOfPhoneConsults@(index)" placeholder="Number of PhoneConsults" onkeyup="validateFinalizeForm(@(index))">
                                 </td>
                             </tr>
                             index++;
@@ -141,7 +141,7 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-info fw-semibold shadow">Submit</button>
+                    <button type="submit" class="btn btn-info fw-semibold shadow finalizeform" disabled>Submit</button>
                 </div>
             </form>
         </div>
@@ -159,25 +159,34 @@
         @if (Model.callId == 1)
         {
             <div class="d-lg-flex justify-content-end gap-2 align-items-center">
-                <input id="bonusAmount" type="number" min="0" class="form-control w-50" placeholder="Bonus Amount">
-                <input id="adminNotes" type="text" class="form-control w-50" placeholder="Admin Description">
+                <input id="bonusAmount" type="number" min="0" class="form-control w-50 bonus" placeholder="Bonus Amount" onkeyup="enableApproveBtn()">
+                <input id="adminNotes" type="text" class="form-control w-50 notes" placeholder="Admin Description" onkeyup="enableApproveBtn()">
 
-                <button type="button" class="btn btn-info fw-semibold me-2" onclick="ApproveTimeSheet()" placeholder="Admin Description">
-                    Approve
-                </button>
+                <button type="button" class="btn btn-info fw-semibold me-2 approve" onclick="ApproveTimeSheet()" placeholder="Admin Description" disabled>Approve</button>
             </div>
-
         }
         else if (Model.callId == 3)
         {
-            <button type="button" class="btn btn-info fw-semibold me-2" onclick="FinalizeTimeSheet()">
-                Finalize
-            </button>
+            <button type="button" class="btn btn-info fw-semibold me-2" onclick="FinalizeTimeSheet()">Finalize</button>
         }
     </div>
 </div>
 
 <script>
+    function validateFinalizeForm(index) {
+        var TotalHr = $(`#floatingTotalHours${index}`);
+        var NoHc = $(`#floatingNumberOfHouseCalls${index}`);
+        var NoPc = $(`#floatingNumberOfPhoneConsults${index}`);
+        var approved = $('.finalizeform');
+
+        if (TotalHr.val()<0 || NoHc.val()<0 || NoPc.val()<0) {
+            approved.prop('disabled', true);
+        }
+        else {
+            approved.prop('disabled', false);
+        }
+    }
+
     function AddTimeSheetDetailId() {
         var timeSheetDetailId = [];
 
@@ -187,6 +196,19 @@
         });
 
         GetAddReceipts(timeSheetDetailId);
+    }
+
+    function enableApproveBtn() {
+        var bonus = $('.bonus');
+        var note = $('.notes');
+        var approved = $('.approve');
+
+        if (bonus.val() == "" || note.val() == "") {
+            approved.prop('disabled', true);
+        }
+        else {
+            approved.prop('disabled', false);
+        }
     }
 
     function FinalizeTimeSheet() {
