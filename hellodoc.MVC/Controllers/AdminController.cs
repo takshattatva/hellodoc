@@ -9,7 +9,7 @@ using Rotativa.AspNetCore;
 
 namespace hellodoc.DAL.Controllers
 {
-    //[CustomAuthorize("Admin", "Physician")]
+    [CustomAuthorize("Admin", "Physician", "Patient")]
     public class AdminController : Controller
     {
         private readonly HellodocDbContext _context;

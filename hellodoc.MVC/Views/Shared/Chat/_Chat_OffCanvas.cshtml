@@ -56,17 +56,17 @@
         position: relative;
     }
 
-    .right-align .content::after {
-        content: "";
-        position: absolute;
-        top: 0px;
-        right: -8px;
-        width: 0;
-        height: 0;
-        border-width: 0 0 25px 15px;
-        border-style: solid;
-        border-color: transparent transparent transparent #98FF98;
-    }
+        .right-align .content::after {
+            content: "";
+            position: absolute;
+            top: 0px;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border-width: 0 0 25px 15px;
+            border-style: solid;
+            border-color: transparent transparent transparent #98FF98;
+        }
 
     .left-align .content {
         background-color: #8EEBEC;
@@ -75,17 +75,17 @@
         position: relative;
     }
 
-    .left-align .content::after {
-        content: "";
-        position: absolute;
-        top: 0px;
-        left: -13px;
-        width: 0;
-        height: 0;
-        border-width: 21px 0 0 23px;
-        border-style: solid;
-        border-color: #8EEBEC transparent transparent transparent;
-    }
+        .left-align .content::after {
+            content: "";
+            position: absolute;
+            top: 0px;
+            left: -13px;
+            width: 0;
+            height: 0;
+            border-width: 21px 0 0 23px;
+            border-style: solid;
+            border-color: #8EEBEC transparent transparent transparent;
+        }
 
     .content {
         padding: 10px;
@@ -106,16 +106,25 @@
     .right-align .content .time {
         text-align: end;
     }
+
+    .custom-height {
+        top: 400px !important;
+    }
+
 </style>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header bg-info">
         <div class="d-flex align-items-center gap-2 w-100 justify-content-between">
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex gap-2 align-items-center me-5">
                 <img id="UserImage" class="border rounded-5" src="~/content/user.png" width="50">
                 <h6 id="UserName" class="d-flex text-center m-0"></h6>
             </div>
-            <button type="button" onclick="hidebackdrop()" class="btn-close shadow-none text-reset btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button class="btn border-0 shadow-none w-auto smallscreen">
+                <i id="small_screen_icon" class="bi bi-fullscreen-exit ms-5 text-white"></i>
+                <i id="full_screen_icon" class="bi bi-fullscreen d-none ms-5 text-white"></i>
+            </button>
+            <button type="button" class="btn-close shadow-none text-reset btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
     </div>
     <div class="offcanvas-body">
@@ -124,7 +133,7 @@
             <div class="w-100 row gap-2 mx-2">
                 <div id="chats" class="ps-0"></div>
                 <div class="input-group pt-5" style="padding: 10px;">
-                    <input placeholder="Type a Message" id="userMessage" type="text" class="p-2 border border-secondary rounded-1 userMessage" style="flex: 1; height: 40px;" onkeyup="showSendBtn()">
+                    <input placeholder="Type a Message" id="userMessage" type="text" class="p-2 primary rounded-1 userMessage" style="flex: 1; height: 40px;" onkeyup="showSendBtn()">
                     <button type="button" id="sendMessage" class="col-3 btn btn-primary shadow-none sendMessage" style="display: inline-flex; padding: 0; background: none; border: none; height: 40px;" disabled>
                         <i class="bi bi-send bg-info ms-3 text-white rounded p-2" style="height: 40px;"></i>
                     </button>
@@ -150,5 +159,26 @@
         else {
             sendButton.prop('disabled', false);
         }
+    }
+
+    const fullscreenExitButton = document.querySelector('.smallscreen');
+
+    if (fullscreenExitButton) {
+        fullscreenExitButton.addEventListener('click', () => {
+            var current_height = document.getElementById('offcanvasRight').classList;
+            if (!current_height.contains('custom-height')) {
+                $('#offcanvasRight').addClass('custom-height');
+                $('#small_screen_icon').addClass('d-none');
+                $('#full_screen_icon').removeClass('d-none');
+            }
+            else {
+                $('#offcanvasRight').removeClass('custom-height');
+                $('#small_screen_icon').removeClass('d-none');
+                $('#full_screen_icon').addClass('d-none');
+            }
+        });
+    } else {
+        Swal.fire("Oops", "Element with class \"smallscreen\" not found", "error");
+
     }
 </script>

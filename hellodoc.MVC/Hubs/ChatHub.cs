@@ -1,7 +1,6 @@
 ﻿using hellodoc.DAL.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
-using hellodoc.BAL.Interface;
 
 namespace SignalRChat.Hubs
 {
