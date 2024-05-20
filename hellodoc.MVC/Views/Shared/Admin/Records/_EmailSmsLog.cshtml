@@ -1,0 +1,252 @@
+﻿@model hellodoc.DAL.ViewModels.EmailSmsLogModel
+
+@functions {
+    public string GetRoleType(int status)
+    {
+        switch (status)
+        {
+            case 1: return "Admin";
+            case 2: return "Physician";
+            case 3: return "Patient";
+            default: return "Unknown";
+        }
+    }
+}
+
+<div class="w-100 px-2 px-sm-5">
+    <div class="d-flex justify-content-between">
+        @if (Model.tempid == 0)
+        {
+            <h3>Email Logs</h3>
+        }
+        else
+        {
+            <h3>SMS Logs</h3>
+        }
+    </div>
+    <div class="shadow p-3 my-3">
+        <form method="post" id="logsRecordFilter" onsubmit="emailSmsLogFilter()">
+            <div class="row g-3">
+                <input asp-for=@Model.tempid id="tempidsmsemaillog" hidden />
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <select asp-for=@Model.searchRecordOne id="status" class="form-select" aria-label="Default select example">
+                        <option value="0" selected>All</option>
+                        @for (var i = 1; i <= 3; i++)
+                        {
+                            <option value="@i">
+                                @GetRoleType(i)
+                            </option>
+                        }
+                    </select>
+                    <label class="text-muted ms-2">serach by role</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for=@Model.searchRecordTwo class="form-control" type="text" placeholder="Reciever Name" aria-label="Search" id="recieverName">
+                    <label for="recieverName" class="text-muted ms-2">Reciever Name</label>
+                </div>
+
+                @if (Model.tempid == 0)
+                {
+                    <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                        <input asp-for=@Model.searchRecordThree class="form-control" type="email" placeholder="Email" id="EmailInput" />
+                        <label nfor="EmailInput" class="text-muted ms-2">Email</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                        <input asp-for=@Model.searchRecordThree class="form-control" type="tel" placeholder="Phone" id="PhoneInput" />
+                        <label nfor="PhoneInput" class="text-muted ms-2">Phone</label>
+                    </div>
+                }
+
+                <div class="form-floating mb-3  col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for=@Model.searchRecordFour class="form-control" type="date" placeholder="Created Date" aria-label="Search" id="Created-Date">
+                    <label for="Created-Date" class="text-muted ms-2">Created date</label>
+                </div>
+
+                <div class="form-floating mb-3  col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for=@Model.searchRecordFive class="form-control" type="date" placeholder="Sent Date" aria-label="Search" id="Sent-Date">
+                    <label for="Sent-Date" class="text-muted ms-2">Sent date</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <div class="d-flex mx-1 justify-content-end">
+                        <button id="cancel_button" class="btn btn-outline-secondary border-secondary fw-semibold me-2 px-3">Clear</button>
+                        <button id="search_button" class="btn btn-info fw-semibold text-white ms-1 px-3">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @if (Model.recordslist.Count > 0)
+        {
+            <div class="table-responsive d-none d-lg-block">
+                <table class="table table-hover mt-3 EmailLogTable">
+
+                    <thead class="table-active ">
+                        <tr class="text-center">
+                            <th class="col text-center">Recipient</th>
+                            <th class="col text-center">Action</th>
+                            <th class="col text-center">Role Name</th>
+                            @if (Model.tempid == 0)
+                            {
+                                <th class="col text-center">
+                                    Email Id
+                                </th>
+                            }
+                            else
+                            {
+                                <th class="col text-center">
+                                    Mobile Number
+                                </th>
+                            }
+                            <th class="col text-center">Created Date</th>
+                            <th class="col text-center">Sent Date</th>
+                            <th class="col text-center">Sent</th>
+                            <th class="col text-center">Sent Tries</th>
+                            <th class="col text-center">Conformation Number </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.recordslist)
+                        {
+                            <tr class="text-center">
+                                <td>@obj.recipient</td>
+                                <td>@obj.action</td>
+                                <td>@obj.rolename</td>
+
+                                @if (Model.tempid == 0)
+                                {
+                                    <td class="col">@obj.email</td>
+                                }
+                                else
+                                {
+                                    <td class="col">@obj.contact</td>
+                                }
+
+                                <td>@DateTime.ParseExact(@obj.createddate, "yyyy-MM-dd", null).ToString("MMM dd, yyyy hh:mm tt")</td>
+                                <td>@DateTime.ParseExact(@obj.sentdate, "yyyy-MM-dd", null).ToString("MMM dd, yyyy")</td>
+                                <td>@obj.sent</td>
+                                <td>@obj.senttries</td>
+                                <td>@obj.confirmationNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="border m-2 rounded shadow d-block d-lg-none">
+                <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                    <table class="w-100 EmailLogTable">
+                        <thead>
+                            <tr>
+                                <th class="d-none"></th>
+                                <th class="d-none"></th>
+                            </tr>
+                        </thead>
+                        @{
+                            var counter = 1;
+                        }
+                        <tbody>
+                            @if (Model.recordslist != null)
+                            {
+                                @foreach (var obj in Model.recordslist)
+                                {
+                                    <tr class="d-flex flex-column">
+                                        <td>
+                                            <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+                                            <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse" data-bs-target="#flush-collapse@(counter)" aria-expanded="false" aria-controls="flush-collapse@(counter)">
+                                                <div class="w-100 ">
+                                                    <span class="fw-bolder">
+                                                        @obj.recipient
+                                                    </span>
+                                                </div>
+                                                <div class="w-100">
+                                                    <div class="">
+                                                        <span class="fw-bolder">Action: </span> @obj.action
+                                                    </div>
+                                                </div>
+                                                <div class="w-100">
+                                                    @if (Model.tempid == 0)
+                                                    {
+                                                        <div class="">
+                                                            <span class="fw-bolder">Email: </span> @obj.email
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="">
+                                                            <span class="fw-bolder">Mobile: </span> @obj.contact
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="flush-collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body main-flex pt-2">
+                                                    <div class="w-100">
+                                                        <div class="">
+                                                            <span class="fw-bolder">Role Name: </span> @obj.rolename
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Created Date: </span> @DateTime.ParseExact(@obj.createddate, "yyyy-MM-dd", null).ToString("MMM dd, yyyy hh:mm tt")
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Sent Date: </span> @DateTime.ParseExact(@obj.sentdate, "yyyy-MM-dd", null).ToString("MMM dd, yyyy")
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Sent: </span> @obj.sent
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Sent Tries: </span> @obj.senttries
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Confirmation Number: </span> @obj.confirmationNumber
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    counter++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center align-items-center fw-bold mt-5">
+                <span class="d-md-block d-none fw-bold fs-2">No records Found.</span>
+                <span class="d-md-none d-block fw-semibold fs-4">No records Found.</span>
+            </div>
+
+            <br />
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="d-md-block d-none"><img src="~/images/no_records_found.png" /></div>
+                <div class="d-md-none d-block"><img src="~/images/no_records_found.png" height="60px" /></div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.EmailLogTable').DataTable({
+            destroy: true,
+            "pageLength": 5,
+            language: {
+                oPaginate: {
+                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                }
+            }
+        });
+        $('.dataTables_length').hide();
+        $('.dataTables_filter').hide();
+    });
+</script>

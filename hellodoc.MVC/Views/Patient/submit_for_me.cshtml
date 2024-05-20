@@ -1,0 +1,155 @@
+@model hellodoc.DAL.ViewModels.PatientReqData;
+@{
+    ViewData["Title"] = "Submit for me";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+<div class="main-container d-flex flex-column justify-content-between">
+    <partial name="Patient/Request/_PatientRequestHeader" />
+
+    <div class=" mt-3 d-flex justify-content-between align-items-center container gap-4 p-4">
+        <h4>Submit Information</h4>
+        <a class="btn btn-outline-info fw-bold shadow" asp-controller="Patient" asp-action="patient_dashboard">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i>
+                <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+    <form method="post" enctype="multipart/form-data" action="" class="container d-flex flex-column shadow gap-4 p-4">
+        <div class="mx-3">
+            <div class="">
+                <h4 class="">Patient Information</h4>
+                <div class="form-floating mb-3 overflow-hidden  ">
+                    <textarea asp-for="Notes" class="form-control" style="height: 100px"
+                              placeholder="Enter Brief Details Of Symptoms (Optional)"
+                              id="floatingTextarea"></textarea>
+                    <label class=" " for="floatingTextarea">
+                        Enter Brief Details Of Symptoms
+                        <span class="optional">(Optional)</span>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3 ">
+                        <input asp-for="@Model.Firstname" type="text" class="form-control " id="floatingInputFirst"
+                               placeholder="First Name" aria-label="First Name" disabled>
+                        <label class="ms-2 " for="floatingInputFirst">First Name</label>
+                        <span class="text-danger" asp-validation-for="Firstname"></span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12  form-floating mb-3 ">
+                        <input asp-for="@Model.Lastname" type="text" class="form-control " id="floatingInputLast"
+                               placeholder="Last Name" aria-label="Last Name" disabled>
+                        <label class="ms-2" for="floatingInputLast">Last Name</label>
+                        <span class="text-danger" asp-validation-for="Lastname"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12  form-floating  ">
+                        <input asp-for="@Model.Birthdate" type="date" class="form-control" id="birthDate" disabled>
+                        <label for="birthDate" class="ms-2">Date Of Birth</label>
+                        <span class="text-danger" asp-validation-for="@Model.Birthdate"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <h4 class="mb-4">Patient Contact Information</h4>
+                <div class="row mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.Email" type="email" class="form-control " id="floatingInputemail"
+                               placeholder="Email" aria-label="Email" disabled>
+                        <label class="ms-2" for="floatingInputemail">Email</label>
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.Phonenumber" id="phone" type="tel" class="form-control " id="floatingInputcontact" style="height:60px;width:100%"
+                               placeholder="99XXXXXXXX" aria-label="Contact Number">
+                        <span class="text-danger" asp-validation-for="Phonenumber"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <h4 class="mb-4">Patient Location</h4>
+                <div class="row mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.Street" type="text" class="form-control " id="floatingInputStreet"
+                               placeholder="Street" aria-label="Street">
+                        <label class="ms-2 " for="floatingInputStreet">Street</label>
+                        <span class="text-danger" asp-validation-for="Street"></span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.City" type="text" class="form-control " id="floatingInputCity" placeholder="City"
+                               aria-label="City">
+                        <label class="ms-2  " for="floatingInputCity">City</label>
+                        <span class="text-danger" asp-validation-for="City"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.State" type="text" class="form-control " id="floatingInputState" placeholder="State"
+                               aria-label="State">
+                        <label class="ms-2 " for="floatingInputState">State</label>
+                        <span class="text-danger" asp-validation-for="State"></span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.Zipcode" type="text" class="form-control " id="floatingInputZipCode"
+                               placeholder="Zip Code" aria-label="Zip Code">
+                        <label class="ms-2" for="floatingInputZipCode">Zip Code</label>
+                        <span class="text-danger" asp-validation-for="Zipcode"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <input asp-for="@Model.Hotelname" type="text" class="form-control " id="floatingInputroom"
+                               placeholder="Room # / Suite (Optional)" aria-label="room">
+                        <label class="ms-2" for="floatingInputroom">Room # / Suite (Optional)</label>
+                        <span class="text-danger" asp-validation-for="Hotelname"></span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                        <select id="regionId" class="form-select p-0 ps-2 mb-2 regionDropdown" aria-label="Default select example" asp-for="RegionId">
+                            <option selected disabled>Select Region</option>
+                            @foreach (var obj in Model.Regions)
+                            {
+                                <option value="@obj.Regionid">
+                                    @obj.Name
+                                </option>
+                            }
+                        </select>
+                        <span class="text-danger" asp-validation-for="RegionId"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <h4 class="mb-4">(Optional) Upload Photo Or Document</h4>
+                <div class="input-group mb-3 border border-2 rounded">
+                    <input type="file" asp-for="Upload" class="form-control" id="inputGroupFile" hidden onchange="validateAndUpdateFileName(this)">
+                    <input id="upload-name" class="form-control inputFile primary rounded bg-transparent" type="text" asp-for="Filename" aria-label="readonly input example" readonly>
+                    <label class="input-group-text btn btn-info pt-2 upload" for="inputGroupFile">
+                        <span class="d-none d-sm-block fw-semibold text-dark">Select File</span>
+                        <i class="fa-solid fa-folder-plus d-block d-sm-none"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-flex justify-content-center justify-content-md-end mt-4 pt-4 mb-3">
+                <button class="btn btn-outline-info border-info me-md-2 mb-3 fw-bolder" type="submit">Submit</button>
+                <button class="btn btn-outline-secondary border-secondary mb-3 fw-bolder" type="reset">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+    <partial name="Patient/_Footer" />
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+@section Scripts {
+    <script>
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+}

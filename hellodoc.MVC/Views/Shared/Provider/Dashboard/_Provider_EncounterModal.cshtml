@@ -1,0 +1,120 @@
+﻿@model hellodoc.DAL.ViewModels.EncounterVm
+
+<style>
+    .modal_radio:focus{
+        box-shadow:none !important;
+    }
+
+    .modal_radio:focus + label {
+        color: white !important;
+        transition: none !important;
+    }
+</style>
+
+@***************************** Encounter Modal to ask for House call or Consultant **********************************@
+<div class="modal fade" id="EncounterModalBox" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Select Type of care</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" action="" method="post" id="EncounterModalForm" onsubmit="PostEncounterCare()">
+                <input type="text" asp-for="@Model.reqid" hidden/>
+                <input type="text" asp-for="@Model.physicianId" hidden/>
+
+                <div class="text-center mt-2 mb-2">
+                    <input type="radio" class="modal_radio btn-check" id="HouseCall" value="1" asp-for="@Model.Option">
+                    <label class=" btn btn-outline-info fw-semibold shadow mx-2" for="HouseCall">HouseCall</label>
+
+                    <input type="radio" class="modal_radio btn-check" id="Consult" value="2" asp-for="@Model.Option">
+                    <label class="btn-outline-info fw-semibold shadow btn mx-2" for="Consult">Consult</label>
+                </div>
+                <span asp-validation-for="@Model.Option" class="text-danger"></span>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-info border-info fw-semibold continue-btn mx-2">Save</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@***************************** House Call Modal to ask for conclude the request **********************************@
+<div class="modal fade" id="houseCallModalId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-5">
+                <form method="post" id="HousecallModalForm" onsubmit="HouseCallPost(@Model.reqid)">
+                    <div class="d-flex justify-content-center ">
+                        <i class="bi bi-info-circle-fill text-info d-flex justify-content-center display-4 mb-3 border border-2 border-info  rounded-circle  p-2"></i>
+                    </div>
+
+                    <h5 class="d-flex justify-content-center fw-semibold mb-3">Confirmation for Conclude Request</h5>
+                    <p class="fw-lighter text-center mb-3">
+                        Are you sure you want to Conclude this request?
+                    </p>
+
+                    <div class="mt-4 d-flex justify-content-center">
+                        <button type="submit" class="btn fw-semibold btn-outline-info border-info mx-2">Conclude</button>
+                        <button type="button" class="btn fw-semibold btn-outline-secondary border-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>  
+        </div>
+    </div>
+</div>
+
+@********************************** Finalize Modal to ask for finalize encounter form **********************************@
+<div class="modal fade" id="EncounterFinalizeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-5">
+                <form method="post" id="EncounterFinalizeModalForm" onsubmit="finalizeEncounter(@Model.reqid)">
+
+                    <div class="d-flex justify-content-center ">
+                        <i class="bi bi-info-circle-fill text-info d-flex justify-content-center display-4 mb-3 border border-2 border-info  rounded-circle  p-2"></i>
+                    </div>
+                    <h5 class="d-flex justify-content-center mb-3">Confirmation for Finalize Report</h5>
+                    <p class="fw-lighter text-center  mb-3">
+                        Are you sure you want to Finalize this Report?
+                    </p>
+
+                    <div class="mt-4 d-flex justify-content-center">
+                        <button type="submit" class="btn fw-semibold btn-outline-info border-info continue-btn mx-2">Finalize</button>
+                        <button type="button" class="btn fw-semibold btn-outline-secondary border-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@***************************** Download Encounter Form Modal to download **********************************@
+<div class="modal fade" id="DownloadFinalizeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Encounter Form</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <div class="modal-body p-3">
+                <form method="post" id="DownloadFinalizeModalForm">
+                    <input type="text" asp-for="@Model.callId" hidden />
+
+                    <p class="fw-lighter  mb-3">
+                        Encounter Form Finalized Successfully !!
+                    </p>
+
+                    <div class="my-4 d-flex justify-content-center">
+                        <button type="submit" id="FinalizeDownloadId" class="btn btn-info shadow fw-semibold continue-btn mx-2" onclick="FinalizeDownload(@Model.reqid)">Download</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

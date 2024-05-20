@@ -1,0 +1,353 @@
+﻿.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader, .loader:before, .loader:after {
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    animation-fill-mode: both;
+    animation: bblFadInOut 1.8s infinite ease-in-out;
+}
+
+.loader {
+    color: #000;
+    font-size: 7px;
+    position: relative;
+    text-indent: -9999em;
+    transform: translateZ(0);
+    animation-delay: -0.16s;
+}
+
+    .loader:before,
+    .loader:after {
+        content: '';
+        position: absolute;
+        top: 0;
+    }
+
+    .loader:before {
+        left: -3.5em;
+        animation-delay: -0.32s;
+    }
+
+    .loader:after {
+        left: 3.5em;
+    }
+
+@keyframes bblFadInOut {
+    0%, 80%, 100% {
+        box-shadow: 0 2.5em 0 -1.3em
+    }
+
+    40% {
+        box-shadow: 0 2.5em 0 0
+    }
+}
+/* *************************** status css *************************** */
+
+.new {
+    background-color: rgba(2, 2, 255, 0.1);
+    border-color: rgba(2, 2, 146) !important;
+    color: rgba(2, 2, 146);
+}
+
+    .new:hover, .new.active {
+        background-color: rgba(2, 2, 146);
+        border-color: rgba(2, 2, 146) !important;
+        color: white;
+    }
+
+.Pending {
+    background-color: rgba(167, 239, 248, 0.10);
+    border-color: rgb(41, 179, 197) !important;
+    color: rgb(41, 179, 197);
+}
+
+    .Pending:hover, .Pending.active {
+        background-color: rgb(0, 92, 104);
+        border-color: rgb(41, 179, 197) !important;
+        color: white;
+    }
+
+.Active {
+    background-color: rgba(138, 253, 215, 0.10);
+    border-color: rgb(19, 99, 55) !important;
+    color: rgb(19, 99, 55);
+}
+
+    .Active:hover, .Active.active {
+        background-color: rgb(2, 54, 37);
+        border-color: rgb(19, 99, 55) !important;
+        color: white;
+    }
+
+.Conclude {
+    background-color: rgba(252, 87, 238, 0.10);
+    border-color: rgb(129, 22, 124) !important;
+    color: rgb(129, 22, 124);
+}
+
+    .Conclude:hover, .Conclude.active {
+        background-color: rgb(99, 3, 91);
+        border-color: rgb(129, 22, 124) !important;
+        color: white;
+    }
+
+.ToClose {
+    background-color: rgba(68, 156, 228, 0.10);
+    border-color: rgb(16, 100, 133) !important;
+    color: rgb(16, 100, 133);
+}
+
+    .ToClose:hover, .ToClose.active {
+        background-color: rgb(3, 47, 83);
+        border-color: rgb(16, 100, 133) !important;
+        color: white;
+    }
+
+.Unpaid {
+    background-color: rgba(164, 46, 233, 0.10);
+    border-color: rgb(86, 26, 134) !important;
+    color: rgb(86, 26, 134);
+}
+
+    .Unpaid:hover, .Unpaid.active {
+        background-color: rgb(44, 1, 70);
+        border-color: rgb(86, 26, 134) !important;
+        color: white;
+    }
+
+html[data-bs-theme="dark"] nav.header {
+    background-color: rgb(42, 50, 56) !important;
+}
+
+html[data-bs-theme="dark"] .text-testing {
+    color: white !important;
+}
+
+html[data-bs-theme="dark"] .modal-dark {
+    color: #212529 !important;
+}
+
+
+@media screen and (max-width : 375px) {
+    .logo {
+        height: 50px !important;
+    }
+}
+
+@media screen and (max-width : 300px) {
+    .logo {
+        display: none !important;
+    }
+}
+
+
+/* *************************** icon, badge and table color css *************************** */
+
+.green-icon {
+    color: green !important;
+}
+
+.green-badge {
+    background-color: green !important;
+}
+
+.table-green {
+    --bs-table-accent-bg: rgba(0, 155, 0, 0.75) !important;
+    --bs-table-color: white !important;
+}
+
+.orange-icon {
+    color: orange;
+}
+
+.orange-badge {
+    background-color: orange !important;
+}
+
+.table-orange {
+    --bs-table-accent-bg: rgba(255, 180, 19, 0.75) !important;
+    --bs-table-color: white !important;
+}
+
+.pink-icon {
+    color: deeppink;
+}
+
+.pink-badge {
+    background-color: deeppink !important;
+}
+
+.table-pink {
+    --bs-table-accent-bg: rgba(255, 37, 153, 0.753) !important;
+    --bs-table-color: white !important;
+}
+
+.blue-icon {
+    color: blue;
+}
+
+.purple-icon {
+    color: purple;
+}
+
+.blue-badge {
+    background-color: blue !important;
+}
+
+.table-blue {
+    --bs-table-accent-bg: rgba(5, 5, 255, 0.75) !important;
+    --bs-table-color: white !important;
+}
+
+
+/* *************************** off canvas css *************************** */
+
+.offcanvas-btn {
+    text-align: left;
+}
+
+    .offcanvas-btn.active {
+        width: 100%;
+        text-align: left;
+        background-color: rgba(0, 255, 255, 0.25) !important;
+        color: black !important;
+        font-weight: bolder;
+    }
+
+@media screen and (min-width : 992px) {
+    .offcanvas-backdrop {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width : 602px) {
+    .offcanvas {
+        width: 75% !important;
+    }
+}
+
+
+/* *************************** accordian css *************************** */
+
+.accordion-button::after {
+    width: 0px !important;
+}
+
+.accordion {
+    --bs-accordion-bg: #EBFAFD !important;
+    --bs-accordion-active-bg: #DAE8EB !important;
+}
+
+.collapse {
+    background-color: var(--bs-accordion-active-bg) !important;
+}
+
+.collapsed {
+    color: black;
+}
+
+.accordion-body {
+    color: black
+}
+
+.accordion-button:focus {
+    box-shadow: none !important;
+}
+
+/* *************************** pagination css *************************** */
+
+.page-item .page-link {
+    box-shadow: none;
+    color: #0dcaf0;
+}
+
+.page-item.active .page-link {
+    color: black;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    box-shadow: none;
+}
+/* *************************** #00bce7 color css *************************** */
+.primary {
+    color: rgb(0, 190, 232) !important;
+    border-color: rgb(0, 190, 232);
+}
+/* *************************** on cursor : pointer *************************** */
+.pointer {
+    cursor: pointer;
+}
+/* *************************** checkboc size @1.5 *************************** */
+input[type="checkbox"] {
+    transform: scale(1.5);
+}
+
+/* *************************** scheduling css *************************** */
+.upload-btn-wrapper {
+    position: relative;
+    /*overflow: hidden;*/
+    /* display: inline-block;*/
+}
+    .upload-btn-wrapper input {
+        position: absolute !important;
+        opacity: 0 !important;
+    }
+
+#shifttable tr td {
+    border-left: 1px solid gray !important;
+    border-right: 1px solid gray !important;
+    height: 60px !important;
+    width: 10% !important;
+}
+    #shifttable tr td div {
+        border-bottom: 1px solid gray !important;
+        height: 60px !important;
+    }
+        #shifttable tr td div button {
+            border: none !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            height: 100% !important;
+        }
+
+.dayshiftheader tr th {
+    border: 1px solid gray !important;
+    color: white !important;
+    font-weight: 600;
+    background-color: #424242f2 !important;
+    border-bottom-color: gray !important;
+    font-size: 12px !important;
+    text-align: center !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    width: 18px !important;
+}
+
+#dayshiftbody tr td {
+    border: 1px solid gray !important;
+    height: 30px !important;
+}
+
+.shiftweektable tr td {
+    border: 1px solid gray !important;
+    height: 40px !important;
+    width: 10% !important;
+}

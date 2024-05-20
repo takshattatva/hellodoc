@@ -1,0 +1,51 @@
+﻿<!-- Include Leaflet CSS -->
+
+<link rel="stylesheet" href="~/leaflet/leaflet.css" />
+
+<div class="container-fluid mb-5" style="height:80vh">
+    <h3 class="mb-3 p-3 px-0 p-md-2">Provider Location</h3>
+    <div id="map" class="w-100 h-100 shadow m-2" style="z-index: 1;"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var map = L.map('map').setView([23.2587, 74.1924], 3);
+
+        // Add Google Streets as base layer
+        var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            maxZoom: 100,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(map);
+
+        // Create a new red icon
+        var redMarkerIcon = L.icon({
+            iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-violet.png',
+            shadowUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        $.ajax({
+            url: '/Admin/GetLocations', // Update the URL with the correct endpoint
+            method: 'GET',
+            success: function (response) {
+
+                response.forEach(function (res) {
+
+                    var popupContent = `<div>
+                                            <div class="me-2 text-center" style="width:40px;height:40px" id ="physicianProfile"><img class="w-100 h-100 border rounded-5" src="/content/${res.physicianid}/Profile.png" /></div>
+                                            <p><strong>Physician Name :</strong> ${res.physicianname}</p>
+                                       </div>`;
+
+                    L.marker([res.latitude, res.longitude], { icon: redMarkerIcon }).addTo(map)
+                        .bindPopup(popupContent);
+                });
+            },
+            error: function (xhr, status, error) {
+                Swal.fire("Oops", "Something Went Wrong", "error");
+            }
+        });
+    });
+</script>

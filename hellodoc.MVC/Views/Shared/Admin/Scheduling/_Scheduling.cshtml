@@ -1,0 +1,447 @@
+﻿@model hellodoc.DAL.ViewModels.SchedulingVm
+
+<style>
+    #calenderLabel {
+        display: inline-block;
+        position: relative;
+    }
+
+    #datePickerInput {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+        #datePickerInput::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: -150%;
+            left: -150%;
+            width: 300%;
+            height: 300%;
+            cursor: pointer;
+        }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-4">Scheduling</h4>
+    </div>
+
+    <div class="d-flex flex-column rounded-3 bgcolor mt-4">
+
+        @if (Model.callId != 3)
+        {
+            <div class="d-md-flex justify-content-between align-items-center mb-3">
+                <form role="search" class="d-flex align-items-center border border-rounded rounded border-info mb-3 me-md-3">
+                    <i type="search" class="fa-solid fa-magnifying-glass px-2"></i>
+                    <select class="form-select border-0 regionDropdown shadow" aria-label="Default select example" onchange="filterPhysicianRegion(this.value)">
+                        <option value="">All Region</option>
+                        @foreach (var obj in Model.regions.ToList())
+                        {
+                            <option value="@obj.Regionid">
+                                @obj.Name
+                            </option>
+                        }
+                    </select>
+                </form>
+                <div class="d-flex justify-content-between align-items-center mb-md-3 mb-2">
+                    <button type="button" class="btn btn-info text-light me-2 fw-semibold shadow" onclick="MDOnCall(@Model.regionId)">Providers On Call</button>
+                    <button type="button" class="btn btn-info text-light me-2 fw-semibold shadow" onclick="ShiftReview(0, 0)">Shifts for Review</button>
+                    <button type="button" class="btn btn-info text-light fw-semibold shadow" onclick="CreateNewShift(1)">Add New Shift</button>
+                </div>
+            </div>
+        }
+
+        <div class="mt-2 fs-5 fw-bold d-md-flex text-center" id="datediv">
+            Something is wrong
+        </div>
+
+        <div class="mt-2 d-md-flex justify-content-end text-center">
+            <div class="d-flex text-center justify-content-center">
+                <div class="rounded-3 mx-1" style="height:25px;width:50px;background-color:pink;border-color:deeppink;"></div>
+                <small class="fw-bolder me-1">Pending Shifts</small>
+                <div class="rounded-3 mx-1" style="height:25px;width:50px;background-color:lightgreen;border-color:darkgreen"></div>
+                <small class="fw-bolder ms-1">Approved Shifts</small>
+            </div>
+        </div>
+
+        <div class=" d-md-flex justify-content-between align-items-center text-center">
+            <div class="d-flex align-items-center justify-content-center my-3 text-center">
+                <button class="mx-2 bg-info rounded-5 d-flex justify-content-center align-items-center" style="height:40px;width:40px;border:none;" onclick="previousCalendar()"><i class="fa-solid fa-caret-left fs-5"></i></button>
+
+                <div id="calenderLabel">
+                    <span id="cal">
+                        <input type="week" id="datePickerInput" onchange="dateChange(2)">
+                    </span>
+                    <button class="border-0 fs-4 bg-transparent"><i class="bi bi-calendar-week"></i></button>
+                </div>
+
+                <button class="mx-2 bg-info rounded-5 d-flex justify-content-center align-items-center" style="height:40px;width:40px;border:none;" onclick="nextCalendar()"><i class="fa-solid fa-caret-right fs-5"></i></button>
+            </div>
+
+            @if (Model.callId == 3)
+            {
+                <button type="button" class="btn btn-success fw-semibold shadow text-light" onclick="CreateNewShift(3)">Add New Shift</button>
+            }
+            else
+            {
+                <div class="d-md-flex my-2 text-center">
+                    <button class="btn btn-outline-info mx-1 scheduleBtn1 fw-semibold shadow" onclick="ShiftCalender('day');">Day</button>
+                    <button class="btn btn-outline-info mx-1 scheduleBtn2 fw-semibold shadow" onclick="ShiftCalender('week');">Week</button>
+                    <button class="btn btn-outline-info ms-1 scheduleBtn3 fw-semibold shadow" onclick="ShiftCalender('month');">Month</button>
+                </div>
+            }
+        </div>
+
+        <div id="shiftTable"></div>
+
+    </div>
+</div>
+
+<div id="schedulingModals"></div>
+
+<script>
+    var date = new Date();
+
+    var diff = date.getDay() - 0;
+    var sunday = new Date(date.getTime() - diff * 24 * 60 * 60 * 1000);
+    var saturday = new Date(sunday.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+    var regionid = 0;
+
+    var schedulingtype;
+
+    function filterPhysicianRegion(region) {
+        regionid = region;
+        switch (schedulingtype) {
+            case 'month':
+
+                ShiftCalender('month');
+                break;
+
+            case 'day':
+
+                ShiftCalender('day');
+                break;
+            case 'week':
+
+                ShiftCalender('week');
+                break;
+        }
+    }
+
+    if (@Model.callId == 3) {
+        ShiftCalender('month');
+    }
+    else {
+        ShiftCalender('day');
+    }
+
+    function ShiftCalender(shifttype) {
+        schedulingtype = shifttype;
+        var datehere;
+        var calendar = document.getElementById("cal");
+
+        switch (schedulingtype) {
+            case 'month':
+                datehere = date.toLocaleDateString('en-US', { month: 'long' }) + ',' + date.getFullYear();
+                calendar.innerHTML = '<input type="month" id="datePickerInput" onchange="dateChange(3)">';
+                $('.scheduleBtn3').addClass("btn-info text-white");
+                $('.scheduleBtn1').removeClass("btn-info text-white");
+                $('.scheduleBtn2').removeClass("btn-info text-white");
+                break;
+
+            case 'day':
+                datehere = date.toLocaleDateString('en-US', { weekday: 'long' }) + ', ' + (date.toLocaleDateString('en-US', { month: 'long' })).substring(0, 3) + ' ' + date.getDate() + ', ' + date.getFullYear();
+                calendar.innerHTML = '<input type="date" id="datePickerInput" onchange="dateChange(1)">';
+                $('.scheduleBtn1').addClass("btn-info text-white");
+                $('.scheduleBtn3').removeClass("btn-info text-white");
+                $('.scheduleBtn2').removeClass("btn-info text-white");
+                break;
+
+            case 'week':
+                datehere = (sunday.toLocaleDateString('en-US', { month: 'long' })).substring(0, 3) + ' ' + sunday.getDate() + ' - ' + (saturday.toLocaleDateString('en-US', { month: 'long' })).substring(0, 3) + ' ' + saturday.getDate() + ' ' + saturday.getFullYear();
+                calendar.innerHTML = '<input type="week" id="datePickerInput" onchange="dateChange(2)">';
+                $('.scheduleBtn2').addClass("btn-info text-white");
+                $('.scheduleBtn1').removeClass("btn-info text-white");
+                $('.scheduleBtn3').removeClass("btn-info text-white");
+        }
+
+        $.ajax({
+            url: '/Admin/loadshift',
+            type: 'POST',
+            data: { datestring: date.toISOString(), sundaystring: sunday.toISOString(), saturdaystring: saturday.toISOString(), shifttype: shifttype, regionid: regionid },
+            success: function (data) {
+                $('#shiftTable').html(data);
+                $('#datediv').text(datehere);
+            },
+            error: function () {
+                console.error('Error loading partial view.');
+            }
+        });
+    }
+
+    function dateChange(filter) {
+
+        var selectmonth = document.getElementById("datePickerInput").value;
+
+        if (filter == 1) {
+            var year = parseInt(selectmonth.split("-")[0]);
+            var month = parseInt(selectmonth.split("-")[1]);
+            var day = parseInt(selectmonth.split("-")[2]);
+            date.setMonth(month - 1);
+            date.setFullYear(year);
+            date.setDate(day);
+
+            ShiftCalender('day');
+        }
+        if (filter == 2) {
+            var year = parseInt(selectmonth.split("-")[0]);
+            var week = parseInt(selectmonth.substring(6));
+
+            var sun = new Date(year, 0, (week - 1) * 7);
+            sunday.setDate(sun.getDate() - sun.getDay());
+
+            var sat = new Date(sunday.getTime() + 6 * 24 * 60 * 60 * 1000);
+            saturday.setDate(sat.getDate());
+
+            ShiftCalender('week');
+        }
+        if (filter == 3) {
+            var year = parseInt(selectmonth.split("-")[0]);
+            var month = parseInt(selectmonth.split("-")[1]);
+            date.setMonth(month - 1);
+            date.setFullYear(year);
+
+            ShiftCalender('month');
+        }
+    }
+
+    function nextCalendar() {
+        switch (schedulingtype) {
+            case 'month':
+                date.setMonth(date.getMonth() + 1);
+                ShiftCalender('month');
+                break;
+
+            case 'day':
+                date.setDate(date.getDate() + 1);
+                ShiftCalender('day');
+                break;
+
+            case 'week':
+                sunday.setDate(sunday.getDate() + 7);
+                saturday.setDate(saturday.getDate() + 7);
+                ShiftCalender('week');
+                break;
+        }
+    }
+
+    function previousCalendar() {
+        switch (schedulingtype) {
+            case 'month':
+                date.setMonth(date.getMonth() - 1);
+                ShiftCalender('month');
+                break;
+
+            case 'day':
+                date.setDate(date.getDate() - 1);
+                ShiftCalender('day');
+                break;
+
+            case 'week':
+                sunday.setDate(sunday.getDate() - 7);
+                saturday.setDate(saturday.getDate() - 7);
+                ShiftCalender('week');
+                break;
+        }
+    }
+
+    function providersModal(DataObject) {
+
+        DataObject.datestring = date.toISOString();
+
+        $.ajax({
+            url: '/Admin/OpenScheduledModal',
+            type: 'Post',
+            data: DataObject,
+            success: function (data) {
+                if (DataObject.actionType == "moreshifts") {
+                    $('#ViewScheduledModal').modal('hide');
+                    $('#schedulingModals').html(data);
+                    $('#ViewAllShiftModal').modal('show');
+                }
+                else {
+                    $('#ViewAllShiftModal').modal('hide');
+                    $('#schedulingModals').html(data);
+                    $('#ViewScheduledModal').modal('show');
+                }
+            },
+            error: function (e) {
+                Swal.fire("Oops", "Something Went Wrong", "error");
+            }
+        });
+    }
+
+    function OpenShiftModalWeek(shiftdate, physicianid) {
+
+        var datestring = date.toISOString();
+        $.ajax({
+            url: '/Admin/OpenScheduledModalWeek',
+            type: 'Post',
+            data: { sundaystring: sunday.toISOString(), saturdaystring: saturday.toISOString(), datestring: datestring, shiftdate: shiftdate, physicianid: physicianid },
+            success: function (data) {
+
+                $('#ViewScheduledModal').modal('hide');
+                $('#schedulingModals').html(data);
+                $('#ViewAllShiftModal').modal('show');
+            },
+            error: function (e) {
+                Swal.fire("Oops", "Something Went Wrong", "error");
+            }
+        });
+    }
+
+    function ReturnShift(status, shiftdetailid) {
+        event.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: "/Admin/ReturnShift",
+            data: { status: status, shiftdetailid: shiftdetailid },
+
+            success: function (res) {
+                if (res.code == 401) {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    Swal.fire("Oops!", "Session Expired !!!", "error");
+                } else {
+
+                    $('#ViewScheduledModal').modal('hide');
+                    Swal.fire({
+                        title: "HalloDoc", text: "Shift Return Successfully ", icon: "success", timer: 1500, timerProgressBar: true
+                    });
+                    switch (schedulingtype) {
+                        case 'month':
+
+                            ShiftCalender('month');
+                            break;
+
+                        case 'day':
+
+                            ShiftCalender('day');
+                            break;
+                        case 'week':
+
+                            ShiftCalender('week');
+                            break;
+                    }
+                }
+            },
+
+            error: function () {
+                Swal.fire("Oops!", "Something is Wrong !!!", "error");
+            }
+        });
+    }
+
+    function deleteShift(shiftdetailid) {
+        event.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: "/Admin/deleteShift",
+            data: { shiftdetailid: shiftdetailid },
+
+            success: function (res) {
+                if (res.code == 401) {
+                    setTimeout(function () { location.reload(); }, 2000);
+                    Swal.fire("Oops!", "Session Expired !!!", "error");
+                } else {
+
+                    $('#ViewScheduledModal').modal('hide');
+                    Swal.fire({
+                        title: "HalloDoc", text: "Shift deleted Successfully ", icon: "success", timer: 1500, timerProgressBar: true
+                    });
+                    switch (schedulingtype) {
+                        case 'month':
+
+                            ShiftCalender('month');
+                            break;
+
+                        case 'day':
+
+                            ShiftCalender('day');
+                            break;
+                        case 'week':
+
+                            ShiftCalender('week');
+                            break;
+                    }
+                }
+            },
+
+            error: function () {
+                Swal.fire("Oops!", "Something is Wrong !!!", "error");
+            }
+        });
+    }
+
+    function EditShiftDetails() {
+        event.preventDefault();
+        var formdata = $('#EditshiftForm').serialize();
+        if ($('#EditshiftForm').valid()) {
+            $.ajax({
+                method: "POST",
+                url: "/Admin/EditShiftDetails",
+                data: formdata,
+
+                success: function (res) {
+                    if (res.code == 401) {
+                        setTimeout(function () { location.reload(); }, 2000);
+                        Swal.fire("Oops!", "Session Expired !!!", "error");
+                    } else {
+                        if (res) {
+                            $('#ViewScheduledModal').modal('hide');
+                            Swal.fire({
+                                title: "HalloDoc", text: "Shift Edited Successfully ", icon: "success", timer: 1500, timerProgressBar: true
+                            });
+                            switch (schedulingtype) {
+                                case 'month':
+
+                                    ShiftCalender('month');
+                                    break;
+
+                                case 'day':
+
+                                    ShiftCalender('day');
+                                    break;
+                                case 'week':
+
+                                    ShiftCalender('week');
+                                    break;
+                            }
+                        }
+                        else {
+                            Swal.fire({
+                                title: "HalloDoc", text: "This Time Slot is not Available", icon: "error"
+                            });
+                        }
+                    }
+                },
+
+                error: function () {
+                    Swal.fire("Oops!", "Something is Wrong !!!", "error");
+                }
+            });
+        }
+    }
+</script>
+
+@section Scripts {
+    @{
+        <Partial name="_ValidationScriptsPartial" />
+    }
+}

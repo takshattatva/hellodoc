@@ -1,0 +1,36 @@
+﻿@inject IHttpContextAccessor Accessor
+@using Microsoft.AspNetCore.Http
+
+<div class="container-fluid">
+
+    <div>
+        <button class="btn d-inline-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a href="#">
+            <img src="~/images/hellodoc.png" alt="logo" height="70px">
+        </a>
+    </div>
+    <div class="d-flex align-items-center gap-1 gap-sm-3">
+        <div class="d-none d-md-block d-flex align-items-center">
+            <h5><span class="fw-semibold text-muted" style="font-family:'Comic Sans MS'">Welcome @Accessor.HttpContext.Session.GetString("_PhysicianName")</span></h5>
+        </div>
+        <div class="d-sm-block d-md-none d-none d-flex align-items-center">
+            <span class="text-muted fs-6" style="font-family:'Comic Sans MS'">Welcome @Accessor.HttpContext.Session.GetString("_PhysicianName")</span>
+        </div>
+        <a asp-controller="Patient" asp-action="Logout">
+            <button class="btn btn-outline-info border border-2 border-info fw-bold">
+                <span class="d-none d-sm-block">Logout</span>
+                <span class="d-block d-sm-none"><i class="fa-solid fa-right-to-bracket fs-5"></i></span>
+            </button>
+        </a>
+        <button class="btn btn-outline-info border border-2 border-info fs-5 px-2 py-1 rounded fw-bolder me-2"
+                id="dark-mode-btn">
+            <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+            <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+        </button>
+    </div>
+</div>
+
+            

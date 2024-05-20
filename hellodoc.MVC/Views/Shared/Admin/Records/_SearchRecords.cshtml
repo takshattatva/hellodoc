@@ -1,0 +1,391 @@
+﻿@model hellodoc.DAL.ViewModels.SearchRecordsModel
+
+@functions{
+    public string GetRequestStatus(int status)
+    {
+        switch (status)
+        {
+            case 1: return "Unassigned";
+            case 2: return "Accepted";
+            case 4: return "MDEnRoute";
+            case 5: return "MDONSite";
+            case 6: return "Conclude";
+            case 3: return "Cancelled";
+            case 7: return "Cancelled By Patient";
+            case 8: return "Closed";
+            case 9: return "Unpaid";
+            case 10: return "Clear";
+            case 11: return "Block";
+            default: return "Unknown";
+        }
+    }
+}
+
+<div class="w-100 px-2 px-sm-5">
+    <div class="d-flex justify-content-between">
+        <h3>Search Records</h3>
+        <button onclick="ExportSearchRecords()" class="btn btn-info rounded-2 text-white">
+        <i class="bi bi-share"></i> <span class="d-none d-sm-inline-block fw-semibold">Export Data to Excel</span>
+        </button>
+    </div>
+
+    <div class="shadow p-3 my-3">
+        <form method="post" id="searchRecordsForm" onsubmit="searchRecordsFilter()">
+            <div class="row g-3">
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <select asp-for=@Model.searchRecordOne id="status" class="form-select" aria-label="Default select example">
+                        <option selected value="0">All Status</option>
+                        @for (var i = 1; i <= 11; i++)
+                        {
+                            <option value="@i">
+                                @GetRequestStatus(@i)
+                            </option>
+                        }
+                    </select>
+                    <label class="text-muted ms-2">Status</label>
+                </div>
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input asp-for=@Model.searchRecordTwo class="form-control" type="search" placeholder="Patient Name" aria-label="Search" id="my-search-input">
+                    <label class="text-muted ms-2">Patient Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <select asp-for=@Model.searchRecordThree id="request_type" class="form-select" aria-label="Default select example">
+                        <option selected value="0">All Request Type</option>
+                        @foreach (var obj in Model.requestType)
+                        {
+                            <option value="@obj.Requesttypeid">
+                                @obj.Name
+                            </option>
+                        }
+                    </select>
+                    <label class="text-muted ms-2">Status</label>
+                </div>
+
+                <div class="form-floating mb-3  col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input type="date" class="form-control bg-transparent" id="from_dateofService" placeholder="From Date of Service">
+                    <label for="datePickerId" class="ms-2 text-muted">From Date of Service</label>
+                </div>
+
+                <div class="form-floating mb-3  col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input type="date" class="form-control bg-transparent" id="to_dateofService" placeholder="To Date of Service">
+                    <label for="datePickerId" class="ms-2 text-muted">To Date of Service</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input asp-for=@Model.searchRecordSix class="form-control" type="search" placeholder="Provider Name" aria-label="Search" id="physician">
+                    <label class="text-muted ms-2">Physician Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input asp-for=@Model.searchRecordSeven class="form-control" type="search" placeholder="Email" aria-label="Search" id="email">
+                    <label class="text-muted ms-2">Email</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                    <input asp-for=@Model.searchRecordEight class="form-control" type="search" placeholder="Phone Number" aria-label="Search" id="phone">
+                    <label class="text-muted ms-2">Phone Number</label>
+                </div>
+
+                <div class="d-flex justify-content-end mb-3">
+                    <button id="cancel_button" type="reset" class="btn btn-outline-secondary border-secondary fw-semibold me-2" onclick="searchRecordsFilter(1)">Clear</button>
+                    <button id="search_button" type="submit" value="submit" class="btn btn-info text-white fw-semibold ms-2">Search</button>
+                </div>
+            </div>
+        </form>
+
+        @if (Model.requestList.Count > 0)
+        {
+            <div class="table-responsive d-none d-lg-block">
+                <table id="searchRecordTable" class="table mt-3 table-hover">
+                    <thead class="table-active">
+                        <tr class="text-center">
+                            <th class="col text-center">Patient Name</th>
+                            <th class="col text-center">Requestor</th>
+                            <th class="col text-center">Date of Service</th>
+                            <th class="col text-center">Close Case Date</th>
+                            <th class="col text-center">Email</th>
+                            <th class="col text-center">Phone Number</th>
+                            <th class="col text-center">Address</th>
+                            <th class="col text-center">Zip</th>
+                            <th class="col text-center">Request Status</th>
+                            <th class="col text-center">Physician</th>
+                            <th class="col text-center">Physician Notes</th>
+                            <th class="col text-center">Cancelled By Provider Note</th>
+                            <th class="col text-center">Admin Note</th>
+                            <th class="col text-center">Patient Note</th>
+                            <th class="col text-center">Delete Permanently</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.requestList)
+                        {
+                            <tr class="text-center">
+                                <td>@obj.patientname</td>
+                                <td>@obj.requestor</td>
+                                <td>
+                                    @if(obj.dateOfService != null)
+                                    {
+                                        @obj.dateOfService
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (obj.closeCaseDate != null)
+                                    {
+                                        @obj.closeCaseDate
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>@obj.email</td>
+                                <td>@obj.contact</td>
+                                <td>@obj.address</td>
+                                <td>@obj.zip</td>
+                                <td>@GetRequestStatus(@obj.status)</td>
+                                <td>
+                                    @if (obj.physician != null)
+                                    {
+                                        @obj.physician
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (obj.physicianNote != null)
+                                    {
+                                        @obj.physicianNote
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (obj.providerNote != null)
+                                    {
+                                        @obj.providerNote
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (obj.AdminNote != null)
+                                    {
+                                        @obj.AdminNote
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (obj.pateintNote != null)
+                                    {
+                                        @obj.pateintNote
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button onclick="deletRequest(@obj.requestid)" class="btn btn-outline-info">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="border m-2 rounded shadow d-block d-lg-none">
+                <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                    <table class="w-100" id="searchRecordTable">
+                        <thead>
+                            <tr>
+                                <th class="d-none"></th>
+                                <th class="d-none"></th>
+                            </tr>
+                        </thead>
+                        @{
+                            var counter = 1;
+                        }
+                        <tbody>
+                            @if (Model.requestList != null)
+                            {
+                                @foreach (var obj in Model.requestList)
+                                {
+                                    <tr class="d-flex flex-column">
+                                        <td>
+                                            <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+                                            <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse" data-bs-target="#flush-collapse@(counter)" aria-expanded="false" aria-controls="flush-collapse@(counter)">
+                                                <div class="w-100 ">
+                                                    <span class="fw-bolder">
+                                                        @obj.patientname
+                                                    </span>
+                                                </div>
+                                                <div class="w-100">
+                                                    <div class="">
+                                                        @obj.address
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="flush-collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body main-flex pt-2">
+                                                    <div class="w-100">
+                                                        <div class="">
+                                                            <span class="fw-bolder">Requestor: </span> @obj.requestor
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Date of service: </span>
+                                                            @if (obj.dateOfService != null)
+                                                            {
+                                                                @obj.dateOfService
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Case Closed Date: </span>
+                                                            @if (obj.closeCaseDate != null)
+                                                            {
+                                                                @obj.closeCaseDate
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Email: </span> @obj.email
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Phone: </span> @obj.contact
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Address: </span> @obj.address
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">ZipCode: </span> @obj.zip
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Request Status: </span> @GetRequestStatus(@obj.status)
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">provider: </span>
+                                                            @if (obj.physician != null)
+                                                            {
+                                                                @obj.physician
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">provider Note: </span>
+                                                            @if (obj.physicianNote != null)
+                                                            {
+                                                                @obj.physicianNote
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Canceled By Provider: </span>
+                                                            @if (obj.providerNote != null)
+                                                            {
+                                                                @obj.providerNote
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Admin Note: </span> @obj.AdminNote
+                                                            @if (obj.AdminNote != null)
+                                                            {
+                                                                @obj.AdminNote
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="fw-bolder">Patient Note: </span>
+                                                            @if (obj.pateintNote != null)
+                                                            {
+                                                                @obj.pateintNote
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="inner-flex d-flex justify-content-end">
+                                                        <button onclick="deletRequest(@obj.requestid)" class="btn btn-outline-info">Delete</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    counter++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center align-items-center fw-bold mt-5">
+                <span class="d-md-block d-none fw-bold fs-2">No records Found.</span>
+                <span class="d-md-none d-block fw-semibold fs-4">No records Found.</span>
+            </div>
+
+            <br />
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="d-md-block d-none"><img src="~/images/no_records_found.png" /></div>
+                <div class="d-md-none d-block"><img src="~/images/no_records_found.png" height="60px" /></div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#searchRecordTable').DataTable({
+            "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+            "pageLength": 5,
+
+            language: {
+                oPaginate: {
+                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                }
+            }
+        });
+        //$('.dataTables_length').hide();
+        $('.dataTables_filter').hide();
+    });
+</script>

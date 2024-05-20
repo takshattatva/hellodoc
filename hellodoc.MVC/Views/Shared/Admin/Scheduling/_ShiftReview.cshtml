@@ -1,0 +1,148 @@
+﻿@model hellodoc.DAL.ViewModels.SchedulingVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="container">
+    <div class="mt-3 mb-2 d-flex justify-content-between align-items-center">
+        <h4 class="mb-4">Requested Shifts</h4>
+        <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetScheduling(1)">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="border rounded shadow p-3">
+
+        <div class="d-md-flex justify-content-between align-items-center mb-3">
+            <form role="search" class="d-flex align-items-center border border-rounded rounded border-info mb-3">
+                <i type="search" class="fa-solid fa-magnifying-glass-location px-2"></i>                
+                <select class="form-select border-0 roleDropdown shadow" aria-label="Default select example" onchange="ShiftReview(this.value, @Model.callId)" id="regionValue">
+                    <option selected value="0">All Region</option>
+                    @foreach (var obj in Model.regions)
+                    {
+                        <option value="@obj.Regionid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+            </form>
+
+            <div class="justify-content-between">
+                <button type="button" class="btn btn-primary ms-1 shadow" onclick="GetScheduling(1)">
+                    <span class="d-md-block d-none fw-semibold">View Current Month Shifts</span>
+                    <span class="d-block d-md-none"><i class="fa-solid fa-calendar-day text-white"></i></span>
+                </button>
+
+                <button type="button" class="btn btn-success ms-1 shadow" id="approveBtn">
+                    <span class="d-md-block d-none fw-semibold">Approve Selected</span>
+                    <span class="d-block d-md-none"><i class="fa-solid fa-check-double text-white"></i></span>
+                </button>
+
+                <button type="button" class="btn btn-danger ms-1 shadow" id="deleteBtn">
+                    <span class="d-md-block d-none fw-semibold">Delete Selected</span>
+                    <span class="d-block d-md-none"><i class="fa-solid fa-trash-can text-white"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive d-md-block d-none">
+            <table class="table table-hover " id="ShiftReviewTable">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <input type="checkbox" class="form-check-input checkbox-main checkbox" name="selectall"
+                                   onchange="tickAll()" />
+                            <span class="ms-5">
+                                Staff
+                            </span>
+                        </th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Region</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                        @foreach (var obj in Model.ShiftReview)
+                        {
+                        <tr class="align-middle">
+                            <td class="first-col">
+                                <input type="checkbox" name="Mark" class="form-check-input checkbox fileCheckbox" value="@obj.shiftDetailId"
+                                       onchange="allCheck()" />
+                                <span class="ms-5">
+                                        @obj.PhysicianName
+                                </span>
+                            </td>
+                            <td>@obj.ShiftDate</td>
+                            <td>@obj.ShiftTime</td>
+                            <td>@obj.ShiftRegion</td>
+                        </tr>
+                        }
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="border rounded shadow d-block d-md-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100" id="ShiftReviewTable">
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @foreach (var obj in Model.ShiftReview)
+                        {
+                            <tr class="d-flex flex-column">
+                                <td>
+                                    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse"
+                                         data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                         aria-controls="flush-collapse@(counter)">
+
+                                        <div class="w-100 ">
+                                            <input type="checkbox" name="Mark" value="@obj.shiftDetailId" class="checkbox fileCheckbox me-3" onchange="allCheck()" />
+                                            <span class="fw-bolder ms-sm-5 ms-1">
+                                                @obj.PhysicianName
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                         aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body main-flex pt-2">
+
+                                            <div class="inner-flex">
+                                                @obj.ShiftDate
+                                            </div>
+                                            <div class="inner-flex">
+                                                @obj.ShiftTime
+                                            </div>
+                                            <div class="inner-flex">
+                                                @obj.ShiftRegion
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/shift-review.js" asp-append-version="true"></script>
+

@@ -1,0 +1,84 @@
+﻿@model hellodoc.DAL.ViewModels.MonthShiftModal
+
+<div class="table-responsive">
+    <table class="table table-hover" style="width:100%;z-index:5">
+        <thead class="dayshiftheader">
+            <tr style="background-color: lightgray;">
+                <th class="p-3">SUN</th>
+                <th>MON</th>
+                <th>TUE</th>
+                <th>WED</th>
+                <th>THU</th>
+                <th>FRI</th>
+                <th>SAT</th>
+            </tr>
+        </thead>
+        <tbody style="font-size:larger;font-weight:400;" id="shifttable">
+
+            @for (int i = 0; i < Model.daysLoop; i += 7)
+            {
+                <tr>
+                    @for (int j = 0; j < 7; j++)
+                    {
+                        var dayNumber = i + j + 1 - Model.startDayIndex;
+
+                        <td class="p-0">
+                            @if (dayNumber > 0 && dayNumber <= Model.daysInMonth)
+                            {
+                                <div class="d-flex justify-content-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">@dayNumber</div>
+                                {
+                                    var count = 1;
+                                    foreach (var item in Model.shiftDetailsmodals)
+                                    {
+                                        var bgcolor = "";
+                                        if (item.Shiftdate.Day == dayNumber && count < 5)
+                                        {
+                                            if (item.Status == 1)
+                                            {
+                                                bgcolor = "lightpink";
+                                            }
+                                            else if (item.Status == 2)
+                                            {
+                                                bgcolor = "lightgreen";
+                                            }
+
+                                            <div style="overflow-y:auto;">
+                                                <button class="w-100 h-100 border-0" style="background-color:@bgcolor;" onclick="providersModal({actionType:'shiftdetails',shiftdetailsid : '@item.Shiftdetailid'})">
+                                                    <span class="fs-7 fw-semibold text-dark">@item.Starttime - @item.Endtime Physician / @item.PhysicianName, @item.Abberaviation</span>
+                                                </button>
+                                            </div>
+                                            count = count + 1;
+                                        }
+                                        if (count > 4)
+                                        {
+                                            <div style="overflow-y:auto;">
+                                                <button class="w-100 h-100 border-0" style="background-color:#B3C8CF;" onclick="providersModal({actionType:'moreshifts', columnDate: '@item.Shiftdate'})">
+                                                    <span class="fs-6 fw-semibold text-dark">View All Shifts...</span>
+                                                </button>
+                                            </div>
+                                            count = count + 1;
+                                            break;
+                                        }
+                                    }
+                                    for (var k = count; k <= 5; k++)
+                                    {
+                                        <div></div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

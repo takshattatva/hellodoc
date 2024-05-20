@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>concierge</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+
+
+    <script src="js/custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+
+
+
+</head>
+
+<body style="background-color: lightgray;">
+
+    <div class="d-flex justify-content-between align-items-center" style="background-color: white;">
+        <div class="ms-3">
+            <img src="images/Fig56. Patient site 1.png" alt="" style="height: 7vh;">
+        </div>
+        <div class="xyz" style="margin-right: 1%;">
+            <button class="moonbut" style="border-color: #00bce7; color: #00bce7; border-radius: 5px;">
+                <i class="bi bi-moon"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+
+
+        <div class="row" style="justify-content: center;">
+            <div class=" col-xl-5 col-xl-6 col-lg-5 col-sm-8 col-md-10 col-10 heading position-relative mt-3 mb-5">
+                <div class="position-absolute backboxp" style="top:0; right: 1%;">
+                    <button
+                        style="border-radius: 10%; height: 35px; border-color:#00bce7; background-color: transparent;">
+                        <a href="#" class="alllinks"> &lt Back </a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3" style="justify-content: center;">
+            <div class="col-xl-5 col-xl-6 col-lg-5 col-sm-8 col-md-10 col-10 sec-row-col"
+                style="background-color: #ffffff;">
+                <form style="display: flex;flex-direction: column;justify-content: space-around;">
+
+                    <div class="row">
+                        <div class="mt-2">
+                            <h5>Concierge Information</h5>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Last Name">
+                                <label for="floatingInput">Your First Name</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3 allins">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="Last Name">
+                                <label for="floatingInput">Your Last Name</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <div class="border rounded-2 tel-container">
+                                    <input id="phone" type="tel" class="form-control border-0 tel-input" name="phone" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">Your Email</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-12 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Last Name">
+                                <label for="floatingInput">Hostel/Property Name
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div>
+                            <h5 class="mt-3">Concierge Location</h3>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">Street</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">City</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">State</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">Zip Code</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="mt-2">
+                          <h5>Patient Information</h5>
+                        </div>
+                        <div class="col-xl-12">
+                          <div class="form-floating">
+                            <textarea class="form-control mb-3" placeholder="Leave a comment here" id="floatingTextarea2"
+                              style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Enter Brief Details of Symptoms (Optional)</label>
+                          </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                          <div class="form-floating mb-3 allins">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="Last Name">
+                            <label for="floatingInput">First Name</label>
+                          </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                          <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="Last Name">
+                            <label for="floatingInput">Last Name</label>
+                          </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                          <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="floatingInput" placeholder="Last Name">
+                            <label for="floatingInput">Date of Birth</label>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    
+                    <div class="row">
+                        <div>
+                            <h5 class="mt-3">Patient Contact Information</h3>
+                            </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3 allins">
+                                <input type="email" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3 allins">
+                                <div class="border rounded-2 tel-container">
+                                    <input id="phone2" type="tel" class="form-control border-0 tel-input" name="phone" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+
+                    <div class="row">
+                        <div>
+                            <h5 class="mt-3">Patient Location</h3>
+                        </div>
+                        <div class="col-xl-6 mt-2">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput"
+                                    placeholder="name@example.com">
+                                <label for="floatingInput">Room # / Suite(Optional)</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12 mt-2 mb-3">
+                            <div class="d-flex justify-content-end">
+                                <button class="me-4"
+                                    style="border-radius: 10%; height: 35px;width: 80px; border-color:#00bce7; background-color: #00bce7;">
+                                    <a href="#" class="alllinks" style="color: white !important;">Submit </a>
+                                </button>
+                                <button
+                                    style="border-radius: 10%; height: 35px;width:80px ; border-color:#00bce7; background-color: transparent;">
+                                    <a href="#" class="alllinks"> Cancel </a>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <footer class="text-center text-lg-start position-fixed"
+                style="background-color: rgb(27, 24, 24); right: 0;bottom:0; color: aliceblue;">
+                <!-- Copyright -->
+                <div class="p-3 text-end">
+                    Terms of Conditions &nbsp; &nbsp;| &nbsp; &nbsp; Privacy Policy
+                </div>
+                <!-- Copyright -->
+            </footer>
+        </div>
+    </div>
+
+
+
+    <script>
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+
+        const phoneInputField2 = document.querySelector("#phone2");
+        const phoneInput2 = window.intlTelInput(phoneInputField2, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+</body>
+
+</html>

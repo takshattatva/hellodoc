@@ -1,0 +1,94 @@
+﻿@model hellodoc.DAL.ViewModels.WeekShiftModal
+
+<div class="table-responsive">
+    <table class="table table-hover" style="width:100%;z-index:5">
+        <thead class="dayshiftheader">
+            <tr style="background-color: lightgray;">
+                <th class="text-center">STAFF</th>
+                <th class="text-center">SUN</th>
+                <th class="text-center">MON</th>
+                <th class="text-center">TUE</th>
+                <th class="text-center">WED</th>
+                <th class="text-center">THU</th>
+                <th class="text-center">FRI</th>
+                <th class="text-center">SAT</th>
+            </tr>
+        </thead>
+        <tbody style="font-size:larger;font-weight:400;" class="shiftweektable">
+            <tr>
+                <td class="text-center fw-bold">Coverege</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+                <td class="text-center fw-semibold" style="background-color:rgba(207, 207, 249, 0.7);">0/24</td>
+            </tr>
+            @{
+                foreach (var phy in Model.Physicians)
+                {
+                    <tr class="text-center">
+                        <td class="p-2 align-middle">
+                            <div class="d-flex align-items-center justify-content-around h-100 fw-semibold">
+                                <span class="text-center me-1" style="width:50px; height:50px">
+                                    <img class="w-100 h-100 border rounded-5" src="~/content/@phy.Physicianid/Profile.png" />
+                                </span> @phy.Firstname @phy.Lastname
+                            </div>
+                        </td>
+                        @{
+                            var list = Model.shiftDetailsmodals.Where(u => u.Physicianid == phy.Physicianid).ToList();
+
+                            foreach (var date in Model.datelist)
+                            {
+                                var list2 = list.Where(u => u.Shiftdate.Day == date);
+
+                                @if (list2.Any())
+                                {
+                                    var count = 1;
+                                    <td class="p-0">
+                                        @foreach (var shift in list2)
+                                        {
+                                            var bgcolor = "";
+                                            if (count <= 2)
+                                            {
+                                                if (shift.Status == 1)
+                                                {
+                                                    bgcolor = "lightpink";
+                                                }
+                                                else if (shift.Status == 2)
+                                                {
+                                                    bgcolor = "lightgreen";
+                                                }
+                                                <div class="text-dark" style="background-color:@bgcolor;border-bottom:solid 1px gray;cursor:pointer" onclick="providersModal({actionType:'shiftdetails',shiftdetailsid : '@shift.Shiftdetailid'})">
+                                                    <small class="fs-6 fw-semibold">
+                                                        @shift.Starttime - @shift.Endtime Physician / @shift.PhysicianName, @shift.Abberaviation
+                                                    </small>
+                                                </div>
+                                                count = count + 1;
+                                            }
+                                            if (count >= 3)
+                                            {
+                                                <div style="overflow-y:auto;background-color:#B3C8CF;">
+                                                    <button class="w-100 h-100 border-0 fs-6 py-1 text-dark fw-semibold" style="background-color:#B3C8CF;cursor:pointer" onclick="OpenShiftModalWeek('@shift.Shiftdate','@shift.Physicianid')">
+                                                        View All Shifts....
+                                                    </button>
+                                                </div>
+                                                count = count + 1;
+                                                break;
+                                            }
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

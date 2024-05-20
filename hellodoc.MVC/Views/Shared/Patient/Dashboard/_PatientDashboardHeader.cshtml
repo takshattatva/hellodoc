@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+<header>
+    <nav class="navbar shadow p-0">
+        <div class="container-fluid">
+            <div>
+                <button class="navbar-toggler d-inline-block d-sm-none primary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <a href="#">
+                    <img src="~/images/hellodoc.png" alt="logo" height="90px">
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-1 gap-sm-3">
+                <div class="d-none d-sm-block d-flex align-items-center">
+                    <h5>
+                        Welcome 
+                        <strong>
+                            @Accessor.HttpContext.Session.GetString("_sessionUserName")
+                        </strong>
+                    </h5>
+                </div>
+                <a asp-action="Logout" class="btn btn-outline-info border border-2 border-info fw-bold">
+                    <span class="d-none d-sm-block">Logout</span>
+                    <span class="d-block d-sm-none"><i class="fa-solid fa-right-from-bracket"></i></span>
+                </a>
+                <button class="btn btn-outline-info border border-2 border-info fs-5 px-2 py-1 rounded fw-bolder me-2"
+                        id="dark-mode-btn">
+                    <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+                    <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="collapse w-100 show d-sm-block slide-out-up" id="navbarToggleExternalContent">
+            <div class="p-2">
+                <hr class="w-100 m-0">
+                <ul class="nav nav-underline mx-5" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active text-muted" id="dashboard-tab" data-bs-toggle="tab"
+                                data-bs-target="#dashboard-tab-pane" type="button" role="tab"
+                                aria-controls="dashboard-tab-pane" aria-selected="true">
+                            Dashboard
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link text-muted" id="profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#profile-tab-pane" type="button" role="tab"
+                                aria-controls="profile-tab-pane" aria-selected="false">
+                            Profile
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

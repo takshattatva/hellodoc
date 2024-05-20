@@ -1,0 +1,108 @@
+@model hellodoc.DAL.ViewModels.ProviderInvoicingVm
+
+<div class="border rounded shadow p-3 mt-4" id="RecieptTable">
+    <div class="table-responsive d-lg-block d-none">
+        <table class="table AddRecieptTable">
+            <thead class="rounded table-active">
+                <tr>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Bill</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            @{
+                var counter = 0;
+            }
+            <tbody>
+                @foreach (var obj in @Model.AddReceiptsDetails)
+                {
+                    <form method="post" enctype="multipart/form-data" id="ReceiptForm@(counter)">
+                    <tr class="align-middle">
+                        <input type="text" asp-for="@obj.TimeSheetDetailId" id="inputTimeSheetDetailId@(counter)"
+                               hidden>
+                        <td>@obj.ShiftDetailDate</td>
+                        <td>
+                            <input type="number" asp-for="@obj.Item" class="form-control w-75 " placeholder="Item" id="inputItem@(counter)" disabled>
+                            <span class="text-danger" asp-validation-for="@obj.Item"></span>
+                        </td>
+                        <td>
+                            <input type="number" asp-for="@obj.Amount" class="form-control w-75" placeholder="Amount" id="inputAmount@(counter)" disabled>
+                            <span class="text-danger" asp-validation-for="@obj.Amount"></span>
+                        </td>
+                        <td>
+                            <div id="upload@(counter)" class="input-group mb-3 border border-2 rounded w-75 d-none">
+                                <input type="file" class="form-control" id="inputFile@(counter)" asp-for="@obj.Bill" onblur="validatefile(@(counter))">
+                                <label class="input-group-text fw-bold bg-info border-info upload"
+                                       for="inputFile@(counter)">
+                                    <i class="bi bi-cloud-arrow-up me-2 fw-bold text-white"></i>
+                                    <span class="text-white d-none d-sm-block">Upload</span>
+                                </label>
+                                <span asp-validation-for="@obj.Bill" class="text-danger"></span>
+                            </div>
+                            <span id="filename@(counter)" class="">@obj.BillValue</span>
+                        </td>
+                        <td>
+                            <div class="d-flex" id="EditContainer@(counter)">
+                                <button type="button" class="btn btn-outline-info me-2 fw-semibold" onclick="enableSubmit(@counter)">Edit</button>
+                                    @if (@obj.BillValue != null)
+                                    {
+                                        <button type="button" class="btn btn-outline-danger me-2 fw-semibold" onclick="DeleteReceipt(@obj.TimeSheetDetailId)">Delete</button>
+                                        <a type="button" class="btn btn-outline-primary fw-semibold" target="_blank" href="~/content/@obj.BillValue">View</a>
+                                    }
+                            </div>
+                            <div class="d-flex d-none" id="SubmitContainer@(counter)">
+                                <button type="submit" class="btn btn-info me-2 fw-semibold text-white" onclick="PostAddReceipt(@counter)">Submit</button>
+                                <button type="reset" class="btn btn-outline-secondary fw-semibold" onclick="disableSubmit(@counter)">Cancel</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </form>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function enableSubmit(counter) {
+        $(`#inputItem${counter}`).prop("disabled", false);
+        $(`#inputAmount${counter}`).prop("disabled", false);
+        $(`#upload${counter}`).removeClass('d-none');
+        $(`#filename${counter}`).addClass('d-none');
+        $(`#EditContainer${counter}`).addClass('d-none');
+        $(`#SubmitContainer${counter}`).removeClass('d-none');
+    }
+
+    function disableSubmit(counter) {
+        $(`#inputItem${counter}`).prop("disabled", true);
+        $(`#inputAmount${counter}`).prop("disabled", true);
+        $(`#upload${counter}`).addClass('d-none');
+        $(`#filename${counter}`).removeClass('d-none');
+        $(`#EditContainer${counter}`).removeClass('d-none');
+        $(`#SubmitContainer${counter}`).addClass('d-none');
+        document.getElementById('ReceiptForm' + counter).reset();
+    }
+
+    function validatefile(counter) {
+        const fileInput = document.getElementById('inputFile' + counter);
+
+        fileInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (!file.name.endsWith('.pdf')) {
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Only .pdf file alllowed",
+                    icon: "error",
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+                fileInput.value = '';
+            }
+        });
+    }
+</script>

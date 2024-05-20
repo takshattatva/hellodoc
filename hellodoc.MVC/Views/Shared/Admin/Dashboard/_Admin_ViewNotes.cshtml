@@ -1,0 +1,128 @@
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+@{
+    ViewData["Title"] = "Admin View Notes";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mx-3">
+        <h4 class="fw-semibold">Notes</h4>
+        @if (Model.viewNotesData.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetDashboard(@Model.StatusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.viewNotesData.callId == 2)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="ViewCaseRecords(@Model.StatusForName, @Model.viewNotesData.RequestId, 1)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.viewNotesData.callId == 3)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.viewNotesData.callId == 4)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="ViewCaseRecords(@Model.StatusForName, @Model.viewNotesData.RequestId, 3)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <form method="post" id="viewNotesForm" onsubmit="UpdateViewNotes(@Model.viewNotesData.RequestId,@Model.viewNotesData.callId)">
+        <input type="text" asp-for="@Model.viewNotesData.RequestId" hidden />
+        <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+        <input type="text" asp-for="@Model.viewNotesData.callId" id="callId" hidden />
+
+        <div class="m-3">
+            <div class="row mt-1">
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <div class=" border shadow rounded d-flex">
+                        <div class="m-3">
+                            <i class="fa-solid fa-arrow-right-arrow-left fs-5 mt-2"></i>
+                        </div>
+                        <div class="m-2">
+                            <h6 class="fw-bolder"> Transfer Notes</h6>
+                            <small class="text-secondary">
+                                <ul>
+                                    @foreach (var obj in Model.viewNotesData.TransferNotes)
+                                    {
+                                        <li type="none">
+                                            <i class="fa-solid fa-hand-point-right"></i> Admin transferred to @obj.Physician.Firstname on @obj.Createddate.ToShortDateString() at @obj.Createddate.ToShortTimeString() : @obj.Notes<br />
+                                        </li>
+                                    }
+                                </ul>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <div class="border shadow rounded d-flex">
+                        <div class="m-3">
+                            <i class="fas fa-user-md fs-5 mt-1"></i>
+                        </div>
+                        <div class="m-2">
+                            <h6 class="fw-bolder">  Physician Notes</h6>
+                            <small class="text-secondary">
+                                @Model.viewNotesData.PhysicianNotes
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <div class="border shadow rounded d-flex">
+
+                        <div class="m-3">
+                            <i class="fa-solid fa-user-tie fs-5 mt-2"></i>
+                        </div>
+                        <div class="m-2">
+                            <h6 class="fw-bolder">  Admin notes</h6>
+                            <small class="text-secondary">
+                                @Model.viewNotesData.AdminNotes
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border shadow rounded mt-3">
+                <div class="row m-3 mx-0 mx-sm-1">
+                    <div class=" col-12 form-floating mb-3 ">
+                        @if (Model.viewNotesData.callId == 1 || Model.viewNotesData.callId == 2)
+                        {
+                            <textarea class="form-control h-100 dclass primary" id="floatingInput1" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.AdminNotes"></textarea>
+                            <label for="floatingInput1" class="text-wrap ms-2 primary h6">Aditional Notes by Admin</label>
+                            <span class="text-danger" asp-validation-for="@Model.viewNotesData.AdminNotes"></span>
+                        }
+                        @if (Model.viewNotesData.callId == 3 || Model.viewNotesData.callId == 4)
+                        {
+                            <textarea class="form-control h-100 dclass primary" id="floatingInput2" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.PhysicianNotes"></textarea>
+                            <label for="floatingInput2" class="text-wrap ms-2 primary h6">Aditional Notes by Physician</label>
+                            <span class="text-danger" asp-validation-for="@Model.viewNotesData.PhysicianNotes"></span>
+                        }
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-flex justify-content-center justify-content-md-end m-4 pt-1">
+                    <button type="submit" class="btn btn-outline-info border-info fw-bold">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,221 @@
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+@{
+    ViewData["Title"] = "View Case";
+}
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+@functions {
+    public string GetTabletype(int Status)
+    {
+        switch (Status)
+        {
+            case 1: return "New";
+            case 2: return "Pending";
+            case 3: return "To Closed";
+            case 4: return "Active";
+            case 5: return "Active";
+            case 6: return "Conclude";
+            case 7: return "To Closed";
+            case 8: return "To Closed";
+            case 9: return "Unpaid";
+            default: return "Unknown";
+        }
+    }
+    public string GetTableColorClass(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "green";
+            case 2: return "orange";
+            case 3: return "blue";
+            case 4: return "pink";
+            default: return "green";
+        }
+    }
+
+    public string GetRequestBy(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "Patient";
+            case 2: return "Family/Friend";
+            case 3: return "Concierge";
+            case 4: return "Business Partner";
+            default: return "Vip";
+        }
+    }
+}
+
+<div class="container">
+    <div class="mt-3 d-flex justify-content-between align-items-center">
+        <h4>
+            @GetTabletype(Model.StatusForName) Request
+            <span class="badge @GetTableColorClass(Model.adminViewCaseData.RequestTypeId)-badge rounded-pill ">
+                <small>@GetRequestBy(Model.adminViewCaseData.RequestTypeId)</small>
+            </span>
+        </h4>
+
+        @if (Model.adminViewCaseData.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetDashboard(@Model.StatusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.adminViewCaseData.callId == 2)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetPatientRecordExplore(@Model.adminViewCaseData.UserId)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.adminViewCaseData.callId == 3)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+    <form class="shadow border rounded my-3" method="post" id="viewCaseDataForm" onsubmit="UpdateViewCaseRecords(@Model.adminViewCaseData.RequestId)">
+        <input type="text" asp-for="@Model.adminViewCaseData.RequestId" hidden />
+        <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+        <input type="text" asp-for="@Model.StatusForName" id="lastStatus" hidden />
+        <input type="text" asp-for="@Model.adminViewCaseData.callId" id="callId" hidden />
+
+        <div class="mx-3 my-4 ">
+            <div class="mt-3">
+                <h4 class="ms-auto me-auto mb-4">Patient Information</h4>
+                <h6 style="font-size: 14px">Confirmation Number : </h6>
+                <p class="text-info fs-5 mb-3">@Model.adminViewCaseData.ConfirmationNumber</p>
+                <div class="row">
+                    <div class=" col-12 form-floating mb-3 ">
+                        <textarea class="form-control h-100" id="floatingInput" placeholder="Textarea" rows="3" asp-for="@Model.adminViewCaseData.Symptoms"
+                                  disabled></textarea>
+                        <label for="floatingInput" class="text-wrap ms-2">Patient Notes</label>
+                    </div>
+                </div>
+                <hr />
+                <div class="mt-1">
+                    <div class="row">
+                        <div class="form-floating mb-3 col-12 col-md-6">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="John" asp-for="@Model.adminViewCaseData.FirstName" disabled>
+                            <label for="floatingInput" class="ms-2 ">First Name</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-md-6">
+                            <input type="text" class="form-control " id="floatingInput" placeholder="Wick" asp-for="@Model.adminViewCaseData.LastName" disabled>
+                            <label for="floatingInput" class="ms-2 ">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-floating mb-3 col-12 col-md-6">
+                            <input type="date" class="form-control" id="floatingInput" placeholder="02-10-2002" asp-for="@Model.adminViewCaseData.DateOfBirth" disabled>
+                            <label for="floatingInput" class="ms-2 ">Date of Birth</label>
+                        </div>
+                        <div class="form-floating mb-3 col-10 col-md-4">
+                            <input type="tel" asp-for="@Model.adminViewCaseData.Mobile" class="input-disable telstyle form-control" id="telephone16" placeholder="" required disabled>
+                            <span class="text-danger" asp-validation-for="@Model.adminViewCaseData.Mobile"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-2 col-md-2">
+                            <a href="tel:@Model.adminViewCaseData.Mobile" type="button" class="btn btn-outline-info border-info p-3">
+                                <i class="fa-solid fa-phone"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-12 col-sm-6">
+                        <input type="email" class="form-control emailInp" id="floatingInput1" asp-for="@Model.adminViewCaseData.Email" disabled>
+                        <label for="floatingInput" class="ms-2 ">Email</label>
+                        <span class="text-danger" asp-validation-for="adminViewCaseData.Email"></span>
+                    </div>
+                    @if (Model.StatusForName != 1 && Model.adminViewCaseData.callId != 3)
+                    {
+                        <div class="form-floating mb-3 col-12 col-sm-1 w-auto">
+                            <button type="button" class="btn text-white btn-info fw-bold w-100 h-100" id="editBtn" style="display : block" onclick="enableFields()">
+                                Edit
+                            </button>
+                            <button type="submit" class="btn text-white btn-info fw-bold w-100 h-100" id="submitBtn" style="display : none">
+                                Submit
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <h4 class="ms-auto me-auto">Location Information</h4>
+                    <div class="form-floating mb-3 col-12 col-md-6">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Maryland" asp-for="@Model.adminViewCaseData.Region"
+                               disabled>
+                        <label for="floatingInput" class="ms-2 ">Region</label>
+                    </div>
+                    <div class="form-floating mb-3 col-10 col-md-4">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Maryland" asp-for="@Model.adminViewCaseData.BusinessAddress"
+                               disabled>
+                        <label for="floatingInput" class="ms-2 ">Business Name / Address</label>
+                    </div>
+                    <div class="form-floating mb-3 col-2 col-md-2">
+                        <a type="button" class="btn btn-outline-info border-info p-3" href="https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(@Model.adminViewCaseData.BusinessAddress).ToString()}" ;" target="_blank">
+                            <div class="d-flex justify-content-between">
+                                <i class="fa-solid fa-location-dot mt-1"></i>
+                                <span class="d-md-block d-none ms-2">Map</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="form-floating mb-3 col-12 col-sm-6">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="007" asp-for="@Model.adminViewCaseData.Room" disabled>
+                        <label for="floatingInput" class="ms-2 ">Room #</label>
+                    </div>
+
+                </div>
+                <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end mt-4 pt-4 mb-3">
+                    @if (Model.StatusForName == 1 && Model.adminViewCaseData.callId == 1)
+                    {
+                        <button type="button" class="btn text-white btn-success fw-semibold shadow" onclick="AssignModal(@Model.adminViewCaseData.RequestId,@Model.StatusForName,2)">Assign Case</button>
+                        <button type="button" class="btn text-white btn-danger fw-semibold shadow" onclick="CancelModal(@Model.adminViewCaseData.RequestId,@Model.StatusForName,2)">Cancel</button>
+                    }
+                    @if (Model.adminViewCaseData.callId == 1)
+                    {
+                        <button type="button" class="btn text-white btn-info fw-semibold shadow" onclick="ViewNotes(@Model.adminViewCaseData.RequestId,@Model.StatusForName,2)">View Notes</button>
+                    }
+                    @if (Model.adminViewCaseData.callId == 3 && Model.StatusForName == 1)
+                    {
+                        <button type="button" class="btn text-white btn-success fw-semibold shadow" onclick="AcceptCaseModal(@Model.adminViewCaseData.RequestId)">Accept Case</button>
+                    }
+                    @if (Model.adminViewCaseData.callId == 3)
+                    {
+                        <button type="button" class="btn text-white btn-info fw-semibold shadow" onclick="ViewNotes(@Model.adminViewCaseData.RequestId,@Model.StatusForName,4)">View Notes</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function enableFields() {
+        document.querySelectorAll('.input-disable ').forEach(function (element) {
+            element.disabled = false;
+        });
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('editBtn').style.display = 'none';
+    }
+
+    var input = document.querySelector("#telephone16");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+</script>

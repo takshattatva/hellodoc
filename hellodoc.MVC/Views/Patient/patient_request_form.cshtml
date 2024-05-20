@@ -1,0 +1,176 @@
+@model hellodoc.DAL.ViewModels.PatientReqData;
+@{
+    ViewData["Title"] = "Patient Request Form";
+}
+
+<div class="main-container d-flex flex-column justify-content-between">
+    <partial name="Patient/_Header" />
+
+    <div class="container mt-4 d-flex justify-content-end align-items-center">
+        <a class="btn btn-outline-info fw-bold shadow" asp-controller="Patient" asp-action="submit_request">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i>
+                <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <form asp-action="patient_request_form" method="post" enctype="multipart/form-data" class="container form-control shadow d-flex flex-column mx-auto mt-3 mb-3">
+        <legend class="mt-3 mb-3">Patient Information</legend>
+        <div class="form-floating mb-3">
+            <textarea asp-for="Notes" class="form-control bg-transparent border border-2 h-100" rows="3"
+                      placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+            <label for="floatingTextarea">
+                Enter Brief Details of Symptons <span class="d-none d-sm-inline">(Optional)</span>
+            </label>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Firstname" type="text" class="form-control bg-transparent border border-2" id="floatingFName"
+                       placeholder="Firstname">
+                <label for="floatingFName" class="ms-2">First Name</label>
+                <span class="text-danger" asp-validation-for="Firstname"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Lastname" type="text" class="form-control bg-transparent border border-2" id="floatingLName"
+                       placeholder="Lastname">
+                <label for="floatingLName" class="ms-2">Last Name</label>
+                <span class="text-danger" asp-validation-for="Lastname"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Birthdate" type="date" class="form-control bg-transparent border border-2" id="birthDate" max="">
+                <label for="birthDate" class="ms-2">Date Of Birth</label>
+                <span class="text-danger" asp-validation-for="Birthdate"></span>
+            </div>
+        </div>
+
+        <legend class=" mt-3 mb-3">Patient Contact Information</legend>
+        <div class="row">
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Email" id="email" onblur="checkEmail()" type="email" class="form-control bg-transparent border border-2"
+                       placeholder="name@example.com">
+                <label for="email" class="ms-2">Email</label>
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Phonenumber" id="phone" type="tel" class="form-control bg-transparent border border-2" style="height:60px;width:100%"
+                       placeholder="99XXXXXXXX">
+                <span class="text-danger" asp-validation-for="Phonenumber"></span>
+            </div>
+            <div class="row d-none" id="passfieldDiv">
+                <div class="col-12 col-md-6 form-floating mb-3">
+                    <input asp-for="PasswordHash" id="PasswordHash" type="password" class="form-control bg-transparent border border-2" id="floatingPassword"
+                           placeholder="">
+                    <label for="PasswordHash" class="ms-2">Password</label>
+                    <span class="text-danger" asp-validation-for="PasswordHash"></span>
+                </div>
+                <div class="col-12 col-md-6 form-floating mb-3">
+                    <input asp-for="ConformPassword" id="ConformPassword" type="password" class="form-control bg-transparent border border-2" id="floatingPassword1"
+                           placeholder="">
+                    <label for="ConformPassword" class="ms-2">Confirm Password</label>
+                    <span class="text-danger" asp-validation-for="ConformPassword"></span>
+                </div>
+            </div>
+        </div>
+
+        <legend class=" mt-3 mb-3">Patient Location</legend>
+        <div class="row">
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Street" type="text" class="form-control bg-transparent border border-2" id="floatingStreet"
+                       placeholder="Street">
+                <label for="floatingStreet" class="ms-2">Street</label>
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="City" type="text" class="form-control bg-transparent border border-2" id="floatingCity"
+                       placeholder="City">
+                <label for="floatingCity" class="ms-2">City</label>
+                <span class="text-danger" asp-validation-for="City"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="State" type="text" class="form-control bg-transparent border border-2" id="floatingState"
+                       placeholder="State">
+                <label for="floatingState" class="ms-2">State</label>
+                <span class="text-danger" asp-validation-for="State"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Zipcode" type="text" class="form-control bg-transparent border border-2" id="floatingZip"
+                       placeholder="Zipcode">
+                <label for="floatingZip" class="ms-2">Zip Code</label>
+                <span class="text-danger" asp-validation-for="Zipcode"></span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="Hotelname" type="text" class="form-control bg-transparent border border-2" id="floatingRoom"
+                       placeholder="Room no / Suite (optional)">
+                <label for="floatingRoom" class="ms-2">Room # / Suite ( Optional )</label>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <select id="regionId" class="form-select p-0 ps-2 mb-2 regionDropdown" aria-label="Default select example" asp-for="RegionId">
+                    <option selected disabled>Select Region</option>
+                    @foreach (var obj in Model.Regions)
+                    {
+                        <option value="@obj.Regionid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="RegionId"></span>
+            </div>
+        </div>
+
+        <legend class=" mt-3 mb-3">( Optional ) Upload Photo or Doument</legend>
+        <div class="input-group mb-3 border border-2 rounded">
+            <input type="file" asp-for="Upload" class="form-control" id="inputGroupFile" hidden onchange="validateAndUpdateFileName(this)">
+            <input id="upload-name" class="form-control inputFile primary rounded bg-transparent" type="text" asp-for="Filename" aria-label="readonly input example" readonly>
+            <label class="input-group-text btn btn-info pt-2 upload" for="inputGroupFile">
+                <span class="d-none d-sm-block fw-semibold text-dark">Select File</span>
+                <i class="fa-solid fa-folder-plus d-block d-sm-none"></i>
+            </label>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3 mb-5">
+            <button class="btn btn-outline-info border-info me-md-2 mb-3 fw-bolder" type="submit">Submit</button>
+            <button class="btn btn-outline-secondary border-secondary mb-3 fw-bolder" type="reset">Cancel</button>
+        </div>
+    </form>
+    <partial name="Patient/_Footer" />
+</div>
+
+@* <partial name="_ValidationScriptsPartial" /> *@
+
+@section Scripts
+{
+    <script>
+        function checkEmail() {
+            var email = $('#email').val();
+
+            $.ajax({
+                url: '@Url.Action("EmailCheck", "Patient")',
+                type: "post",
+
+                async: true,
+                datatype: 'html',
+                cache: false,
+                data: { email: email },
+                success: function (result) {
+                    if (!result) {
+                        $("#passfieldDiv").removeClass("d-none");
+                    }
+                    else {
+                        $("#passfieldDiv").addClass("d-none");
+                    }
+                },
+                error: function () {
+                    console.log("errrrrrrrrrrrroooooooorrrrrrr");
+                }
+            });
+        };
+    </script>
+    <script>
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+}

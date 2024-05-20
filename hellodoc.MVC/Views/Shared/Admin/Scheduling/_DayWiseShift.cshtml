@@ -1,0 +1,115 @@
+﻿@model hellodoc.DAL.ViewModels.DayShiftModal
+
+<div class="table-responsive">
+    <table class="table table-hover" style="width:100%;z-index:5">
+        <thead id="dayshiftheader" class="dayshiftheader">
+            <tr>
+                <th>STAFF</th>
+                <th>12A</th>
+                <th>1A</th>
+                <th>2A</th>
+                <th>3A</th>
+                <th>4A</th>
+                <th>5A</th>
+                <th>6A</th>
+                <th>7A</th>
+                <th>8A</th>
+                <th>9A</th>
+                <th>10A</th>
+                <th>11A</th>
+                <th>12P</th>
+                <th>1P</th>
+                <th>2P</th>
+                <th>3P</th>
+                <th>4P</th>
+                <th>5P</th>
+                <th>6P</th>
+                <th>7P</th>
+                <th>8P</th>
+                <th>9P</th>
+                <th>10P</th>
+                <th>11P</th>
+            </tr>
+        </thead>
+        <tbody id="dayshiftbody" class="mt-1">
+            <tr>
+                <td class="text-center fw-semibold">coverage</td>
+                @for (int i = 0; i < 24; i += 1)
+                {
+                    <td style="background-color:rgba(207, 207, 249, 0.7);"></td>
+                }
+            </tr>
+
+            @{
+                foreach (var phy in Model.Physicians)
+                {
+                    <tr class="text-center">
+                        <td class="p-2 align-middle">
+                            <div class="d-flex align-items-center fw-semibold">
+                                <span class="text-center me-1" style="width:50px; height:50px">
+                                    <img class="w-100 h-100 border rounded-5" src="~/content/@phy.Physicianid/Profile.png" />
+                                </span> @phy.Firstname @phy.Lastname
+                            </div>
+                        </td>
+                        @{
+                            var list = Model.shiftDetailsmodals.Where(u => u.Physicianid == phy.Physicianid).ToList();
+                            var startlist = new List<int>();
+                            var endlist = new List<int>();
+                            var idlist = new List<int>();
+
+                            foreach (var shift in list)
+                            {
+                                startlist.Add(shift.Starttime.Hour);
+                                endlist.Add(shift.Endtime.Hour);
+                                idlist.Add(shift.Shiftdetailid);
+                            }
+
+                            for (int i = 0; i < 24; i += 1)
+                            {
+                                if (startlist.Contains(i))
+                                {
+                                    var index = startlist.IndexOf(i);
+                                    var col = endlist[index] - startlist[index];
+                                    var shift = list.FirstOrDefault(s => s.Shiftdetailid == idlist[index]);
+
+                                    var endmin = shift.Endtime.Minute;
+                                    var startmin = shift.Starttime.Minute;
+                                    var duration = shift.Endtime - shift.Starttime;
+                                    var left = (shift.Starttime.Minute / 60.0) * 100;
+                                    var bgcolor = "";
+
+                                        if (shift.Status == 1)
+                                        {
+                                            bgcolor = "lightpink";
+                                        }
+                                        else if (shift.Status == 2)
+                                        {
+                                            bgcolor = "lightgreen";
+                                        }
+
+                                    double percentage = ((col * 60 + startmin + endmin) / ((col + 1) * 60)) * 100;
+
+                                    if (endmin > 0)
+                                    {
+                                        col = col + 1;
+                                    }
+
+                                    <td colspan="@col" style="background-color:@bgcolor;">
+                                        <button class="h-100 border-0 text-dark fw-semibold" style="background-color:@bgcolor;" onclick="providersModal({actionType:'shiftdetails',shiftdetailsid : '@shift.Shiftdetailid'})">
+                                            @shift.Starttime - @shift.Endtime  @shift.Abberaviation
+                                        </button>
+                                    </td>
+                                    i += col - 1;
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

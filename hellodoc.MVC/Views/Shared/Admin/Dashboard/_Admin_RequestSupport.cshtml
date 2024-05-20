@@ -1,0 +1,32 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="requestSupportModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Request Support</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" method="post" id="requestDTYFormId" onsubmit="requestDTYPost()">
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+                <div class="text-secondary">
+                    To all unscheduled Physicians. We are short on coverage and needs additional support on call to respond to requests.
+                </div>
+
+                <div class="mt-4 form-floating text-secondary">
+                    <textarea class="form-control h-100 primary" id="floatingInput" placeholder="Request Message" rows="3" asp-for="@Model.RequestSupportMessage"></textarea>
+                    <label for="floatingInput" class="text-wrap">Message</label>
+                    <span class="text-danger" asp-validation-for="@Model.RequestSupportMessage"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Send</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,190 @@
+﻿@model hellodoc.DAL.ViewModels.AdminViewDocumentsVm
+
+<div class="container-fluid">
+
+    <div class=" mt-2 d-flex justify-content-between align-items-center">
+        <h4>Conclude Care</h4>
+
+        <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetProviderDashboard()">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5">
+
+        <div class="text-secondary pt-3 my-2">Patient Name</div>
+        <span class="text-info fs-4 my-2">
+            @Model.patientName
+        </span>
+        @if (Model.ConfirmationNumber != null)
+        {
+            <span class="my-2 text-secondary">( @Model.ConfirmationNumber )</span>
+        }
+
+        <div class="my-4 fs-5 fw-semibold">
+            Encounter Forms
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="concludeDocumentFormId" onsubmit="UploadConcludeDocument()">
+            <input type="text" asp-for="@Model.requestId" hidden />
+            <input type="text" asp-for="@Model.isFinalized" hidden />
+
+            <div class="d-sm-flex">
+                <div class="input-group mb-3 border border-2 rounded">
+                    <input type="file" class="form-control" id="inputGroupFile" asp-for="@Model.document">
+                    <label class="input-group-text fw-bold bg-info border-info upload" for="inputGroupFile">
+                        <i class="fa-solid fa-cloud-arrow-up me-2 fw-bold text-white"></i>
+                        <span class="text-white d-none d-sm-block">Upload</span>
+                    </label>
+                </div>
+                <button class="btn btn-outline-info me-md-2 fw-bold d-none ms-2" type="submit" id="upload-btn" style="height: 20%">Upload</button>
+            </div>
+            <span class="text-danger" id="errorBox"></span>
+        </form>
+
+        @if (Model.viewDocuments.Count > 0 || Model.viewDocuments != null)
+        {
+            <div class="container-fluid table-responsive d-none d-lg-block p-0 m-0 mt-2">
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th scope="col">Document Name</th>
+                            <th scope="col">Upload Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.viewDocuments)
+                        {
+                            <tr class="align-middle">
+                                <td class="first-col">
+                                    <i class="bi text-danger fs-5 bi-file-earmark-pdf-fill me-2"></i>
+                                    @obj.documentName
+                                </td>
+                                <td>
+                                    @obj.uploadDate.ToString("MMM")
+                                    @obj.uploadDate.Day,
+                                    @obj.uploadDate.Year
+                                </td>
+                                <td>
+                                    <a href="~/content/@obj.documentName" download="@obj.documentName" class="btn btn-outline-info fw-bold download-btn">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+                                    <a class="btn btn-outline-info fw-bold delete-btn" onclick="DeleteConcludeFile(@obj.requestWiseFileId, @obj.requestId)">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="border rounded shadow d-block d-lg-none">
+                <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                    <table class="w-100">
+                        <thead>
+                            <tr>
+                                <th class="d-none"></th>
+                                <th class="d-none"></th>
+                            </tr>
+                        </thead>
+                        @{
+                            var counter = 1;
+                        }
+                        <tbody>
+                            @foreach (var obj in Model.viewDocuments)
+                            {
+                                <tr class="d-flex flex-column">
+                                    <td>
+                                        <h2 class="accordion-header" id="flush-heading@(counter)">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                                    aria-controls="flush-collapse@(counter)">
+                                                <i class="bi text-danger fs-5 me-2 bi-file-earmark-pdf-fill"></i>
+                                                @obj.documentName
+                                            </button>
+                                        </h2>
+                                    </td>
+                                    <td>
+                                        <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                             aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body main-flex pt-0 d-sm-flex justify-content-around">
+                                                <div class="inner-flex mb-1">
+                                                    <b>Upload Date:</b>
+                                                    @obj.uploadDate.ToString("MMM")
+                                                    @obj.uploadDate.Day,
+                                                    @obj.uploadDate.Year
+                                                </div>
+                                                <div class="inner-flex d-flex justify-content-center gap-2">
+                                                    <a href="~/content/file/@obj.documentName" download="@obj.documentName" type="button" class="btn btn-outline-dark download-btn border-info text-info">
+                                                        <i class="fa-solid fa-download"></i>
+                                                    </a>
+                                                    <a type="button" class="btn btn-outline-dark delete-btn border-info text-info" onclick="DeleteFile(@obj.requestWiseFileId, @obj.requestId)">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                    <a href="~/content/@obj.documentName" target="_blank" class="btn btn-outline-info fw-bold preview-btn">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="text-center">No Data Found</p>
+        }
+
+        <form class="my-3" method="post" id="ConcludeFormId" onsubmit="ConcludeCare()">
+            <input type="text" asp-for="@Model.requestId" hidden />
+
+            <p class="fs-5 mt-4 mb-2 fw-semibold">Provider Note</p>
+            <div class="form-floating text-secondary">
+                <textarea class="form-control h-100 primary" id="floatingInputConclude" placeholder="Description" rows="3" asp-for="@Model.ProviderNote"></textarea>
+                <label for="floatingInputConclude" class="text-wrap">Provider Notes</label>
+                <span class="text-danger" asp-validation-for="@Model.ProviderNote"></span>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end">
+                <button type="submit" class="btn btn-info fw-semibold shadow">Conclude Care</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    $(document).ready(function () {
+        $('#inputGroupFile').on('change', function () {
+            var fileName = $('#inputGroupFile').val();
+            var errorMessage = document.getElementById('errorBox');
+
+            if (fileName != "") {
+                if (!(fileName.endsWith('.pdf') || fileName.endsWith('.png') || fileName.endsWith('.jpeg') || fileName.endsWith('.jpg') || fileName.endsWith('.mp4') || fileName.endsWith('.mp3') || fileName.endsWith('.mkv'))) {
+                    errorMessage.innerText = "Upload only pdf, image, audio or video";
+                }
+                else {
+                    errorMessage.innerText = "";
+                    $("#upload-btn").removeClass("d-none");
+                }
+            }
+            else {
+                $("#upload-btn").addClass("d-none");
+            }
+        });
+    });
+</script>

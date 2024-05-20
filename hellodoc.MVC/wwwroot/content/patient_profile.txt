@@ -1,0 +1,402 @@
+@model Data.Dash.PatientDashData
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bas-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>patient_profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <style>
+        .bg {
+            background-image: url();
+        }
+
+        .dark-mode {
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        .night {
+            height: 40px;
+            width: 40px;
+            top: 4%;
+            left: 97%;
+            border: 1px solid #00bce7;
+            border-radius: 5px;
+            background: none;
+        }
+
+        .moon {
+            color: #00bce7;
+        }
+
+        .logout {
+            height: 40px;
+            width: fit-content;
+            top: 4%;
+            left: 92%;
+            border: 1px solid #00bce7;
+            border-radius: 5px;
+            background: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+            .logout:hover {
+                background-color: #00d0ff1a;
+                color: #fff;
+            }
+
+        .wlc {
+            top: 4%;
+            left: 76%;
+            font-weight: 500;
+            font-size: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nitem:hover {
+            color: #00bce7 !important;
+        }
+
+        .nitem.active {
+            color: #00bce7 !important;
+        }
+
+        .nitem.deactive {
+            color: #00bce7 !important;
+        }
+    </style>
+    
+</head>
+<body onload="modefunction()">
+    <div class="container-fluid">
+        <header>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="ms-3 d-flex align-items-center">
+                    <div class="ms-3 d-md-none d-block">
+                        <p>
+                            <a style="color: #00bce7;top:3%;left:3%;background: none;border: 1px solid #00bce7;border-radius: 5px;width: fit-content;" class="btn position-absolute" data-bs-toggle="collapse" href="#collapsewithlink" role="button" aria-expanded="false" aria-controls="collapsewithlink">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                                </svg>
+                            </a>
+                        </p>
+                        <div class="collapse" id="collapsewithlink">
+                            <div class="card card-body">
+                                <ul class="nav nav-underline">
+                                    <li class="nav-item mx-2">
+                                        <a asp-action="patient_dashboard" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" aria-current="page">Dashboard</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a asp-action="patient_profile" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")">Profile</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="d-md-none d-block ms-5 align-items-center justify-content-between">
+                            <img src="~/images/hellodoc.png" alt="" class="ms-5" style="height: 12vh;">
+                        </div>
+                    </div>
+                    <div class="d-md-block d-none">
+                        <img src="~/images/hellodoc.png" alt="" class="ms-5" style="height: 90px;">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="d-xl-block d-none position-absolute" style="right:10%;top: 3%;">
+                        <pre style="font-weight: 500;font-size:22px;font-family:Verdana, Geneva, Tahoma, sans-serif;">Welcome <strong style="font-weight: bold;">@Accessor.HttpContext.Session.GetString("_sessionUserName")</strong></pre>
+                    </div>
+                    <div class="position-absolute me-4" style="right: 8%;top: 3%;">
+                        <a class="logout position-absolute" asp-action="Logout">
+                            <span style="color:#00bce7 ;font-weight: bold;" class="d-xl-block d-none">Logout</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="color: #00bce7;"
+                                 fill="currentColor" class="bi bi-box-arrow-right d-xl-none d-block mt-1" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                <path fill-rule="evenodd"
+                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="position-absolute ms-5" style="right: 3%;top: 3%;">
+                        <button onclick="moonfunction()" class="night position-absolute">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: #00bce7;" width="20" height="20"
+                                 fill="currentColor" class="bi bi-moon moon" viewBox="0 0 16 16">
+                                <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class=" d-md-flex d-none justify-content-start mx-4 my-2">
+                <ul class="nav nav-underline">
+                    <li class="nav-item mx-2">
+                        <a asp-action="patient_dashboard" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" aria-current="page">Dashboard</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a asp-action="patient_profile" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="py-md-2 justify-content-around w-100 ms-5">
+            <div class="row justify-content-between px-4  h5 align-items-lg-start" style="width:96%">
+                <div class="col-10">
+                    <p style="font-weight: bold;">User Profile</p>
+                </div>
+                <div class="col-2 text-end">
+                    <div class="d-lg-block d-none">
+                        @Html.ActionLink("< Back", "patient_dashboard", "Patient", null, new { @class = "back", @style = "font-weight: bold;color:#00bce7;font-size: 13px;padding:8px;border:1px solid #00bce7;border-radius:5px;width:fit-content" })<br>
+                    </div>
+                    <div class="d-lg-none d-block">
+                        <a asp-action="patient_dashboard" asp-controller="Patient" type="button" style="width:fit-content;padding:5px;border:1px solid #00bce7;border-radius:5px">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color:#00bce7" width="20" height="20" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                                <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width: 92%;background-color: #c9c9c941;border-radius: 5px;" class="ms-4 box-shadow justify-content-center shadow align-items-center">
+                    <div class="container-fluid shadow-1 rounded-3">
+                    <form asp-action="patient_profile" asp-controller="Patient" method="post" enctype="multipart/form-data">
+                        <span class="mt-5" style="font-size:18px;font-weight:700">General Information</span>
+                        <div class="row">
+                            <div class="col-xl-6 mt-2">
+                                <input type="text" asp-for="@Model.profileData.Firstname" class="input-disable form-control" id="f1" placeholder="First Name" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.Firstname" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 mt-2">
+                                <input type="text" asp-for="@Model.profileData.Lastname" class="input-disable form-control" id="f2" placeholder="Last Name" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.Lastname" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-xl-6">
+                                @{
+                                    string max = DateTime.Now.ToString("yyyy-MM-dd");
+                                }
+                                <input max="@max" type="date" asp-for="@Model.profileData.Birthdate" id="f3" class="input-disable form-control mt-2" id="birthday" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.Birthdate" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6">
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <span class="py-3" style="font-size:18px;font-weight:700">Contact Information</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <input type="tel" asp-for="@Model.profileData.PhoneNumber" class="input-disable form-control tel-input w-100" id="phone" style="border-radius: 3px;border: 1px solid;height: 40px;" />
+                                    <span asp-validation-for="@Model.profileData.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <select name="type" id="f5" class="w-100 input-disable" style="height:40px;border:1px solid;border-radius:5px">
+                                    <option value="apple" selected>Mobile</option>
+                                    <option value="banana">Fax</option>
+                                    <option value="orange">Landline</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <div class="col-xl-8 w-100">
+                                    <input type="email" id="email" asp-for="@Model.profileData.Email" id="f6" class="input-disable form-control" id="floating4" placeholder="Email" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                    <span asp-validation-for="@Model.profileData.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <span class="py-3" style="font-size:18px;font-weight:700">Location Information</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6 mt-2">
+                                <input type="text" asp-for="@Model.profileData.Street" class="input-disable form-control" id="f7" placeholder="Street" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.Street" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 mt-2">
+                                <input type="text" asp-for="@Model.profileData.City" class="input-disable form-control" id="f8" placeholder="City" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.City" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6 mt-2">
+                                <input type="text" asp-for="@Model.profileData.State" class="input-disable form-control" id="f9" placeholder="State" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.State" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-4 mt-2">
+                                <input type="text" asp-for="@Model.profileData.Zipcode" class="input-disable form-control" id="f10" placeholder="Zipcode" style="border-radius: 3px;border: 1px solid;height: 40px;padding: 10px;width: 100%;">
+                                <span asp-validation-for="@Model.profileData.Zipcode" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-2 mt-2" >
+                                <a type="button" onclick="map_init()" style="border-radius: 3px;border: 1px solid #00bce7;height: 40px;width: fit-content;padding:5px;background-color:transparent;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="color:#00bce7" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                    <span style="color:#00bce7">Map</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end py-3">
+                            <button onclick="enableFields()" id="editBtn" class="px-4" type="button" style="border-radius: 3px;border: 1px solid #00bce7;height: 40px;padding: 10px;width: fit-content;padding:10px;background-color:#00bce7">
+                                <span style="color:white;">Edit</span>
+                            </button>
+                            <button class="" id="submitBtn" style="border-radius: 3px;border: 1px solid #00bce7;height: 40px;padding: 10px;width: fit-content;padding:10px;background-color:#00bce7">
+                                <span style="color:white;">Submit</span>
+                            </button>
+                            <button type="reset" class="ms-2" id="cancelBtn" style="border-radius: 3px;border: 1px solid #00bce7;height: 40px;padding: 10px;width: fit-content;padding:10px;background-color:transparent">
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-dark fixed-bottom d-flex justify-content-end py-2 px-3">
+            <span class="text-light">
+                Terms of
+                Conditions | Privacy policy
+            </span>
+        </footer>
+
+
+    <partial name="_validationscriptspartial" />
+
+    <script>
+        function modefunction() {
+            var x = document.documentElement;
+            var y = localStorage.getItem('theme');
+            if (y == 'light' || y == null) {
+                x.setAttribute('data-bs-theme', 'light');
+            }
+            else {
+                x.setAttribute('data-bs-theme', 'dark');
+            }
+        }
+
+        function moonfunction() {
+            var x = document.documentElement;
+            var y = localStorage.getItem('theme');
+
+            if (y == "light" || y == null) {
+                localStorage.setItem('theme', 'dark');
+                x.setAttribute('data-bs-theme', 'dark');
+            }
+            else {
+                localStorage.setItem('theme', 'light');
+                x.setAttribute('data-bs-theme', 'light');
+            }
+        }
+    </script>
+        <script>
+            $('.nav-link').on('click', function () {
+                $('.active-link').removeClass('active-link');
+                $(this).addClass('active-link');
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script>
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+    <script>
+
+        function disableFields() {
+            document.querySelectorAll('.input-disable ').forEach(function (element) {
+                element.disabled = true;
+            });
+
+            // Hide the submit and cancel buttons, show the edit button
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('editBtn').style.display = 'block';
+
+        }
+
+        function enableFields() {
+            document.querySelectorAll('.input-disable ').forEach(function (element) {
+                element.disabled = false;
+            });
+
+            // Show the submit and cancel buttons, hide the edit button
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('cancelBtn').style.display = 'block';
+            document.getElementById('editBtn').style.display = 'none';
+        }
+        disableFields();
+    </script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            alert("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
+        }
+
+        function map_init() {
+            alert("During updating profile no need to select location from google map");
+            var lt = 48.451778;
+            var lg = 31.646305;
+
+            var myLatlng = new google.maps.LatLng(lt, lg);
+            var mapOptions = {
+                center: new google.maps.LatLng(lt, lg),
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                draggable: true
+            });
+
+            google.maps.event.addListener(
+                marker,
+                'drag',
+                function () {
+                    document.getElementById('lat1').innerHTML = marker.position.lat().toFixed(6);
+                    document.getElementById('lng1').innerHTML = marker.position.lng().toFixed(6);
+                    document.getElementById('zoom').innerHTML = mapObject.getZoom();
+
+                    // Dynamically show it somewhere if needed
+                    // $(".x").text(marker.position.lat().toFixed(6));
+                    // $(".y").text(marker.position.lng().toFixed(6));
+                    // $(".z").text(map.getZoom());
+
+                    alert(marker.position.lat().toFixed(6) + " " + marker.position.lng().toFixed(6) + " " + map.getZoom());
+
+                }
+            );
+        }
+    </script>
+</body>
+</html>

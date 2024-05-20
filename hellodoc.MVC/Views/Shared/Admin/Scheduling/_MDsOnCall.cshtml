@@ -1,0 +1,69 @@
+﻿@model hellodoc.DAL.ViewModels.OnCallModal
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-4">MDs On Call</h4>
+        <a class="btn btn-outline-info fw-bold shadow" onclick="GetScheduling(1)">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+        <form role="search" class="d-flex align-items-center border border-rounded rounded border-info mb-3">
+            <i type="search" class="fa-solid fa-magnifying-glass-location px-2"></i>
+            <select class="form-select border-0 regionDropdown shadow" aria-label="Default select example" onchange="MDOnCall(this.value)" id="regionValue">
+                <option selected value="0">All Region</option>
+                @foreach (var obj in Model.regions.ToList())
+                {
+                    <option value="@obj.Regionid">
+                        @obj.Name
+                    </option>
+                }
+            </select>
+        </form>
+        <div class="d-flex mb-3">
+            <button type="button" class="btn btn-primary me-2 shadow" onclick="GetScheduling(1)">
+                <span class="fw-semibold d-md-block d-none text-light">Calendar View</span>
+                <i class="fa-solid fa-calendar-days text-light d-md-none d-block"></i>
+            </button>
+            <button type="button" class="btn btn-info shadow" onclick="ShiftReview(0, 0)">
+                <span class="fw-semibold d-md-block d-none text-light">Shift for Review</span>
+                <i class="fa-solid fa-rectangle-list text-light d-md-none d-block"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="border rounded shadow p-3">
+        <div class="my-2 mb-5">
+            <h5>MD's On Call</h5>
+
+            <div id="matched-events" class="row my-2">
+                @foreach (var oncall in Model.OnCall)
+                {
+                    <div class="col-12 col-sm-4 my-2 d-flex align-items-center">
+                        <div class="me-2 text-center" style="width:40px;height:40px"><img class="w-100 h-100 border rounded-5" src="~/content/@oncall.Physicianid/Profile.png" /></div>
+                        <div><span class="fw-semibold">@oncall.Firstname @oncall.Lastname</span></div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <h5>Physicians Off Duty</h5>
+
+            <div id="unmatched-events" class="row">
+                @foreach (var offduty in Model.OffDuty)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 my-2 d-flex align-items-center">
+                        <div class="me-2 text-center" style="width:40px;height:40px"><img class="w-100 h-100 border rounded-5" src="~/content/@offduty.Physicianid/Profile.png" /></div>
+                        <div><span class="fw-semibold">@offduty.Firstname @offduty.Lastname</span></div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

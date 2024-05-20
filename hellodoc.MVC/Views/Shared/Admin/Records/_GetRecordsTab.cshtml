@@ -1,0 +1,160 @@
+﻿@model hellodoc.DAL.ViewModels.GetRecordsModel
+
+<div class="w-100 px-2 px-sm-5">
+
+    <h3 class="ms-2 my-1">Patient History</h3>
+
+    <div class="shadow rounded-2">
+        <form method="post" id="patientRecordsform" onsubmit="patientRecordsFilter()">
+            <div class="row g-2 my-2 p-3">
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordOne type="text" class="form-control" id="first_name" placeholder="First Name">
+                    <label for="first_name" class="ms-2">First Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordTwo type="text" class="form-control" id="last_name" placeholder="Last Name">
+                    <label for="last_name" class="ms-2">Last Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordThree type="email" class="form-control" id="email" placeholder="Email" aria-label="Email">
+                    <label for="Email" class="ms-2">Email</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordFour type="tel" class="phone form-control" id="phone" placeholder="Phone" aria-label="Phone">
+                    <label for="phone" class="ms-2">Phone Number</label>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="reset" value="reset" class="btn btn-outline-secondary border-secondary fw-semibold me-2 px-3" id="clear_button">Clear</button>
+                    <button type="submit" value="submit" class="btn btn-info text-white fw-semibold ms-1 px-3" id="search_button">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive d-none d-lg-block">
+            <table class="table PatientHistory table-hover" id="search_table">
+                <thead class="table-active p-2">
+                    <tr>
+                        <th scope="col" class="text-center">First Name</th>
+                        <th scope="col" class="text-center">Last Name</th>
+                        <th scope="col" class="text-center">Email</th>
+                        <th scope="col" class="text-center">Phone</th>
+                        <th scope="col" class="text-center">Address</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model.users)
+                    {
+                        <tr>
+                            <td class="text-center">@obj.Firstname</td>
+                            <td class="text-center">@obj.Lastname</td>
+                            <td class="text-center">@obj.Email</td>
+                            <td class="text-center">@obj.Mobile</td>
+                            @{
+                                var address = @obj.Street + " " + @obj.City + " " + @obj.State + " " + @obj.Zipcode;
+                            }
+                            <td class="text-center">@address</td>
+                            <td>
+                                <button style="cursor : pointer" class="btn btn-outline-info fw-semibold rounded-2" aria-expanded="false" onclick="GetPatientRecordExplore(@obj.Userid)">Explore</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="border rounded shadow d-block d-lg-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100  PatientHistory">
+                    <thead>
+                        <tr>
+                            <th class="d-none"></th>
+                            <th class="d-none"></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @if (Model.users != null)
+                        {
+                            @foreach (var obj in Model.users)
+                            {
+                                <tr class="d-flex flex-column">
+                                    <td>
+                                        <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                        <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse" data-bs-target="#flush-collapse@(counter)" aria-expanded="false" aria-controls="flush-collapse@(counter)">
+
+                                            <div class="w-100 ">
+                                                <span class="fw-bolder">
+                                                    @{
+                                                        var Name = @obj.Firstname + " " + @obj.Lastname;
+                                                    }
+                                                    @Name
+                                                </span>
+                                            </div>
+                                            <div class="w-100 mt-2">
+                                                <div class="">
+                                                    Contact : @obj.Mobile
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div id="flush-collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body main-flex pt-2">
+                                                <div class="w-100">
+                                                    @{
+                                                        var address = @obj.Street + " " + @obj.City + " " + @obj.State + " " + @obj.Zipcode;
+                                                    }
+                                                    <div class="">
+                                                        <span class="fw-bolder">Email: </span> @obj.Email
+                                                    </div>
+                                                    <div class="">
+                                                        <span class="fw-bolder">Phone: </span> @obj.Mobile
+                                                    </div>
+                                                    <div class="">
+                                                        <span class="fw-bolder">Address: </span> @address
+                                                    </div>
+
+                                                    <div class="inner-flex d-flex justify-content-end">
+                                                        <button style="cursor : pointer" class="btn btn-outline-info fw-semibold rounded-2" aria-expanded="false" onclick="GetPatientRecordExplore(@obj.Userid)">Explore</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.PatientHistory').DataTable({
+            destroy: true,
+            "pageLength": 5,
+            language: {
+                oPaginate: {
+                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                }
+            }
+        });
+        $('.dataTables_length').hide();
+        $('.dataTables_filter').hide();
+    });
+</script>

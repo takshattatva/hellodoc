@@ -1,0 +1,214 @@
+﻿@model hellodoc.DAL.ViewModels.ProvidersVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="container">
+    <h4 class="mb-4">Provider Information</h4>
+
+    <div class="border rounded shadow p-3">
+        <div class="d-md-flex justify-content-between align-items-center mb-3">
+            <form role="search" class="d-flex align-items-center border border-rounded rounded border-info mb-3">
+                <i type="search" class="fa-solid fa-magnifying-glass-location px-2"></i>
+                <select class="form-select border-0 regionDropdown" aria-label="Default select example" onchange="GetProvider(this.value)" id="regionValue">
+                    <option selected value="0">All Region</option>
+                    @foreach (var obj in Model.Regions)
+                    {
+                        <option value="@obj.Regionid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+            </form>
+            <div class="d-flex justify-content-center  mb-3">
+                <button type="button" class="btn btn-info text-light fw-semibold shadow" onclick="CreateProviderAccount(1)">Create Provider Account</button>
+            </div>
+        </div>
+        <div class="table-responsive d-lg-block d-none">
+            <table class="table table-hover provider">
+                <thead>
+                    <tr>
+                        <th class="">Stop Notification </th>
+                        <th>Provider Name</th>
+                        <th>Role</th>
+                        <th>On Call Status</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var obj in Model.Providers)
+                    {
+                        <tr class="align-middle">
+                            <td class="ps-5">
+                                <input type="checkbox" asp-for="@obj.IsNotificationStopped" name="Mark" class="form-check-input checkbox fileCheckbox" onchange="allCheck()" onclick="stopNotification(@obj.physicianId)" />
+                            </td>
+                            <td>
+                                <span class="document-name mx-2">
+                                    @obj.Name
+                                </span>
+                            </td>
+                            <td>
+                                @obj.Role
+                            </td>
+                            <td>
+                                @obj.CallStatus
+                            </td>
+                            @if (@obj.Status == 1)
+                            {
+                                <td>Active</td>
+                            }
+                            else if (@obj.Status == 2)
+                            {
+                                <td>Pending</td>
+                            }
+                            else
+                            {
+                                <td> Not Active</td>
+                            }
+                            <td class="text-end">
+                                @if (!obj.IsNotificationStopped)
+                                {
+                                    <button type="button" class="btn btn-outline-primary border-primary py-1 fw-semibold" onclick="ContactProvider(`@obj.Email`)">Contact</button>
+                                }
+                                <button type="button" class="btn btn-outline-info border-info py-1 fw-semibold" onclick="GetEditProvider(`@obj.aspId`, 1)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="border rounded shadow d-block d-lg-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100 provider">
+                    <thead>
+                        <tr>
+                            <th class="d-none"></th>
+                            <th class="d-none"></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @foreach (var obj in Model.Providers)
+                        {
+                            <tr class="d-flex flex-column">
+                                <td>
+                                    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse"
+                                         data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                         aria-controls="flush-collapse@(counter)">
+
+                                        <div class="w-100 ">
+                                            <input type="checkbox" name="Mark" class="checkbox fileCheckbox me-2" onchange="allCheck()" />
+                                            <span class="fw-bolder">
+                                                @obj.Name
+                                            </span>
+                                        </div>
+                                        <div class="w-100">
+                                            <div class="">
+                                                <span class="fw-bolder">On Call Status : @obj.CallStatus</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                         aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body main-flex pt-0">
+                                            <div class="inner-flex pt-1">
+                                                <span class="fw-bolder">Role : @obj.Role</span>
+                                            </div>
+                                            <div class="inner-flex pb-2">
+                                                @if (@obj.Status == 1)
+                                                {
+                                                    <span class="fw-bolder">Status : Active</span>
+                                                }
+                                                else if (@obj.Status == 2)
+                                                {
+                                                    <span class="fw-bolder">Status : Pending</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="fw-bolder">Status : Not Active</span>
+                                                }
+                                            </div>
+                                            <div class="inner-flex d-flex justify-content-between">
+                                                @if (!obj.IsNotificationStopped)
+                                                {
+                                                    <button type="button" class="btn btn-outline-primary border-primary fw-semibold" onclick="ContactProvider(`@obj.Email`)">Contact</button>
+                                                }
+                                                <button type="button" class="btn btn-outline-info border-info fw-semibold" onclick="GetEditProvider(`@obj.aspId`, 1)">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ContactProviderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-bold fs-5" id="exampleModalLongTitle">Contact Your Provider</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-4 m-1" action="" method="post" id="ContactProviderForm">
+                <input type="text" id="contactEmailId" asp-for="@Model.Email" hidden />
+
+                <div class="text-secondary mb-2">
+                    Choose communication to send message
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" name="ContactRadio" id="SMS" value="1">
+                    <label class="form-check-label cursor-pointer" for="SMS">
+                        SMS
+                    </label>
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" name="ContactRadio" id="Email" value="2">
+                    <label class="form-check-label cursor-pointer" for="Email">
+                        Email
+                    </label>
+                </div>
+                <div class="form-check mb-1">
+                    <input class="form-check-input" type="radio" name="ContactRadio" id="Both" value="3" checked>
+                    <label class="form-check-label cursor-pointer" for="Both">
+                        Both
+                    </label>
+                </div>
+                <div class="mt-4 form-floating text-secondary">
+                    <textarea class="form-control h-100 primary" id="floatingInputMessage" placeholder="Message" rows="3" asp-for="@Model.ContactMessage"></textarea>
+                    <label for="floatingInputMessage" class="text-wrap">Message</label>
+                    <span class="text-danger" asp-validation-for="@Model.ContactMessage"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Send</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+<script src="~/js/provider.js" asp-append-version="true"></script>

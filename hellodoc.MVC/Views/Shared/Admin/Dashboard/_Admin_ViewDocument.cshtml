@@ -1,0 +1,169 @@
+﻿@model hellodoc.DAL.ViewModels.AdminViewDocumentsVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="container">
+    <div class=" mt-2 d-flex justify-content-between align-items-center">
+        <h3 class="fw-semibold">Documents</h3>
+        @if (Model.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetDashboard(@Model.statusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId == 2)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetPatientRecordExplore(@Model.UserId)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId == 3)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5">
+        <div class="text-secondary pt-3 my-2">Patient Name</div>
+        <span class="text-info fs-4 my-2 fw-semibold">
+            @Model.patientName
+        </span>
+        <span class="my-2">
+            (@Model.ConfirmationNumber)
+        </span>
+        <div class="my-2 text-secondary">
+            Check here to review and add files that you or the Client/Member has attached to the Request.
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="viewDocumentFormId" onsubmit="UploadDocument(@Model.requestId, @Model.statusForName,@Model.callId)">
+            <input type="text" asp-for="@Model.requestId" hidden />
+            <input type="text" asp-for="@Model.statusForName" id="statusForName" hidden />
+            <input type="text" asp-for="@Model.statusForName" id="lastStatus" hidden />
+            <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+            <div class="d-sm-flex">
+                <div class="input-group mb-3 border border-2 rounded">
+                    <input type="file" asp-for="@Model.document" class="form-control" id="inputGroupFile" hidden onchange="validateAndUpdateFileName(this)">
+                    <input id="upload-name" class="form-control inputFile primary rounded bg-transparent" type="text" value="Choose File..." aria-label="readonly input example" readonly>
+                    <label class="input-group-text btn btn-info pt-2 upload" for="inputGroupFile">
+                        <span class="d-none d-sm-block fw-semibold text-dark">Select File</span>
+                        <i class="fa-solid fa-folder-plus d-block d-sm-none"></i>
+                    </label>
+                </div>
+                <button class="btn btn-outline-info me-md-2 fw-bold d-none ms-2" type="submit" id="upload-btn" style="height: 20%">Upload</button>
+            </div>
+        </form>
+
+        <div class="d-flex justify-content-end pt-3 pe-0 mb-4">
+            <button class="btn btn-outline-info fw-bold downloadAll me-2" type="button">
+                <span class="d-none d-md-inline-block">Download All</span>
+                <span class="d-inline-block d-md-none"><i class="fa-solid fa-download"></i></span>
+            </button>
+            <button class="btn btn-outline-info fw-bold deleteAll me-2 d-md-block d-none" type="button">
+                <span class="d-none d-md-inline-block">Delete All</span>
+                <span class="d-inline-block d-md-none"><i class="fa-solid fa-trash-can"></i></span>
+            </button>
+            <button class="btn btn-outline-info fw-bold mailAll" type="button">
+                <span class="d-none d-md-inline-block">Send Email</span>
+                <span class="d-inline-block d-md-none"><i class="fa-solid fa-envelope-circle-check"></i></span>
+            </button>
+        </div>
+
+        <hr class="d-md-none d-block">
+        <div class="d-md-block d-none">
+            <div class="container-fluid table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <input type="checkbox" class="form-check-input checkbox-main checkbox " name="selectall"
+                                       onchange="tickAll()" />
+                                <span class="document-combo ms-5">
+                                    <span class="document-name mx-2">
+                                        Document Name
+                                    </span>
+                                </span>
+                            </th>
+                            <th scope="col">Upload Date <i class="fa-solid fa-arrow-up-long"></i></th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.viewDocuments)
+                        {
+                            <tr class="align-middle">
+                                <td class="first-col">
+                                    <input type="checkbox" name="Mark" class="form-check-input checkbox fileCheckbox" value="@obj.requestWiseFileId"
+                                           onchange="allCheck()" />
+                                    <input type="text" value="@obj.requestId" id="requestId" hidden />
+                                    <span class="document-combo ms-5">
+                                        <i class="bi text-danger fs-5 bi-file-earmark-pdf-fill"></i>
+                                        <span class="document-name mx-2">
+                                            @obj.documentName
+                                        </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    @obj.uploadDate.ToString("MMM")
+                                    @obj.uploadDate.Day,
+                                    @obj.uploadDate.Year
+                                </td>
+                                <td>
+                                    <a href="~/content/@obj.documentName" download="@obj.documentName" class="btn btn-outline-info fw-bold download-btn">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+                                    <a class="btn btn-outline-info fw-bold delete-btn" onclick="DeleteFile(@obj.requestWiseFileId, @obj.requestId, @obj.statusForName, @obj.callId)">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="d-md-none d-block">
+            @foreach (var obj in Model.viewDocuments)
+            {
+                <div class="d-flex justify-content-start">
+                    <input type="checkbox" name="Mark" class="checkbox fileCheckbox"
+                           onchange="allCheck()" />
+                    <span class="document-combo ms-2">
+                        <i class="bi text-danger fs-5 bi-file-earmark-pdf-fill"></i>
+                        <span class="document-name mx-2">
+                            @obj.documentName
+                        </span>
+                    </span>
+                </div>
+                <div class="mt-2">
+                    @obj.uploadDate.ToString("MMM") @obj.uploadDate.Day,@obj.uploadDate.Year
+                </div>
+                <div class="mt-2">
+                    <a href="~/content/@obj.documentName" download="@obj.documentName" class="btn btn-outline-info fw-bold download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                    <a type="button" class="btn btn-outline-info fw-bold delete-btn" onclick="DeleteFile(@obj.requestWiseFileId, @obj.requestId)">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </a>
+                </div>
+                <hr />
+            }
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+<script src="~/js/admin-viewdoc.js" asp-append-version="true"></script>

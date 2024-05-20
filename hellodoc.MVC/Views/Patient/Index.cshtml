@@ -1,0 +1,105 @@
+﻿@model hellodoc.DAL.Models.Aspnetuser;
+@{
+    ViewData["Title"] = "Login Page";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+<div class="container-fluid main-container p-0">
+    <div class="row h-100 w-100">
+        <div class="col-12 col-md-6 d-none d-md-block h-100 ">
+            <img src="~/images/11116016_415.jpg" alt="images" class="object-fit-cover w-100 h-100">
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="login-bg-img position-fixed d-flex justify-content-center align-items-center d-block d-md-none">
+                <img src="~/images/11116016_415.jpg" alt="images" class="h-100">
+            </div>
+
+            <button class="mode position-absolute btn btn-outline-info border border-2 border-info fs-4 px-2 py-1 rounded fw-bolder me-2 moon-button" id="dark-mode-btn">
+                <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+                <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+            </button>
+
+            <div class="container login-container d-flex flex-column justify-content-between ms-auto me-auto pt-5 pb-5">
+
+                <a class="login-logo d-flex justify-content-center mt-5" href="#">
+                    <img src="~/images/hellodoc.png" alt="images" class="img-fluid hellodoc-img">
+                </a>
+
+                <form method="post">
+                    <div class="login-form mb-5">
+                        <div class=" text-info fw-bold">
+                            <a asp-controller="Patient" asp-action="patient_site" class="text-info text-decoration-none">
+                                <i class="bi bi-caret-left-fill"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <h3 class="d-flex justify-content-center mb-3 mt-4">Login To Your Account</h3>
+                        <div class="form-floating mb-3 position-relative">
+                            <input type="email" asp-for="Email" class="form-control bg-transparent border border-2 border-info" required
+                                   id="floatingEmail" placeholder="name@example.com">
+                            <label for="floatingEmail" class="fw-semibold">Email</label>
+                            <div class="user-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="fa-solid fa-circle-user fs-4 mt-2 "></i>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3 position-relative">
+                            <input asp-for="Passwordhash" type="password" class="form-control bg-transparent border-2 border-info" required
+                                   id="floatingPassword" placeholder="Password">
+                            <span class="text-danger" asp-validation-for="Passwordhash"></span>
+                            <label for="floatingPassword" class="fw-semibold">Password</label>
+                            <div class="eye-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="bi bi-eye-slash fs-4 text-muted mt-1 common-cursor-pointer" id="togglePassword" onclick="showPassword()"></i>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-info text-white p-2 mb-3 batan"><b>Log in</b></button>
+                            <a asp-controller="Patient" asp-action="patient_forgot_passwd" class="d-flex justify-content-center text-info text-decoration-none fw-bolder">
+                                Forget Password
+                                <i class="bi bi-caret-right-fill ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="login-footer d-flex justify-content-around">
+                    <div>
+                        <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted fw-semibold">Terms of Conditions</a>
+                    </div>
+                    <span class="fw-semibold">|</span>
+                    <div>
+                        <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted fw-semibold">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script>
+    $("form").validate({
+        errorClass: "text-danger",
+        errorElement: "span",
+        rules: {
+            Email: {
+                required: true,
+                email: true
+            },
+            Passwordhash: {
+                required: true,
+            }
+        },
+        messages: {
+            Email: {
+                required: "Please enter your Email",
+                email: "Please enter a valid email address"
+            },
+            PasswordHash: {
+                required: "Please enter your Password"
+            }
+        }
+    });
+</script>

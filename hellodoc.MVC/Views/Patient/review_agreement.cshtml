@@ -1,0 +1,61 @@
+﻿@model hellodoc.DAL.ViewModels.ReviewAgreementVm
+
+@{
+    ViewData["Title"] = "Review Agreement";
+}
+
+<partial name="Patient/_Header" />
+
+<div class="container d-flex flex-column justify-content-around align-items-center" style="height: 100vh">
+    <div class="container d-flex flex-column justify-content-center">
+        <div class="mb-5 d-flex justify-content-center">
+            <div class="w-75 fs-5">
+                To provide best medical service, we cannot determine the cost right away. If you agree to our service, so we will provide care and follow-up until all care is completed. So with this points, if you like us to provide care to you on "Agree" and we'll get started immidiately, if you do not agree simply click "Cancel".
+            </div>
+        </div>
+        <div class="d-flex justify-content-around">
+            <a class="btn btn-outline-success border-success px-4 py-2 fw-bold" asp-controller="Patient" asp-action="Review_Agree" asp-route-pid="@Model.RequestId">I Agree</a>
+            <button type="button" class="btn btn-outline-danger border-danger px-4 py-2" data-bs-toggle="modal" data-bs-target="#cancelAgreementModalId">Cancel</button>
+        </div>
+    </div>
+    <div></div>
+</div>
+
+<div class="modal fade" id="cancelAgreementModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-bold fs-5" id="exampleModalLongTitle">Cancel Confirmation</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+
+            </div>
+            <form class="p-3" id="cancelAgreementForm" method="post" asp-controller="Patient" asp-action="Review_Cancel">
+                <input type="text" asp-for="@Model.RequestId" hidden />
+                <div class="">
+                    Patient Name:
+                    <span class="text-info fw-semibold">
+                        @Model.PatientName
+                    </span>
+                </div>
+
+                <div class="mt-4 form-floating text-secondary">
+                    <textarea class="form-control h-100 border-info" id="floatingInputCancelAgreement" placeholder="Cancelation explanation" rows="3" asp-for="@Model.CancellationNotes"></textarea>
+                    <label for="floatingInputBlock" class="text-wrap">Please provide a breif explanation for your cancelation</label>
+                    <span class="text-danger" asp-validation-for="CancellationNotes"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Confirm</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,131 @@
+/**************************************************  Main buttons hover effect ***********************************************************************************/
+.batan {
+    color: #fff;
+    transition: .3s;
+}
+
+    .batan:hover {
+        box-shadow: 5px 5px #999fff;
+        transition: .3s;
+    }
+
+/**************************************************  checkbox size @1.5 ***********************************************************************************/
+input[type="checkbox"] {
+    transform: scale(1.5);
+}
+/* *************************** #00bce7 color css *************************** */
+.primary {
+    color: rgb(0, 190, 232) !important;
+    border-color: rgb(0, 190, 232);
+}
+/* *************************** on cursor : pointer *************************** */
+.pointer {
+    cursor: pointer;
+}
+/************************************************** hover effect on submit request page buttons ***********************************************************************************/
+
+.boton-p, .boton-f, .boton-c, .boton-b {
+    border-radius: 5px;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.20);
+    width: 360px;
+    border: none;
+}
+    .boton-p span,
+    .boton-f span,
+    .boton-c span,
+    .boton-b span
+    {
+        position: relative;
+        z-index: 1;
+    }
+
+    .boton-p:after,
+    .boton-f:after,
+    .boton-c:after,
+    .boton-b:after {
+        content: "";
+        position: absolute;
+        left: 5;
+        top: 0;
+        height: 380%;
+        width: 140%;
+        -webkit-transition: all .5s ease-in-out;
+        transition: all .5s ease-in-out;
+        -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+        transform: translateX(-98%) translateY(-25%) rotate(45deg);
+    }
+    .boton-p:after {
+        background: rgba(128, 0, 128, 0.5);
+    }
+    .boton-f:after {
+        background-color: rgba(0, 189, 231, 0.5);
+    }
+    .boton-c:after {
+        background-color: rgba(0, 128, 0, 0.5);
+    }
+    .boton-b:after {
+        background-color: rgba(255, 104, 129, 0.5);
+    }
+    .boton-p:hover:after,
+    .boton-f:hover:after,
+    .boton-c:hover:after,
+    .boton-b:hover:after
+    {
+        -webkit-transform: translateX(-1%) translateY(-25%) rotate(30deg);
+        transform: translateX(-1%) translateY(-25%) rotate(45deg);
+    }
+a:hover .fa-user-injured {
+    display: inline-block;
+}
+
+a .fa-user-injured {
+    display: none;
+}
+
+a:hover .fa-user-injured {
+    animation: fadeIn 0.5s ease-in-out;
+}
+a:hover .fa-people-roof {
+    display: inline-block;
+}
+
+a .fa-people-roof {
+    display: none;
+}
+
+a:hover .fa-people-roof {
+    animation: fadeIn 0.5s ease-in-out;
+}
+a:hover .fa-person-military-to-person {
+    display: inline-block;
+}
+
+a .fa-person-military-to-person {
+    display: none;
+}
+
+a:hover .fa-person-military-to-person {
+    animation: fadeIn 0.5s ease-in-out;
+}
+a:hover .fa-people-group {
+    display: inline-block;
+}
+
+a .fa-people-group {
+    display: none;
+}
+
+a:hover .fa-people-group {
+    animation: fadeIn 0.5s ease-in-out;
+}
+/************************************************** Check color ***********************************************************************************/
+.form-check-input:checked {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+}

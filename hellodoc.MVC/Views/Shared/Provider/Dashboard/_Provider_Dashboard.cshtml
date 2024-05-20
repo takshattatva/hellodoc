@@ -1,0 +1,67 @@
+﻿<div class="container-fluid">
+    <div class="row nav" id="myTab" role="tablist">
+
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-4 mb-3 nav-item" onclick="ProviderTableRecords([1])" role="presentation">
+            <div class="border rounded p-1 p-sm-2 active new" id="new-tab" data-bs-toggle="tab"
+                 data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane"
+                 aria-selected="true">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-user-plus text-primary me-2 d-none d-md-block px-1 fs-5"></i>
+                    <h6 class="px-1 m-0">New</h6>
+                </div>
+                <div class="ps-1 pt-3">
+                    <h4>@Model.countRequest.NewRequest</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="ProviderTableRecords([2])" role="presentation">
+            <div class="border rounded p-1 p-sm-2 Pending" id="Pending-tab" data-bs-toggle="tab"
+                 data-bs-target="#Pending-tab-pane" type="button" role="tab"
+                 aria-controls="Pending-tab-pane" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-spinner fa-spin fa-3x fa-fw me-2 d-none px-1 d-md-block fs-5"></i>
+                    <h6 class="px-1 m-0">Pending</h6>
+                </div>
+                <div class="ps-1 pt-3">
+                    <h4>@Model.countRequest.PendingRequest</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="ProviderTableRecords([4, 5])" role="presentation">
+            <div class="border rounded p-1 p-sm-2 Active" id="Active-tab" data-bs-toggle="tab"
+                 data-bs-target="#Active-tab-pane" type="button" role="tab"
+                 aria-controls="Active-tab-pane" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-user-check me-2 text-success d-none px-1 d-md-block fs-5"></i>
+                    <h6 class="px-1 m-0">Active</h6>
+                </div>
+                <div class="ps-1 pt-3">
+                    <h4>@Model.countRequest.ActiveRequest</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="ProviderTableRecords([6])" role="presentation">
+            <div class="border rounded p-1 p-sm-2 Conclude" id="Conclude-tab" data-bs-toggle="tab"
+                 data-bs-target="#Conclude-tab-pane" type="button" role="tab"
+                 aria-controls="Conclude-tab-pane" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-check-double me-2 d-none px-1 d-md-block fs-5"></i>
+                    <h6 class="px-1 m-0">Conclude</h6>
+                </div>
+                <div class="ps-1 pt-3">
+                    <h4>@Model.countRequest.ConcludeRequest</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="tableRecords" class="container-fluid">
+    <partial name="Provider/Dashboard/_ProviderTable" />
+</div>
+

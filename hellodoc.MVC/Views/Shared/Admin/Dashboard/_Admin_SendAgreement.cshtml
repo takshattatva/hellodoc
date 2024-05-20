@@ -1,0 +1,75 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+@functions {
+    public string GetTableColorClass(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "green";
+            case 2: return "orange";
+            case 3: return "pink";
+            case 4: return "blue";
+            default: return "green";
+        }
+    }
+
+    public string GetRequestBy(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "Patient";
+            case 2: return "Family/Friend";
+            case 3: return "Business";
+            case 4: return "Concierge";
+            default: return "Vip";
+        }
+    }
+}
+
+<div class="modal fade" id="SendAgreementModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Send Agreement</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" method="post" id="sendAgreementFormId" onsubmit="SendAgreement(@Model.callId)">
+                <input type="text" asp-for="@Model.sendAgreementModal.RequestId" hidden/>
+                <input type="text" asp-for="@Model.StatusForName" id="statusForNameId" hidden />
+                <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="mt-3">
+                    <small>
+                        <i class="bi bi-circle-fill @GetTableColorClass(Model.sendAgreementModal.RequestTypeId)-icon"></i>
+                        <b>@GetRequestBy(Model.sendAgreementModal.RequestTypeId)</b>
+                    </small>
+                </div>
+
+                <div class="mt-2">
+                    <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
+                </div>
+
+
+                <div class="mt-4 form-floating text-secondary">
+                    <input class="form-control h-100" id="floatingInputNumber" placeholder="Phone Number" asp-for="@Model.sendAgreementModal.Phone" />
+                    <label for="floatingInputNumber" class="text-wrap">Phone Number</label>
+                    <span class="text-danger" asp-validation-for="@Model.sendAgreementModal.Phone"></span> 
+                </div>
+
+                <div class="mt-4 form-floating text-secondary">
+                    <input class="form-control h-100" id="floatingInputEmail" placeholder="Email" asp-for="@Model.sendAgreementModal.Email" />
+                    <label for="floatingInputEmail" class="text-wrap">Email</label>
+                    <span class="text-danger" asp-validation-for="@Model.sendAgreementModal.Email"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold" asp-controller="Patient" asp-action="review_agreement" asp-route-pid="@Model.sendAgreementModal.RequestId">Send</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

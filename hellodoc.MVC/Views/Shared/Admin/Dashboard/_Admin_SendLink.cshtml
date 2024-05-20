@@ -1,0 +1,63 @@
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="modal fade" id="sendLinkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Send mail to patient for submitting request</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+
+            <form class="p-3" id="sendLinkFormId" method="post" onsubmit="SendLink(@Model.StatusForName,@Model.callId)">
+                <input type="text" asp-for="@Model.callId" id="callId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+
+                <div class="form-floating mb-3 col-12">
+                    <input asp-for="@Model.sendLink.FirstName" type="text" class="form-control bg-transparent" id="floatingInput"
+                           placeholder="">
+                    <label for="floatingInput" class="ms-2 ">First Name</label>
+                    <span class="text-danger" asp-validation-for="@Model.sendLink.FirstName"></span>
+                </div>
+                <div class="form-floating mb-3 col-12">
+                    <input asp-for="@Model.sendLink.LastName" type="text" class="form-control bg-transparent" id="floatingInput"
+                           placeholder="">
+                    <label for="floatingInput" class="ms-2 ">Last Name</label>
+                    <span class="text-danger" asp-validation-for="@Model.sendLink.LastName"></span>
+                </div>
+                <div class="form-floating mb-3 col-12">
+                    <input type="tel" asp-for="@Model.sendLink.Phone" class="telstyle form-control" id="telephone13" placeholder="">
+                    <span class="text-danger" asp-validation-for="@Model.sendLink.Phone"></span>
+                </div>
+                <div class="form-floating mb-3 col-12">
+                    <input asp-for="@Model.sendLink.Email" type="email" class="form-control bg-transparent" id="floatingInput"
+                           placeholder="">
+                    <label for="floatingInput" class="ms-2 ">Email</label>
+                    <span class="text-danger" asp-validation-for="@Model.sendLink.Email"></span>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn confirm-btn btn-outline-info border-info mx-2 fw-semibold">Confirm</button>
+                    <button type="reset" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    var input = document.querySelector("#telephone13");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+</script>

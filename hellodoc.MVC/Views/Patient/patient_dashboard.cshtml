@@ -1,0 +1,226 @@
+﻿@model hellodoc.DAL.ViewModels.PatientDashData
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+@functions {
+    public string GetStatusString(int statusId)
+    {
+        switch (statusId)
+        {
+            case 1: return "New"; // new
+            case 2: return "Pending"; // pending
+            case 3: return "Cancelled By Admin"; // to closed
+            case 4: return "Active"; //
+            case 5: return "Active"; //
+            case 6: return "Conclude"; //
+            case 7: return "Cancelled By Patient"; // to closed
+            case 8: return "To-Closed"; //
+            case 9: return "Unpaid"; // unpaid
+            case 10: return "Clear"; // clear
+            case 11: return "Block Request"; // blocked
+            default: return "Unknown"; // Error
+        }
+    }
+    public string GetStatusColor(int statusId)
+    {
+        switch (statusId)
+        {
+            case 1: return "rgba(13, 255, 0, 0.3)";// new --> popti
+            case 2: return "rgba(255, 242, 0, 0.5)";// pending --> yellow
+            case 3: return "rgba(0, 191, 255, 0.3)";// closed --> sky blue
+            case 4: return "rgba(255, 0, 0, 0.3)";// active --> red
+            case 5: return "rgba(255, 0, 0, 0.3)";// active --> red
+            case 6: return "rgba(14, 14, 235, 0.3)";// conclude --> dark blue not purple
+            case 7: return "rgba(0, 191, 255, 0.3)";// closed --> sky blue
+            case 8: return "rgba(0, 191, 255, 0.3)";// closed --> sky blue
+            case 9: return "rgba(174, 0, 255, 0.3)";// unpaid --> purple
+            case 10: return "rgba(255, 153, 0, 0.3)";// clear --> orange
+            case 11: return "rgba(0, 0, 0, 0.3)";// blocked --> black
+            default: return "transparent";
+        }
+    }
+}
+
+<div class="main-container d-flex flex-column">
+    <partial name="Patient/Dashboard/_PatientDashboardHeader" />
+
+    <div class="tab-content container-fluid p-5" id="myTabContent">
+        <div class="tab-pane fade show active" id="dashboard-tab-pane" role="tabpanel"
+             aria-labelledby="dashboard-tab" tabindex="0">
+            <div class="d-flex justify-content-between">
+                <h3 class="mb-4">Medical History</h3>
+            </div>
+
+            <div class="container-fluid d-none d-sm-block shadow p-3 rounded-3">
+                <div class="text-end py-3">
+                    <a class="btn btn-outline-info fw-semibold border-info" data-bs-toggle="modal" data-bs-target="#myModal1">
+                        <span>Create New Request</span>
+                    </a>
+                </div>
+                <table class="table patientTable table-hover">
+                    <thead class="table bg-primary">
+                        <tr>
+                            <th scope="col">Created Date <i class="fa-solid fa-arrow-down-long"></i></th>
+                            <th scope="col" class="text-start" colspan="3">Current Status</th>
+                            <th scope="col">Chat With</th>
+                            <th scope="col" class="text-center">Document</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.dashboardData)
+                        {
+                            <tr class="align-middle">
+                                <td scope="row">
+                                    <span class="fw-semibold">@obj.CreatedDate.ToString("MMM") @obj.CreatedDate.Day,@obj.CreatedDate.Year</span>
+                                </td>
+
+                                <td class="text-start" colspan="3">
+                                    <button disabled class="btn shadow" style="background-color:@GetStatusColor(obj.Status);border:none">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-semibold">@GetStatusString(obj.Status)</span>
+                                        </div>
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.AdminAspId`,0)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                            <i class="fa-solid fa-user fs-6"></i>
+                                            <span>Admin</span>
+                                        </button>
+                                        @if (obj.PhysicianId > 0)
+                                        {
+                                            <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                <i class="fa-solid fa-user-doctor fs-6"></i>
+                                                <span> Provider</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    @if (obj.DocumentCount > 0)
+                                    {
+                                        <a class="btn shadow btn-outline-info" asp-controller="Patient" asp-route-rid=@obj.RequestId asp-action="view_doc">
+                                            <span><i class="fa-solid fa-file-zipper"></i></span>
+                                            <span class="fw-semibold">(@obj.DocumentCount) docs</span>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mx-2 border rounded shadow">
+                <div class="accordion container-fluid d-block d-sm-none" id="accordionPanelsStayOpenExample">
+                    <div class="text-end py-3">
+                        <a href="#" class="btn btn-outline-info fw-bold border-2 border-info" data-bs-toggle="modal" data-bs-target="#myModal1">
+                            <span><i class="fa-solid fa-plus fw-bold fs-5"></i></span>
+                        </a>
+                    </div>
+                    <hr class="m-0">
+
+                    @{
+                        var counter = 1;
+                    }
+
+                    @foreach (var obj in Model.dashboardData)
+                    {
+                        <div class="accordion accordion-flush" id="accordionFlushExample@(counter)">
+                            <div class="accordion-item bg-transparent">
+                                <h2 class="accordion-header" id="flush-heading@(counter)">
+                                    <button class="accordion-button collapsed bg-transparent" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#flush-collapse@(counter)" aria-expanded="true"
+                                            aria-controls="flush-collapse@(counter)">
+                                        <i class="fa-solid fa-clock primary me-2"></i><span class="accordion-heading primary">
+                                            Created Date:
+                                            <span class="accordion-value primary fw-semibold">
+                                                @obj.CreatedDate.ToString("MMM")
+                                                @obj.CreatedDate.Day,
+                                                @obj.CreatedDate.Year
+                                            </span>
+                                        </span>
+                                    </button>
+                                </h2>
+                                <div id="flush-collapse@(counter)" class="accordion-collapse collapse bg-transparent"
+                                     aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample@(counter)">
+                                    <div class="accordion-body main-flex">
+                                        <div class="inner-flex">
+                                            <i class="fa-solid fa-circle-user primary"></i>
+                                            <span class="accordion-heading-inner">
+                                                Physician :
+                                                <span class="accordion-value-inner fw-semibold">
+                                                    @obj.physicianname
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="inner-flex">
+                                            <i class="fa-solid fa-circle-check primary"></i> <span class="accordion-heading-inner">
+                                                Current Status : <span class="fw-semibold">@GetStatusString(obj.Status)</span>
+                                            </span>
+                                        </div>
+                                        <div class="inner-flex d-flex justify-content-center">
+                                            @if (obj.DocumentCount > 0)
+                                            {
+                                                <a class="btn btn-outline-info shadow p-1" asp-controller="Patient" asp-route-rid=@obj.RequestId asp-action="view_doc">
+                                                    <span><i class="fa-solid fa-file-zipper"></i></span>
+                                                    <span>(@obj.DocumentCount) docs</span>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        counter++;
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <partial name="Patient/Profile/_PatientProfile" />
+        </div>
+    </div>
+
+    <partial name="Patient/_Footer" />
+</div>
+
+<style>
+    .create-request-active {
+        background-color: #00bce7 !important;
+        color: white !important;
+    }
+</style>
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-dark modal-title text-light fw-bold fs-5" id="exampleModalLongTitle">Create New Request</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form action="">
+                <input type="hidden" name="" id="redirect-value" value="submit_for_me">
+                <div class="modal-body">
+                    <span class="modal-head small">Here, I want to create new request for ...</span>
+                    <div class="modal-flex d-flex justify-content-center my-3">
+                        <div class="btn fw-semibold shadow common-btn cancel-btn create-request-active border border-1 border-info" onclick="toggleButton(this,'submit_for_me')"> Me </div>
+                        <div class="btn fw-semibold shadow common-btn cancel-btn ms-2 border border-1 border-info" onclick="toggleButton(this,'submit_for_other')"> Some One Else</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn fw-semibold shadow btn-info continue-btn" data-bs-dismiss="modal" onclick="redirect()">Continue</button>
+                    <button type="button" class="btn fw-semibold shadow btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="Chat/_Chat_OffCanvas" />
+
+<script src="~/js/dashboard-modal.js" asp-append-version="true"></script>

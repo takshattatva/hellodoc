@@ -1,0 +1,251 @@
+﻿@model hellodoc.DAL.ViewModels.EncounterVm
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class=" mt-3 d-flex justify-content-between align-items-center">
+        <h4>Encounter Form</h4>
+
+        @if (Model.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetDashboard(@Model.statusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId == 2)
+        {
+            <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetPatientRecordExplore(@Model.userId)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId == 3)
+        {
+            <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+
+    <form class="shadow border rounded my-3" method="post" id="EncounterForm" onsubmit="SubmitEncounter(@Model.reqid)">
+        <div class="mx-3 my-4 mt-3">
+            <h3 class="mb-3 text-center text-info">Medical Report-Confidential</h3>
+            <div class="row">
+                <input type="hidden" value="@Model.reqid" asp-for="@Model.reqid" />
+                <input type="hidden" value="@Model.statusForName" asp-for="@Model.statusForName" />
+                <input type="hidden" value="@Model.callId" asp-for="@Model.callId" />
+
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input name="first_name" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Firstname" disabled asp-for="@Model.FirstName">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">Firstname</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input name="last_name" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Lastname" disabled asp-for="@Model.LastName">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">Lastname</label>
+                </div>
+                <div class="col-12 form-floating mb-3 text-muted">
+                    <input name="Location" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Location" disabled asp-for="@Model.Location">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">Location</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input type="date" name="DOB" class="form-control" id="birthDate" placeholder="Date Of Birth" disabled asp-for="@Model.BirthDate">
+                    <label for="birthDate" class="form-label ms-2">Date Of Birth</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input type="date" class="form-control" id="serviceDate" placeholder="Date" disabled asp-for="@Model.Date">
+                    <label for="serviceDate" class="form-label ms-2">Date</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input type="tel" asp-for="@Model.PhoneNumber" class="telstyle form-control" id="telephone12" disabled placeholder="">
+                    <span class="text-danger" asp-validation-for="@Model.PhoneNumber"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <input name="email" type="email" class="form-control" id="email" placeholder="Email" disabled asp-for="@Model.Email">
+                    <label for="email" class="form-label ms-2">Email</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" id="floatingTextarea2" rows="2" disabled asp-for="@Model.HistoryIllness"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">History Of present illness or Injury</label>
+                    <span class="text-danger" asp-validation-for="@Model.HistoryIllness"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating  mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" id="floatingTextarea3" rows="2" disabled asp-for="@Model.MedicalHistory"></textarea>
+                    <label for="floatingTextarea3" class="ms-2">Medical History</label>
+                    <span class="text-danger" asp-validation-for="@Model.MedicalHistory"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" id="floatingTextarea4" rows="2" disabled asp-for="@Model.Medications"></textarea>
+                    <label for="floatingTextarea4" class="ms-2">Medications</label>
+                    <span class="text-danger" asp-validation-for="@Model.Medications"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" id="floatingTextarea5" rows="2" disabled asp-for="@Model.Allergies"></textarea>
+                    <label for="floatingTextarea5" class="ms-2">Allergies</label>
+                    <span class="text-danger" asp-validation-for="@Model.Allergies"></span>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-4 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="Temp" disabled asp-for="@Model.Temp" step="any">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">Temp</label>
+                    <span class="text-danger" asp-validation-for="@Model.Temp"></span>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-4 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="HR" disabled asp-for="@Model.Hr">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">HR</label>
+                    <span class="text-danger" asp-validation-for="@Model.Hr"></span>
+                </div>
+                <div class="col-sm-6 col-md-4 col-xl-4 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="RR" disabled asp-for="@Model.Rr">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">RR</label>
+                    <span class="text-danger" asp-validation-for="@Model.Rr"></span>
+                </div>
+
+                <div class="col-sm-6 col-md-2 col-xl-2 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="FirsBlood pressuretname" disabled asp-for="@Model.BpS">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">
+                        Blood pressure
+                        (Systolic)
+                    </label>
+                    <span class="text-danger" asp-validation-for="@Model.BpS"></span>
+                </div>
+                <div class="col-sm-6 col-md-2 col-xl-2 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="Blood pressure" disabled asp-for="@Model.BpD">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">
+                        Blood pressure
+                        (Diastolic)
+                    </label>
+                    <span class="text-danger" asp-validation-for="@Model.BpD"></span>
+                </div>
+                <div class="col-sm-6 col-md-4 col-xl-4 col-6 form-floating mb-3 text-muted">
+                    <input type="number" class="form-control dclass" id="exampleFormControlInput1" placeholder="O2" disabled asp-for="@Model.O2">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">O2</label>
+                    <span class="text-danger" asp-validation-for="@Model.O2"></span>
+                </div>
+                <div class="col-sm-6 col-md-4 col-xl-4 col-6 form-floating mb-3 text-muted">
+                    <input type="text" class="form-control dclass" id="exampleFormControlInput1" placeholder="Pain" disabled asp-for="@Model.Pain">
+                    <label for="exampleFormControlInput1" class="form-label ms-2">Pain</label>
+                    <span class="text-danger" asp-validation-for="@Model.Pain"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6  form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Heent"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Heent</label>
+                    <span class="text-danger" asp-validation-for="@Model.Heent"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Cv"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">CV</label>
+                    <span class="text-danger" asp-validation-for="@Model.Cv"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Chest"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Chest</label>
+                    <span class="text-danger" asp-validation-for="@Model.Chest"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Abd"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">ABD</label>
+                    <span class="text-danger" asp-validation-for="@Model.Abd"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Extr"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Extr</label>
+                    <span class="text-danger" asp-validation-for="@Model.Extr"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating  mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Skin"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Skin</label>
+                    <span class="text-danger" asp-validation-for="@Model.Skin"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Neuro"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Neuro</label>
+                    <span class="text-danger" asp-validation-for="@Model.Neuro"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Other"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Other</label>
+                    <span class="text-danger" asp-validation-for="@Model.Other"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Diagnosis"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Diagnosis</label>
+                    <span class="text-danger" asp-validation-for="@Model.Diagnosis"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating  mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.TreatmentPlan"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Treatment Plan</label>
+                    <span class="text-danger" asp-validation-for="@Model.TreatmentPlan"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.MedicationDispensed"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Medications Dispensed</label>
+                    <span class="text-danger" asp-validation-for="@Model.MedicationDispensed"></span>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.Procedures"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Procedures</label>
+                    <span class="text-danger" asp-validation-for="@Model.Procedures"></span>
+                </div>
+                <div class="form-floating mb-3 text-muted">
+                    <textarea class="form-control dclass h-100" rows="2" id="floatingTextarea2" disabled asp-for="@Model.FollowUp"></textarea>
+                    <label for="floatingTextarea2" class="ms-2">Followup</label>
+                    <span class="text-danger" asp-validation-for="@Model.FollowUp"></span>
+                </div>
+            </div>
+
+            @if (Model.callId != 2)
+            {
+                <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end mt-4 pt-4 mb-3">
+                    <button type="button" class="editBtn btn btn-info text-white EditBtn fw-semibold" onclick="enableFields()">Edit</button>
+                    <button type="submit" class="submitBtn btn btn-outline-info EditBtn fw-semibold">Save</button>
+                    <button type="button" class="cancelBtn btn btn-outline-secondary border-secondary EditBtn fw-semibold" onclick="disableFields()">Cancel</button>
+
+                    @if (Model.callId == 3)
+                    {
+                        <button type="button" id="finalizeBtn" class="btn fw-semibold text-white" style="background-color: #6f42c1" onclick="finalizeEncounterModal(@Model.reqid)">Finalize</button>
+                    }
+                </div>
+            }
+        </div>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    var input = document.querySelector("#telephone12");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+
+    function disableFields() {
+        document.querySelectorAll('.dclass').forEach(function (element) {
+            element.disabled = true;
+            document.getElementById('EncounterForm').reset(); // for reseting form
+            $('.text-danger').addClass("d-none");
+        });
+        $('.editBtn').removeClass("d-none");
+        $('.submitBtn').addClass("d-none");
+        $('.cancelBtn').addClass("d-none");
+    }
+    function enableFields() {
+        document.querySelectorAll('.dclass').forEach(function (element) {
+            element.disabled = false;
+            $('.text-danger').removeClass("d-none");
+        });
+        $('.editBtn').addClass("d-none");
+        $('.submitBtn').removeClass("d-none");
+        $('.cancelBtn').removeClass("d-none");
+    }
+    disableFields();
+</script>

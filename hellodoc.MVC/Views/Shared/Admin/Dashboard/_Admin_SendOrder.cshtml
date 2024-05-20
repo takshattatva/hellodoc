@@ -1,0 +1,162 @@
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+@{
+    ViewData["Title"] = "Send Order";
+}
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class=" mt-3 d-flex justify-content-between align-items-center">
+        <h4> Send Orders </h4>
+        @if (Model.sendOrderModel.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetDashboard(@Model.sendOrderModel.statusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.sendOrderModel.callId == 3)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+    <form method="post" class="shadow border rounded my-3" id="sendOrderForm" onsubmit="UpdateSendOrder(@Model.sendOrderModel.RequestId)">
+        <input type="text" asp-for="@Model.sendOrderModel.RequestId" hidden />
+        <input type="text" asp-for="@Model.sendOrderModel.statusForName" id="statusForNameId" hidden />
+        <input type="text" asp-for="@Model.sendOrderModel.statusForName" id="lastStatus" hidden />
+        <input type="text" asp-for="@Model.sendOrderModel.callId" id="callId" hidden />
+
+        <div class="mx-3 my-4 ">
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-6 form-floating mb-3 ">
+                        <select class="form-select mt-4" aria-label="Narrow search by healthprofessionaltypes" id="floatingInputhpt" asp-for="@Model.sendOrderModel.HealthPressionallId" onchange="FilterSendOrder(this.value)">
+                            <option selected disabled>Select Proffesion</option>
+                            @foreach (var obj in Model.healthProfessionalTypes)
+                            {
+                                <option value="@obj.Healthprofessionalid">
+                                    @obj.Professionname
+                                </option>
+                            }
+                        </select>
+                        <label for="floatingInputhpt" class="mt-4 ms-2 bg-transparent">Health Professional Types</label>
+                        <span class="text-danger" asp-validation-for="@Model.sendOrderModel.HealthPressionallId"></span>
+                    </div>
+                    <div class="col-6 form-floating mb-3 ">
+                        <select class="form-select mt-4" id="healthprofessionid" aria-label="Narrow search by healthprofessionals" asp-for="@Model.sendOrderModel.VendorId" onchange="VendorData(this.value)">
+                            <option selected disabled>Vendor</option>
+                            @foreach (var obj in Model.healthProfessionals)
+                            {
+                                <option value="@obj.Vendorid">
+                                    @obj.Vendorname
+                                </option>
+                            }
+                        </select>
+                        <label for="healthprofessionid" class="mt-4 ms-2 bg-transparent">Health Professionals</label>
+                        <span class="text-danger" asp-validation-for="@Model.sendOrderModel.VendorId"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-12 col-md-6">
+                        <input type="tel" asp-for="sendOrderModel.BusinessContact" class="telstyle form-control" id="telephone14" placeholder="">
+                        <span class="text-danger" asp-validation-for="sendOrderModel.BusinessContact"></span>
+                    </div>
+                    <div class="form-floating mb-3 col-12 col-md-6">
+                        <input type="email" class="form-control emailInp dclass input-disable" id="floatingEmail" asp-for="sendOrderModel.Email"
+                               mailto:placeholder="test@google.com">
+                        <label for="floatingEmail" class="ms-2 ">Email</label>
+                        <span class="text-danger" asp-validation-for="sendOrderModel.Email"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating mb-3 col-12 col-md-6">
+                        <input type="tel" asp-for="sendOrderModel.FaxNum" class="telstyle form-control" id="telephone15" placeholder="">
+                        <span class="text-danger" asp-validation-for="sendOrderModel.FaxNum"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class=" col-12 form-floating">
+                        <textarea class="form-control h-100 dclass" id="floatingInput" placeholder="Textarea" rows="5" asp-for="sendOrderModel.Prescription"></textarea>
+                        <label for="floatingInput" class="text-wrap ms-2 text-muted h6">Prescription or Order Details</label>
+                        <span class="text-danger" asp-validation-for="sendOrderModel.Prescription"></span>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="form-floating mb-3 col-12 col-md-6">
+                        <select class="form-select form-select-md  h-100 text-secondary" id="noofrefill" asp-for="sendOrderModel.Refil" aria-label="meadiam select example">
+                            <option selected>Number of Refills</option>
+                            <option value="1">500mg, 10 tablets, 3 times a day for 7 days, with 1 refill (30 tablets)</option>
+                            <option value="2">10mg, 1 tablet a day, for 30 days, with 2 refills (90 tablets)</option>
+                            <option value="3">10mg, 1 tablet a day, for 30 days, with 5 refills (180 tablets)</option>
+                            <option value="4">20mg, 1 tablet a day, for 30 days, with 3 refills (120 tablets)</option>
+                            <option value="5">10mg, 1 tablet a day, for 30 days, with 1 refill (30 tablets)</option>
+                        </select>
+                        <label for="noofrefill" class="text-wrap ms-2 text-muted h6">No. of Refills</label>
+                        <span class="text-danger" asp-validation-for="sendOrderModel.Refil"></span>
+                    </div>
+                </div>
+                <div class="col-12 mt-5 ">
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Submit</button>
+                        <button type="reset" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    var input = document.querySelector("#telephone14");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+    var input = document.querySelector("#telephone15");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

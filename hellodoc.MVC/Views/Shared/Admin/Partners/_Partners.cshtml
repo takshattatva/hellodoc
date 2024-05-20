@@ -1,0 +1,171 @@
+﻿@model hellodoc.DAL.ViewModels.PartnersVm
+
+<div class="container-fluid">
+    <h4 class="mb-md-3 mb-1 p-1 p-md-2 ">Vendors</h4>
+    <div class="border rounded shadow p-3">
+        <div class="d-md-flex justify-content-between align-items-center mb-3">
+
+            <div class="d-md-flex gap-2">
+
+                <form role="search" class=" d-flex align-items-center border border-rounded rounded border-info mb-2">
+                    <i type="search" class="fa-brands fa-searchengin ms-2" style="position: absolute;"></i>
+                    <input class="form-control border-0 my-search-input ps-5 shadow" id="my-search-input2" type="text"
+                           placeholder="Search Vendors" aria-label="Search">
+                </form>
+                <form role="search" class="d-flex align-items-center border border-rounded rounded border-info mb-2">
+                    <i type="search" class="fa-solid fa-magnifying-glass px-2" style="position: absolute;"></i>
+                    <select class="form-select border-0 ProfessionsDropdown ps-5 shadow" aria-label="Default select example"
+                            onchange="Partners(this.value)">
+                        <option value="">All Professions</option>
+                        @foreach (var obj in Model.Professions.ToList())
+                        {
+                            <option value="@obj.Healthprofessionalid">
+                                @obj.Professionname
+                            </option>
+                        }
+                    </select>
+                </form>
+            </div>
+            <div class="d-flex justify-content-end" id="buttonProvider">
+                <button type="button" class="btn btn-info shadow" onclick="AddBusiness(0)">
+                    <span class="d-md-block d-none fw-semibold">Add Business</span>
+                    <span class="d-md-none d-block fw-semibold"><i class="fa-solid fa-plus text-dark"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive d-lg-block d-none">
+            <table class="table PartnerTable table-hover">
+                <thead class="rounded">
+                    <tr class="text-center align-middle">
+                        <th style="background: transparent;">Profession</th>
+                        <th style="background: transparent;">Business Name</th>
+                        <th style="background: transparent;">Email</th>
+                        <th style="background: transparent;">FAX Number</th>
+                        <th style="background: transparent;">Phone Number</th>
+                        <th style="background: transparent;">Business Contact</th>
+                        <th style="background: transparent;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model.Partnersdata)
+                    {
+                        <tr class="align-middle">
+                            <td>@obj.ProfessionName</td>
+                            <td>@obj.VendorName</td>
+                            <td>@obj.VendorEmail</td>
+                            <td>@obj.FaxNo</td>
+                            <td>@obj.PhoneNo</td>
+                            <td>@obj.Businesscontact</td>
+                            <td>
+                                <div id="actionBtnGroup" style="display: flex;">
+                                    <button type="button" class="fw-semibold btn btn-outline-info editbtn" onclick="AddBusiness(@obj.VendorId)">Edit</button>
+                                    <button type="button" class="fw-semibold btn btn-outline-danger delbtn ms-1" onclick="DelPartner(@obj.VendorId)">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="border rounded shadow d-block d-lg-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100 PartnerTable">
+                    <thead>
+                        <tr>
+                            <th class="d-none"></th>
+                            <th class="d-none"></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @foreach (var obj in Model.Partnersdata)
+                        {
+
+                            <tr class="d-flex flex-column">
+                                <td>
+                                    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse"
+                                         data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                         aria-controls="flush-collapse@(counter)">
+
+                                        <div class="w-100 ">
+                                            <span class="fw-bolder">
+                                                @obj.VendorName
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td class="p-0">
+                                    <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                         aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body main-flex pt-0">
+                                            <div class="inner-flex pt-2 mobile-font">
+                                                <span class="fw-bolder">Email</span>: @obj.VendorEmail
+                                            </div>
+                                            <div class="inner-flex mobile-font">
+                                                <span class="fw-bolder">Fax</span>: @obj.FaxNo
+                                            </div>
+                                            <div class="inner-flex mobile-font">
+                                                <span class="fw-bolder">Phone Number</span>: @obj.PhoneNo
+                                            </div>
+                                            <div class="inner-flex pb-2 mobile-font">
+                                                <span class="fw-bolder">Business Contact</span>: @obj.Businesscontact
+                                            </div>
+                                            <div class="inner-flex d-flex gap-2 justify-content-end mt-1">
+                                                <button type="button" class="btn btn-outline-info border-info" onclick="AddBusiness(@obj.VendorId)">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger border-danger" onclick="DeletePartner(@obj.VendorId)">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            counter++;
+
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.PartnerTable').DataTable({
+            "initComplete": function (settings, json) {
+
+                $('#my-search-input2').val(settings.oPreviousSearch.sSearch);
+
+                $('#my-search-input2').on('keyup', function () {
+                    var searchValue = $(this).val();
+                    settings.oPreviousSearch.sSearch = searchValue;
+                    settings.oApi._fnReDraw(settings);
+                });
+            },
+            "lengthMenu": [[10, 15, -1], [10, 15, "All"]],
+            "pageLength": 10,
+
+            language: {
+                oPaginate: {
+                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                }
+            }
+        });
+        $('.dataTables_filter').hide();
+    });
+</script>

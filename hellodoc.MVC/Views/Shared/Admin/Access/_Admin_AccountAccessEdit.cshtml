@@ -1,0 +1,72 @@
+﻿@model hellodoc.DAL.ViewModels.AdminAccountAccessVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mx-3">
+        <h4 class="fw-semibold">Edit Role</h4>
+        <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetAccountAccess()">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <form method="post" id="AccountEditForm" onsubmit="SetEditAccessAccount(document.getElementById('Role').value,document.getElementById('inputroleid').value)">
+
+        <div class="m-3 p-3 border rounded shadow">
+            <h5>Details</h5>
+            <div class="row mt-1">
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <input type="text" class=" form-control " id="RoleName"
+                           placeholder="RoleName" aria-label="RoleName" asp-for="@Model.CreateAccountAccess.name">
+                    <span class="text-danger" asp-validation-for="@Model.CreateAccountAccess.name"></span>
+                    <label class="ms-2 " for="RoleName">Role Name</label>
+                </div>
+
+                <input type="text" value="@Model.CreateAccountAccess.roleid" id="inputroleid" asp-for="@Model.CreateAccountAccess.roleid" hidden />
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <select class="form-select form-control d1class" id="Role" value="this.value" asp-for="@Model.CreateAccountAccess.accounttypeid" onchange="FilterEditRolesMenu(this.value,document.getElementById('inputroleid').value)">
+                        <option value="" disabled selected>All</option>
+                        @foreach (var obj in Model.Aspnetroles)
+                        {
+                            <option value="@obj.Id">
+                                @obj.Name
+                            </option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="@Model.CreateAccountAccess.accounttypeid"></span>
+
+                    <label for="Role" class="ms-2 ">Role</label>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="form-floating mb-3 col-12" id="EditRoleMenu">
+                    @foreach (var obj in Model.AccountMenu)
+                    {
+                        <div class="form-check form-check-inline px-2 mx-3 my-2 col-auto">
+                            <input class="form-check-input d2class" name="AccountMenu" @(obj.ExistsInTable ? "checked" : "") type="checkbox" id="@obj.menuid" value="@obj.menuid">
+                            <label class="form-check-label" for="@obj.menuid">@obj.name</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end m-4 pt-4 ">
+                <button type="submit" class="btn text-white btn-info fw-semibold">Save</button>
+                <button type="reset" id="cancelBtnPhyEdit1" class="btn CancelBtn btn-outline-secondary border-secondary fw-semibold">Cancel</button>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+<partial name="_ValidationScriptsPartial" />

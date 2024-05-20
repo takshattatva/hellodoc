@@ -1,0 +1,12 @@
+﻿/************************************************** Contact Number Width ***********************************************************************************/
+.iti {
+    width:100%;
+}
+
+.spin-icon {
+    transition: transform 0.5s ease;
+}
+
+    .spin-icon:hover {
+        transform: rotate(360deg);
+    }

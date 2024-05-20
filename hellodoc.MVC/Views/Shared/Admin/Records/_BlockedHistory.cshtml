@@ -1,0 +1,161 @@
+﻿@model hellodoc.DAL.ViewModels.BlockedRequestModel
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+
+<div class="w-100 px-2 px-sm-5">
+    <h3 class="ms-2 my-1">Blocked History</h3>
+    <div class="shadow rounded-2">
+        <form method="post" id="BlockedRecordsform" onsubmit="BlockedRecordsFilter()">
+            <div class="row g-2 my-2 p-3">
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordOne type="text" class="form-control" id="first_name" placeholder="First Name">
+                    <label for="first_name" class="ms-2">First Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordTwo type="text" class="form-control" id="last_name" placeholder="Last Name">
+                    <label for="last_name" class="ms-2">Last Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordThree type="search" class="form-control" id="email" placeholder="Email" aria-label="Email">
+                    <label for="Email" class="ms-2">Email</label>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 col-xl-3 d-flex">
+                    <input asp-for=@Model.searchRecordFour type="tel" class="phone form-control" id="phone" placeholder="Phone" aria-label="Phone">
+                    <label for="phone" class="ms-2">Phone Number</label>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="reset" value="reset" class="btn btn-outline-secondary border-secondary me-2 px-3 fw-semibold" id="search_button">Clear</button>
+                    <button type="submit" value="submit" class="btn btn-info text-white ms-1 px-3 fw-semibold" id="clear_button">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive d-none d-lg-block">
+            <table class="table BlockHistory table-hover">
+                <thead class="table-active p-2">
+                    <tr>
+                        <th scope="col" class="text-center">Patient Name</th>
+                        <th scope="col" class="text-center">Phone Number</th>
+                        <th scope="col" class="text-center">Email</th>
+                        <th scope="col" class="text-center">Created Date</th>
+                        <th scope="col" class="text-center">Notes</th>
+                        <th scope="col" class="text-center">is Active</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model.blockrequestList)
+                    {
+                        <tr>
+                            <td class="text-center">@obj.patientname</td>
+                            <td class="text-center">@obj.contact</td>
+                            <td class="text-center">@obj.email</td>
+                            <td class="text-center">@(obj.createddate?.ToString("MMM dd, yyyy hh:mm tt") ?? "N/A")</td>
+                            <td class="text-center">@obj.notes</td>
+                            <td class="text-center">
+                                <input id="isactive" class="form-check-input" type="checkbox" @(obj.isactive ? "checked" : "")>
+                                <label class=" ms-2" for="isactive"></label>
+                            </td>
+                            <td>
+                                <button style="cursor : pointer" class="btn btn-outline-info rounded-2" aria-expanded="false" onclick="UnblockRequest(@obj.requestid)">unblock</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="border rounded shadow d-block d-lg-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100 BlockHistory">
+                    <thead>
+                        <tr>
+                            <th class="d-none"></th>
+                            <th class="d-none"></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @if (Model.blockrequestList != null)
+                        {
+                            @foreach (var obj in Model.blockrequestList)
+                            {
+                                <tr class="d-flex flex-column">
+                                    <td>
+                                        <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+                                        <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse" data-bs-target="#flush-collapse@(counter)" aria-expanded="false" aria-controls="flush-collapse@(counter)">
+                                            <div class="w-100 fw-bolder">
+                                               @obj.patientname
+                                            </div>
+                                            <div class="w-100 mt-2 fw-bolder">
+                                                <div class="">
+                                                    @obj.email
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="flush-collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body main-flex pt-2">
+                                                <div class="w-100">
+                                                    <div class="">
+                                                        <span class="fw-bolder">Phone: </span> @obj.contact
+                                                    </div>
+                                                    <div class="">
+                                                        <span class="fw-bolder">Created Date: </span> @(obj.createddate?.ToString("MMM dd, yyyy hh:mm tt") ?? "N/A")
+                                                    </div>
+                                                    <div class="">
+                                                        <span class="fw-bolder">Notes: </span> @obj.notes
+                                                    </div>
+                                                    <div class="">
+                                                        <span class="fw-bolder">Is Active: </span>  <input id="isactive" class="form-check-input ms-2" type="checkbox" @(obj.isactive ? "checked" : "")>
+                                                        <label class=" ms-2" for="isactive"></label>
+                                                    </div>
+                                                    <div class="inner-flex d-flex justify-content-end">
+                                                        <button style="cursor : pointer" class="btn btn-outline-info rounded-2" aria-expanded="false" onclick="UnblockRequest(@obj.requestid)">unblock</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    @* $('.requesttable').DataTable.destroy(); *@
+            $('.BlockHistory').DataTable({
+                "initComplete": function (settings, json) {
+                },
+                "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+                "pageLength": 5,
+                language: {
+                    oPaginate: {
+                        sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                        sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                    }
+                }
+            });
+
+        $('.dataTables_filter').hide();
+        $('.dataTables_length').hide();
+    });
+</script>

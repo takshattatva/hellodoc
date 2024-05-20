@@ -1,0 +1,81 @@
+@model Aspnetrole
+@{
+    ViewData["Title"] = "Submit Request";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+
+<div class="submit-container d-flex flex-column justify-content-between">
+    <partial name="Patient/_Header" />
+
+    <div class="col d-flex flex-column justify-content-center align-items-center mt-5">
+        <form class="ms-5 mt-5">
+            <div class="form-group ms-4 align-items-center">
+                <div class="d-flex justify-content-between">
+                    <span style="font-size: 40px;" class="me-5 fw-semibold">I am a ........</span>
+                    <a class="btn btn-outline-info fw-bold h-50 mt-3 shadow" asp-controller="Patient" asp-action="patient_site">
+                        <div class="d-flex justify-content-between">
+                            <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                        </div>
+                    </a>
+                </div>
+                
+                <a class="btn boton-p mt-4" asp-action="patient_request_form" asp-controller="Patient" style="background-color: rgba(128, 0, 128, 0.267);">
+                    <div class="row py-1" style="color:rgba(128, 0, 128, 1)">
+                        <div class="col-4 text-start">
+                            <i id="patient-icon" class="fa-solid fa-user-injured fs-5" ></i>
+                        </div>
+                        <div class="col-8 text-start">
+                            <span>Patient </span>
+                        </div>
+                    </div>
+                </a>
+                <a class="btn boton-f mt-4" asp-action="family_request_form" asp-controller="Patient" style="background-color: rgba(0, 189, 231, 0.17);">
+                    <div class="row py-1" style="color:rgba(0, 189, 231, 1)">
+                        <div class="col-4 text-start">
+                            <i id="patient-icon" class="fa-solid fa-people-roof fs-5"></i>
+                        </div>
+                        <div class="col-8 text-start">
+                            <span>Family/Friends </span>
+                        </div>
+                    </div>
+                </a>
+                <a class="btn boton-c mt-4" asp-action="concierge_request_form" asp-controller="Patient" style="background-color: rgba(0, 128, 0, 0.233);">
+                    <div class="row py-1" style="color:rgba(0, 128, 0, 1)">
+                        <div class="col-4 text-start">
+                            <i id="patient-icon" class="fa-solid fa-person-military-to-person fs-5"></i>
+                        </div>
+                        <div class="col-8 text-start">
+                            <span>Concierge </span>
+                        </div>
+                    </div>
+                </a>
+                <a class="btn boton-b mt-4" asp-action="business_request_form" asp-controller="Patient" style="background-color: rgba(255, 104, 129, 0.212);">
+                    <div class="row py-1" style="color:rgba(255, 104, 129, 1)">
+                        <div class="col-4 text-start">
+                            <i id="patient-icon" class="fa-solid fa-people-group fs-5"></i>
+                        </div>
+                        <div class="col-8 text-start">
+                            <span>Business Partners </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </form>
+    </div>
+    <footer class="bg-dark bg-gradient fixed-bottom py-2 px-3">
+        <div class="d-flex justify-content-between">
+            <div class="text-start">
+                <img src="~/images/hellodoc_footer.png" height="30px">
+            </div>
+            <div class="text-end">
+                <a class="text-light" style="text-decoration:none" asp-action="Privacy" asp-controller="Patient">
+                    Terms of
+                    Conditions | Privacy policy
+                </a>
+            </div>
+        </div>
+    </footer>
+</div>
+   
+

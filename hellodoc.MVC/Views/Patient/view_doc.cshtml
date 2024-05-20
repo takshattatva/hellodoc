@@ -1,0 +1,179 @@
+﻿@model hellodoc.DAL.ViewModels.PatientDashData
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+@{
+    ViewData["Title"] = "Patient Upload";
+}
+
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+<div class="main-container d-flex flex-column">
+    <partial name="Patient/Dashboard/_PatientDashboardHeader" />
+
+    <div class="tab-content container-fluid p-5 " id="myTabContent">
+        <div class="tab-pane fade show active" id="dashboard-tab-pane" role="tabpanel"
+             aria-labelledby="dashboard-tab" tabindex="0">
+
+            <div class=" mt-2 d-flex justify-content-between align-items-center">
+                <h4>Document</h4>
+                <a class="btn btn-outline-info fw-bold h-50 shadow" asp-controller="Patient" asp-action="patient_dashboard">
+                    <div class="d-flex justify-content-between">
+                        <i class="bi bi-caret-left-fill"></i>
+                        <span class="d-sm-block d-none">Back</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="container-fluid shadow border rounded mt-3 px-4 mb-5 pb-5">
+                <div class="text-secondary pt-3 my-2">Patient Name</div>
+                <span class="primary fs-4 my-2">
+                    @Accessor.HttpContext.Session.GetString("_sessionUserName")
+                </span>
+                <span class="my-2 text-secondary">
+                    ( @Accessor.HttpContext.Session.GetString("_sessionConfirmationNumber") )
+                </span>
+                <div class="my-2 text-muted">
+                    Check here for any files that you or doctors of your subsequents
+                    requestors have attatched for you to review.
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="d-sm-flex">
+                        <div class="input-group mb-3 border border-2 rounded">
+                            <input type="file" asp-for="Upload" class="form-control" id="inputGroupFile" hidden onchange="validateAndUpdateFileName(this)">
+                            <input id="upload-name" class="form-control inputFile primary rounded bg-transparent" type="text" value="Choose File..." aria-label="readonly input example" readonly>
+                            <label class="input-group-text btn btn-info pt-2 upload" for="inputGroupFile">
+                                <span class="d-none d-sm-block fw-semibold text-dark">Select File</span>
+                                <i class="fa-solid fa-folder-plus d-block d-sm-none"></i>
+                            </label>
+                        </div>
+                        <button class="btn btn-outline-info me-md-2 fw-bold d-none ms-2" type="submit" id="upload-btn" style="height: 20%">Upload</button>
+                    </div>
+                </form>
+                <div class="text-end pt-3 pe-0 mb-4">
+                    <button class="btn btn-outline-info fw-semibold downloadAll shadow" type="button">
+                        <span class="d-none d-sm-inline-block">Download All</span>
+                        <span class="d-inline-block d-sm-none"><i class="fa-solid fa-download"></i></span>
+                    </button>
+                </div>
+                <hr class="d-md-none d-block" />
+                <div class="d-md-block d-none">
+                    <div class="container-fluid table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <input type="checkbox" class="form-check-input checkbox-main checkbox " name="selectall"
+                                               onchange="tickAll()" />
+                                        <span class="document-combo ms-5">
+                                            <span class="document-name mx-2">
+                                                Document Name
+                                            </span>
+                                        </span>
+                                    </th>
+                                    <th scope="col">Uploader</th>
+                                    <th scope="col">Upload Date <i class="fa-solid fa-arrow-up-long"></i></th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                    @foreach (var obj in Model.documentData)
+                                    {
+                                    <tr class="align-middle">
+                                        <td class="first-col">
+                                            <input type="checkbox" name="Mark" class="form-check-input checkbox fileCheckbox"
+                                                   onchange="allCheck()" />
+                                            <span class="document-combo ms-5">
+                                                <i class="bi text-danger fs-5 bi-file-earmark-pdf-fill"></i>
+                                                <span class="document-name mx-2">
+                                                        @obj.DocumentName
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                    @Accessor.HttpContext.Session.GetString("_sessionUserName")
+                                            </span>
+                                        </td>
+                                        <td>
+                                                @obj.CreatedDate.ToString("MMM")
+                                                @obj.CreatedDate.Day,
+                                                @obj.CreatedDate.Year
+                                        </td>
+                                        <td>
+                                            <a href="~/content/@obj.DocumentName" download="@obj.DocumentName" class="btn btn-outline-info fw-bold download-btn">
+                                                <i class="fa-solid fa-download"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="d-md-none d-block">
+                    @foreach (var obj in Model.documentData)
+                    {
+                        <div class="d-flex justify-content-start">
+                            <input type="checkbox" name="Mark" class="form-check-input checkbox fileCheckbox"
+                                   onchange="allCheck()" />
+                            <span class="document-combo ms-2">
+                                <i class="bi text-danger fs-5 bi-file-earmark-pdf-fill"></i>
+                                <span class="document-name mx-2">
+                                    @obj.DocumentName
+                                </span>
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span>
+                                @Accessor.HttpContext.Session.GetString("_sessionUserName")
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            @obj.CreatedDate.ToString("MMM") @obj.CreatedDate.Day,@obj.CreatedDate.Year
+                        </div>
+                        <div class="mt-2">
+                            <a href="~/content/@obj.DocumentName" download="@obj.DocumentName" class="btn btn-outline-info fw-bold download-btn w-auto">
+                                <i class="fa-solid fa-download"></i>
+                            </a>
+                        </div>
+                        <hr />
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <partial name="Patient/Profile/_PatientProfile" />
+        </div>
+    </div>
+
+    <partial name="Patient/_Footer" />
+</div>
+
+@section Scripts
+    {
+    <script>
+        $('.downloadAll').click(function () {
+            $('.fileCheckbox:checked').each(function () {
+                var filePath = $(this).closest('tr').find('.download-btn')[0].click();
+            });
+        });
+
+        $(document).ready(function () {
+            $('#inputGroupFile').on('change', function () {
+                var inputValue = $('#inputGroupFile').val();
+
+                if (inputValue != "") {
+                    $("#upload-btn").removeClass("d-none");
+                }
+                else {
+                    $("#upload-btn").addClass("d-none");
+                }
+            });
+        });
+
+    </script>
+}

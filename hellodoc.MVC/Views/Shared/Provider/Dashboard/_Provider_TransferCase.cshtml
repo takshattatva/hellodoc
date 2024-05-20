@@ -1,0 +1,34 @@
+﻿@model hellodoc.DAL.ViewModels.TransferCaseModal
+
+<div class="modal fade" id="providerTransferModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Transfer Request</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+
+            <form class="p-3" id="providerTransferCaseForm" method="post" onsubmit="TransferCase()">
+                <input type="text" asp-for="@Model.RequestId" hidden />
+                <input type="text" asp-for="@Model.PhysicianId" hidden />
+
+                <div class="text-secondary">
+                    This request will be transferred to admin.
+                </div>
+                <div class="mt-4 form-floating text-secondary">
+                    <textarea class="form-control h-100 primary" id="floatingInputTransfer" placeholder="Description" rows="3" asp-for="@Model.TransferNotes"></textarea>
+                    <label for="floatingInputTransfer" class="text-wrap">Description</label>
+                    <span class="text-danger" asp-validation-for="TransferNotes"></span>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn fw-semibold btn-outline-info border-info continue-btn mx-2">Submit</button>
+                    <button type="button" class="btn fw-semibold cancel-btn btn-outline-secondary border-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

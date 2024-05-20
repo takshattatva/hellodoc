@@ -1,0 +1,127 @@
+@model hellodoc.DAL.ViewModels.AdminInvoicingVm
+
+<link rel="stylesheet" href="~/css/invoicing.css" asp-append-version="true" />
+
+<div class="container">
+    <h4 class="mb-md-3 mb-1 p-1 p-md-2 ">Timesheets</h4>
+
+    <div class="border rounded shadow p-3">
+        <div class="d-lg-flex gap-2 align-items-center mb-3">
+            <div class="form-floating">
+                <select asp-for="@Model.PhysicianId" id="phyDropdown" class="form-select border-secondary border-1 ps-3 border-info PhysicianDropDown shadow" aria-label="Default select example" onchange="GetTimeSheetDetail()">
+                    <option value="" selected disabled class="primary">Select Physician</option>
+                    @foreach (var obj in Model.physiciansList!.ToList())
+                    {
+                        <option value="@obj.Physicianid">
+                            Dr. @obj.Firstname @obj.Lastname
+                        </option>
+                    }
+                </select>
+                <label for="phyDropdown" class="primary">Select Physician</label>
+            </div>
+
+            <div class="form-floating" id="biWeeklyId">
+                <select id="searchByTimeperiod" class="form-select border-secondary border-1 TimesheetperiodDropdown border-info ps-3 shadow" aria-label="Default select example" onchange="GetTimeSheetDetail()">
+                    <option value="" selected disabled class="primary">Select Timeslot</option>
+                </select>
+                <label for="searchByTimeperiod" class="primary">Search by Timesheetperiod</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="border rounded shadow p-3 mt-5">
+        <h4 class="mb-md-3 mb-1 p-1 p-md-2 ">Timesheet</h4>
+        @if (Model.timesheetsList != null)
+        {
+            @if (Model.timesheetsList.Count != 0 && Model.timesheetsList.Select(i => i.IsFinalize).First() == true)
+            {
+                <div class="d-lg-block d-none">
+                    <table class="table TimesheetPeriodTable">
+                        <thead class="rounded table-active">
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var obj in @Model.timesheetsList)
+                            {
+                                <tr class="align-middle">
+                                    <td>@obj.StartDate.ToString("dd MMM, yyyy")</td>
+                                    <td>@obj.EndDate.ToString("dd MMM, yyyy")</td>
+                                    @if (obj.IsApproved == false)
+                                    {
+                                        <td>
+                                            <p>Pending</p>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-info fw-semibold" onclick="GetAdminFinalizeTimeSheet(1)">
+                                                Approve
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <p>Approved</p>
+                                        </td>
+                                        <td>-</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="ms-2">For Selected Time Duration <span class="fw-semibold">@Model.Physicianname</span> Yet Not Finalized Timesheet</p>
+            }
+        }
+        else
+        {
+            <span class="ms-2">Please Select Physician And Date Slot</span>
+        }
+    </div>
+</div>
+
+<script>
+    timePeriodForSelect();
+
+    function timePeriodForSelect() {
+        var dropdown = document.getElementById("searchByTimeperiod");
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var currentMonth = currentDate.getMonth() + 1;
+        dropdown.innerHTML = "";
+
+        for (var month = 1; month <= currentDate.getMonth() + 1; month++) {
+            var daysInMonth = new Date(currentYear, month, 0).getDate();
+            var monthname = "";
+            if (month == 1) { monthname = "Jan" }
+            else if (month == 2) { monthname = "Feb" }
+            else if (month == 3) { monthname = "Mar" }
+            else if (month == 4) { monthname = "Apr" }
+            else if (month == 5) { monthname = "May" }
+            else if (month == 6) { monthname = "Jun" }
+            else if (month == 7) { monthname = "Jul" }
+            else if (month == 8) { monthname = "Aug" }
+            else if (month == 9) { monthname = "Sep" }
+            else if (month == 10) { monthname = "Oct" }
+            else if (month == 11) { monthname = "Nov" }
+            else if (month == 12) { monthname = "Dec" }
+
+            var option1 = document.createElement("option");
+            option1.value = month + "-1";
+            option1.text = "1 " + monthname + ", " + currentYear + " - 15 " + monthname + ", " + currentYear;
+            dropdown.appendChild(option1);
+
+            var option2 = document.createElement("option");
+            option2.value = month + "-2";
+            option2.text = "16 " + monthname + ", " + currentYear + " - " + daysInMonth + " " + monthname + ", " + currentYear;
+            dropdown.appendChild(option2);
+        }
+    }
+</script>

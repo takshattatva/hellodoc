@@ -1,0 +1,100 @@
+﻿@model hellodoc.DAL.ViewModels.AdminAccountAccessVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mx-3">
+        <h4 class="fw-semibold">Create Role</h4>
+        <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetAccountAccess()">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <form method="post" id="AccountCreateForm" onsubmit="SetCreateAccessAccount()">
+
+        <div class="m-3 p-3 border rounded shadow">
+            <h5 class="mt-1 mb-3">Details</h5>
+            <div class="row mt-2">
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <input type="text" class="form-control " id="RoleName" onblur="checkRoleName()"
+                           placeholder="RoleName" aria-label="RoleName" asp-for="@Model.CreateAccountAccess.name">
+                    <label class="ms-2 " for="RoleName">Role Name</label>
+                    <span class="text-danger" asp-validation-for="@Model.CreateAccountAccess.name"></span>
+                    <div class="row d-none" id="rolenamecheckerror"><span class="text-danger">RoleName Already Existes!!!</span></div>
+                </div>
+
+                <input type="text" asp-for="@Model.CreateAccountAccess.roleid" hidden />
+                <div class="form-floating mb-3 col-12 col-sm-6 ">
+                    <select class="form-select form-control d1class" id="Role" asp-for="@Model.CreateAccountAccess.accounttypeid" onchange="FilterRolesMenu(this.value)">
+                        <option value="" disabled selected>All</option>
+                        @foreach (var obj in Model.Aspnetroles)
+                        {
+                            <option value="@obj.Id">
+                                @obj.Name
+                            </option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="@Model.CreateAccountAccess.accounttypeid"></span>
+
+                    <label for="Role" class="ms-2 ">Role</label>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="form-floating mb-3 col-12" id="RolesMenuList">
+                    @foreach (var obj in Model.Menus)
+                    {
+                        <div class="form-check form-check-inline px-2 mx-3 my-2 col-auto">
+                            <input class="form-check-input d2class" name="AccountMenu" type="checkbox" id="@obj.Menuid" value="@obj.Menuid">
+                            <label class="form-check-label" for="@obj.Menuid">@obj.Name</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end m-4 pt-4 ">
+                <button type="submit" class="btn text-white btn-info fw-semibold">Save</button>
+                <button type="reset" id="cancelBtnPhyEdit1" class="btn CancelBtn btn-outline-secondary border-secondary fw-semibold">Cancel</button>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function checkRoleName() {
+        var RoleName = $('#RoleName').val();
+
+        $.ajax({
+            url: '@Url.Action("RoleNamecheck", "Admin")',
+            type: "post",
+
+            async: true,
+            datatype: 'html',
+            cache: false,
+            data: { RoleName: RoleName },
+            success: function (result) {
+                if (!result) {
+                    $("#rolenamecheckerror").addClass("d-none");
+                }
+                else {
+                    $("#rolenamecheckerror").removeClass("d-none");
+                }
+            },
+            error: function () {
+                console.log("errrrrrrrrrrrroooooooorrrrrrr");
+            }
+        });
+    };
+</script>

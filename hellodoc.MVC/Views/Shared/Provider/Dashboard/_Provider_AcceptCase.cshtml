@@ -1,0 +1,28 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="acceptModalId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content pt-4 pb-4 border rounded-4">
+            <div class="container d-flex flex-column pt-4 pb-4">
+                <div class="container d-flex justify-content-center mb-3">
+                    <i class="fa-solid fa-circle-info text-warning border-warning" style="font-size: 100px;border-radius: 100%;padding: 10px;border:2px solid yellow;"></i>
+                </div>
+                <div class="container d-flex justify-content-center fs-4 fw-semibold">
+                    Confirmation For Accept Case
+                </div>
+            </div>
+
+            <div class="container pt-2 pb-4 text-center fw-semibold">
+                Are sure you want to accept this request?
+            </div>
+
+            <form class="pb-4 pt-4 d-grid gap-2 col-3 mx-auto d-flex" method="post" onsubmit="AcceptCase()">
+                <input type="text" asp-for="@Model.RequestId" id="clearRequestId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForNameId" hidden />
+
+                <button type="submit" class="btn btn-outline-info border-info fw-semibold" data-bs-dismiss="modal">Accept</button>
+                <button type="button" class="btn btn-outline-secondary border-secondary fw-semibold " data-bs-dismiss="modal">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

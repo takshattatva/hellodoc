@@ -1,0 +1,46 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="cancelModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Confirm Cancellation</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" method="post" id="cancelCaseForm" onsubmit="CancelCase(@Model.cancelCaseModal.RequestId)">
+                <input type="text" asp-for="@Model.cancelCaseModal.RequestId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+                <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="fw-bold">
+                    Patient Name: @Model.cancelCaseModal.Name
+                </div>
+
+                <select class="form-select border-info mt-4" aria-label="Reasons for Cancellation" asp-for="@Model.cancelCaseModal.CasetagId">
+                    <option selected disabled>Reasons for Cancellation</option>
+                    @foreach (var obj in Model.casetags.ToList())
+                    {
+                        <option value="@obj.Casetagid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.cancelCaseModal.CasetagId"></span>
+
+                <div class="mt-4 form-floating">
+                    <textarea class="primary form-control h-100" id="floatingInputNotes" placeholder="Provide Additional Notes" rows="3" asp-for="@Model.cancelCaseModal.CancellationNotes"></textarea>
+                    <label for="floatingInputNotes" class="text-wrap">Provide Additional Notes</label>
+                    <span class="text-danger" asp-validation-for="@Model.cancelCaseModal.CancellationNotes"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Confirm</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,157 @@
+﻿@model hellodoc.DAL.ViewModels.GetRecordsModel
+
+@functions {
+    public string GetRequestStatus(int status)
+    {
+        switch (status)
+        {
+            case 1: return "Unassigned";
+            case 2: return "Accepted";
+            case 3: return "MDEnRoute";
+            case 4: return "MDONSite";
+            case 5: return "Conclude";
+            case 6: return "Cancelled";
+            case 7: return "Cancelled By Patient";
+            case 8: return "Closed";
+            case 9: return "Unpaid";
+            case 10: return "Clear";
+            case 11: return "Block";
+            default: return "Unknown";
+        }
+    }
+}
+
+
+<div class="w-100 px-2 px-sm-5">
+    <div class="d-flex justify-content-between my-2">
+        <h3 class="ms-2 my-1">Patient Records</h3>
+        <a class="btn btn-outline-info fw-bold shadow" onclick="GetRecordsTab()">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="shadow rounded-2 mt-4 table-responsive d-none d-lg-block">
+        <table class="table table-hover">
+            <thead class="table-active">
+                <tr>
+                    <th scope="col" class="text-center">Client/Member</th>
+                    <th scope="col" class="text-center">Created Date <i class="bi bi-arrow-down"></i></th>
+                    <th scope="col" class="text-center">Confirmation</th>
+                    <th scope="col" class="text-center">Provider Name</th>
+                    <th scope="col" class="text-center">Concluded Date</th>
+                    <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center">Final Report</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.requestList)
+                {
+                    <tr>
+                        <td class="text-center">@obj.Firstname @obj.Lastname</td>
+                        <td class="text-center">@obj.Createddate.ToString("MMM dd, yyyy")</td>
+                        <td class="text-center">@obj.Confirmationnumber</td>
+                        @if(obj.Physicianid == null)
+                        {
+                            <td class="text-center">Physician Not Assigned</td>
+                        }
+                        else
+                        {
+                            <td class="text-center">@obj.Physician.Firstname @obj.Physician.Lastname</td>
+                        }
+                        <td class="text-center">MMM DD,YYYY</td>
+                        <td class="text-center">@GetRequestStatus(obj.Status)</td>
+                        <td class="text-center">
+                            <button class="btn btn-outline-info fw-semibold rounded-2" onclick="AdminEncounter(@obj.Requestid, @obj.Status, 2)">View</button>
+                        </td>
+                        <td>
+                            <div class="dropstart">
+                                <button style="cursor : pointer" class="btn btn-outline-info fw-semibold rounded-2" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
+                                <ul class="dropdown-menu ps-1 py-2">
+                                    <li>
+                                        <button class="dropdown-item" onclick="ViewCaseRecords(@obj.Status,@obj.Requestid,2)">View Case</button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" onclick="ViewDocuments(@obj.Requestid,0,2)">Documents</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+    </div>
+    <div class="border rounded shadow d-block d-lg-none">
+        <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+            <table class="w-100 requesttable">
+                <thead>
+                    <tr>
+                        <th class="d-none"></th>
+                        <th class="d-none"></th>
+                    </tr>
+                </thead>
+                @{
+                    var counter = 1;
+                }
+                <tbody>
+                    @if (Model.requestList != null)
+                    {
+                        @foreach (var obj in Model.requestList)
+                        {
+                            <tr class="d-flex flex-column">
+                                <td>
+                                    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse" data-bs-target="#flush-collapse@(counter)" aria-expanded="false" aria-controls="flush-collapse@(counter)">
+
+                                        <div class="w-100 ">
+                                            <span class="fw-bolder">
+                                                @obj.Firstname @obj.Lastname
+                                            </span>
+                                        </div>
+                                        <div class="w-100 mt-2">
+                                            <div class="fw-semibold">
+                                                @obj.Confirmationnumber
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div id="flush-collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body main-flex pt-2">
+                                            <div class="w-100">
+                                                <div class="">
+                                                    <span class="fw-bolder">Created Date: </span> @obj.Createddate.ToString("MMM dd,yyyy")
+                                                </div>
+                                                <div class="">
+                                                    <span class="fw-bolder">Provider: </span> @obj.Physician.Firstname @obj.Physician.Lastname
+                                                </div>
+                                                <div class="">
+                                                    <span class="fw-bolder">Conclude Date: </span> Conclude Date
+                                                </div>
+                                                <div class="">
+                                                    <span class="fw-bolder">Status: </span> @GetRequestStatus(@obj.Status)
+                                                </div>
+                                                <div class="inner-flex d-flex justify-content-end flex-column">
+                                                    <button style="cursor : pointer" class=" mx-3 mt-1 btn btn-outline-info rounded-2" aria-expanded="false" onclick="ViewCaseRecords(@obj.Status,@obj.Requestid,2)">View Case</button>
+                                                    <button style="cursor : pointer" class="m-3 btn btn-outline-info rounded-2" aria-expanded="false" onclick="ViewDocuments(@obj.Requestid,0,2)">Documents</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

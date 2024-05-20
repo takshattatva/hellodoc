@@ -1,0 +1,145 @@
+﻿@inject IHttpContextAccessor Accessor
+@using Microsoft.AspNetCore.Http
+@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+@functions {
+    public string GetTableColorClass(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "green";
+            case 2: return "orange";
+            case 3: return "pink";
+            case 4: return "blue";
+            default: return "violate";
+        }
+    }
+
+    public string GetTabletype(int Status)
+    {
+        switch (Status)
+        {
+            case 1: return "New";
+            case 2: return "Pending";
+            case 4: return "Active";
+            case 6: return "Conclude";
+            case 3: return "To Close";
+            case 9: return "Unpaid";
+            default: return "Unknown";
+        }
+    }
+
+    public string GetRequestBy(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "Patient";
+            case 2: return "Family/Friend";
+            case 3: return "Business";
+            case 4: return "Concierge";
+            default: return "Vip";
+        }
+    }
+}
+
+@{
+    int[] dashStatus = new int[3];
+
+    if (Model.StatusForName == 3)
+    {
+        dashStatus[0] = 3;
+        dashStatus[1] = 7;
+        dashStatus[2] = 8;
+    }
+    else if (Model.StatusForName == 4)
+    {
+        dashStatus[0] = 4;
+        dashStatus[1] = 5;
+    }
+    else
+    {
+        dashStatus[0] = Model.StatusForName;
+    }
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h5>
+        Patients (@GetTabletype(Model.StatusForName))
+    </h5>
+    <div class="d-flex">
+        <button type="button" onclick="sendLinkModal(@Model.StatusForName,1)"
+                class="btn btn-info d-flex ms-1 ms-sm-2 p-sm-2 p-1 align-items-center text-light">
+            <i class="fa-regular fa-paper-plane"></i>
+            <span class="d-md-block d-none  px-2 fw-semibold">SendLink</span>
+        </button>
+        <button type="button" onclick="adminCreateRequest(@Model.StatusForName,1)"
+                class="btn btn-info d-flex ms-1 ms-sm-2 p-1 p-sm-2 align-items-center text-light">
+            <i class="fa-solid fa-file-signature"></i>
+            <span class="d-md-block d-none px-2 fw-semibold">CreateRequest</span>
+        </button>
+        <button type="button" onclick="Export([@dashStatus[0], @dashStatus[1], @dashStatus[2]])"
+                class="btn btn-info d-flex ms-1 ms-sm-2 p-1 p-sm-2 align-items-center text-light">
+            <i class="fa-solid fa-share"></i>
+            <span class="d-md-block d-none px-2 fw-semibold">Export</span>
+        </button>
+        <button type="button" onclick="Export([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])"
+                class="btn btn-info d-flex ms-1 ms-sm-2 p-1 p-sm-2 align-items-center text-light">
+            <i class="fa-solid fa-share-from-square"></i>
+            <span class="d-md-block d-none px-2 fw-semibold">Export All</span>
+        </button>
+        <button type="button" onclick="RequestSupport()"
+                class="btn btn-info d-flex ms-1 ms-sm-2 p-1 p-sm-2 align-items-center text-light">
+            <i class="fa-solid fa-user-astronaut"></i>
+            <span class="d-md-block d-none px-2 fw-semibold">Request DTY Support</span>
+        </button>
+    </div>
+</div>
+
+<div class="mt-2 mb-2">
+    <div class="d-md-flex justify-content-between align-items-center gap-2">
+
+        <div class="d-md-flex gap-1">
+            <form role="search" class="mb-2">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search" id="my-search-input">
+            </form>
+            @* ********************************************* filter by region using manually database changes ********************************************* *@
+            <select class="form-select mb-2 regionDropdown" aria-label="Default select example" onchange="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], null, this.value)">
+                <option selected>All Region</option>
+                @foreach (var obj in Model.regions.ToList())
+                {
+                    <option value="@obj.Regionid">
+                        @obj.Name
+                    </option>
+                }
+            </select>
+        </div>
+        @* ********************************************* filter by requesttype using FilterTableRecords ajax ********************************************* *@
+        <div class="d-flex gap-2 align-items-center mb-2">
+            <button type="button" onclick="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], null)" class="btn btn-outline-secondary d-none d-md-block">All</button>
+            <div type="button" onclick="TableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], '1')" class="d-md-flex gap-1 mx-auto text-center align-items-center">
+                <i class="fa-solid fa-circle green-icon"></i>
+                <div><small>Patient</small></div>
+            </div>
+            <div type="button" onclick="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], '2')" class="d-md-flex gap-1 mx-auto text-center align-items-center">
+                <i class="fa-solid fa-circle orange-icon"></i>
+                <div><small>Family/Friend</small></div>
+            </div>
+            <div type="button" onclick="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], '3')" class="d-md-flex gap-1 mx-auto text-center align-items-center">
+                <i class="fa-solid fa-circle blue-icon"></i>
+                <div><small>Concierge</small></div>
+            </div>
+            <div type="button" onclick="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], '4')" class="d-md-flex gap-1 mx-auto text-center align-items-center">
+                <i class="fa-solid fa-circle pink-icon"></i>
+                <div><small>Business</small></div>
+            </div>
+            <div type="button" onclick="FilterTableRecords([@dashStatus[0], @dashStatus[1], @dashStatus[2]], '5')" class="d-md-flex gap-1 mx-auto text-center align-items-center">
+                <i class="fa-solid fa-circle purple-icon"></i>
+                <div><small>Vips</small></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="requestTable">
+    <partial name="Admin/Dashboard/_AdminRequestTable" />
+</div>

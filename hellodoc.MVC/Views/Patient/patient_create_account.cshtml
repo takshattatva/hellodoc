@@ -1,0 +1,80 @@
+﻿@model hellodoc.DAL.ViewModels.RegisterVm
+@{
+    ViewData["Title"] = "Create Account Page";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+<div class="container-fluid main-container p-0">
+    <div class="row h-100 w-100">
+        <div class="col-12 col-md-6 d-none d-md-block h-100 ">
+            <img src="~/images/11116016_415.jpg" alt="images" class="object-fit-cover w-100 h-100">
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="login-bg-img position-fixed d-flex justify-content-center align-items-center d-block d-md-none">
+                <img src="~/images/11116016_415.jpg" alt="images" class="h-100">
+            </div>
+
+            <button class="mode position-absolute btn btn-outline-info border border-2 border-info fs-4 px-2 py-1 rounded fw-bolder me-2 moon-button" id="dark-mode-btn">
+                <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+                <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+            </button>
+
+            <div class="container login-container d-flex flex-column justify-content-between ms-auto me-auto pt-5 pb-5">
+
+                <a class="login-logo d-flex justify-content-center mt-5" href="#">
+                    <img src="~/images/hellodoc.png" alt="images" class="img-fluid hellodoc-img">
+                </a>
+
+                <form method="post" class="login-form" asp-action="patient_create_account" asp-route-pid="@Model.RequestId">
+                    <input type="text" asp-for="@Model.RequestId" hidden />
+
+                    <div class="login-form mb-5">
+                        <h3 class="d-flex justify-content-center mb-3">Create Account</h3>
+                        <div class="form-floating mb-3 position-relative">
+                            <input asp-for="Email" type="email" class="form-control bg-transparent border border-2 border-info" required
+                                   id="floatingEmail" placeholder="name@example.com">
+                            <label for="floatingEmail" class="fw-semibold">Email ID</label>
+                            <div class="user-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="fa-solid fa-circle-user fs-4 mt-2 "></i>
+                            </div>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                        <div class="form-floating mb-3 position-relative">
+                            <input asp-for="Password" type="password" class="form-control bg-transparent border-2 border-info" required
+                                   id="floatingPassword" placeholder="Password">
+                            <label for="floatingPassword" class="fw-semibold">Password</label>
+                            <div class="eye-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="bi bi-eye-slash fs-4 text-muted mt-1 common-cursor-pointer" id="togglePassword" onclick="showPassword()"></i>
+                            </div>
+                            <span class="text-danger" asp-validation-for="Password"></span>
+                        </div>
+                        <div class="form-floating mb-3 position-relative">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control bg-transparent border-2 border-info" required
+                                   id="floatingPassword2" placeholder="Re-enter Password">
+                            <label for="floatingPassword2" class="fw-semibold">Confirm Password</label>
+                            <div class="eye-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="bi bi-eye-slash fs-4 text-muted mt-1 common-cursor-pointer" id="togglePassword2" onclick="showPassword2()"></i>
+                            </div>
+                            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+                        </div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-info text-white p-2 mb-3 batan"><b>Create Account</b></button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="login-footer d-flex justify-content-around">
+                    <div>
+                        <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted fw-semibold">Terms of Conditions</a>
+                    </div>
+                    <span class="fw-semibold">|</span>
+                    <div>
+                        <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted fw-semibold">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

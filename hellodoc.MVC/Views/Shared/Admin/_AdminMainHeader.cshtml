@@ -1,0 +1,289 @@
+﻿@inject IHttpContextAccessor Accessor
+
+<header>
+    <nav class="navbar header shadow position-sticky top-0 z-3">
+
+        <partial name="Admin/_AdminUperHeader" />
+
+        <hr class="w-100 m-0 p-0 d-none d-lg-block">
+
+        <div class="collapse w-100 mx-lg-1 lg-show d-lg-block d-none" id="navbarToggleExternalContent">
+            <div class="px-3">
+                <ul class="nav nav-underline" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active text-muted px-1" id="home-tab" data-bs-toggle="tab"
+                                data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                                aria-selected="true">
+                            Dashboard
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link text-muted px-3" id="provider-location-tab" data-bs-toggle="tab"
+                                data-bs-target="#provider-location-tab-pane" type="button" role="tab"
+                                aria-controls="provider-location-tab-pane" aria-selected="false" onclick="ProviderLocation()">
+                            Provider-location
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button onclick="GetAdminProfile(0, 1)" class="nav-link text-muted px-3" id="profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                                aria-selected="false">
+                            Profile
+                        </button>
+                    </li>
+
+                    <li class="nav-item dropdown" role="presentation">
+                        <button class="nav-link text-muted px-3 dropdown-toggle" id="Providers-tab" data-bs-toggle="dropdown"
+                                type="button" role="tab" aria-haspopup="true"
+                                aria-selected="false">
+                            Providers
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button class="dropdown-item" id="Provider-tab" data-bs-toggle="tab"
+                                        data-bs-target="#Provider-tab-pane" type="button" role="tab" aria-controls="Provider-tab-pane" aria-selected="false" onclick="GetProvider(0)">
+                                    Provider
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#Scheduling-tab-pane" type="button" role="tab" aria-controls="Scheduling-tab-pane" aria-selected="false" onclick="GetScheduling(1)">
+                                    Scheduling
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#Invoicing-tab-pane" type="button" role="tab" aria-controls="Invoicing-tab-pane" aria-selected="false" onclick="GetAdminInvoicing()">
+                                    Invoicing
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link text-muted px-3" id="Partners-tab" data-bs-toggle="tab"
+                                data-bs-target="#Partners-tab-pane" type="button" role="tab"
+                                aria-controls="Partners-tab-pane" aria-selected="false" onclick="Partners(0)">
+                            Partners
+                        </button>
+                    </li>
+
+                    <li class="nav-item dropdown" role="presentation">
+                        <button class="nav-link text-muted px-3 dropdown-toggle" id="Access-tab" data-bs-toggle="dropdown"
+                                type="button" role="tab" aria-haspopup="true"
+                                aria-selected="false">
+                            Access
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button class="dropdown-item" id="Account-tab" data-bs-toggle="tab"
+                                        data-bs-target="#Account-tab-pane" type="button" role="tab" aria-controls="Account-tab-pane" aria-selected="false" onclick="GetAccountAccess()">
+                                    Account Access
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" id="User-tab" data-bs-toggle="tab"
+                                        data-bs-target="#User-tab-pane" type="button" role="tab" aria-controls="User-tab-pane" aria-selected="false" onclick="GetUserAccess(0)">
+                                    User Access
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" id="Admin-tab" data-bs-toggle="tab"
+                                        data-bs-target="#Admin-tab-pane" type="button" role="tab" aria-controls="Admin-tab-pane" aria-selected="false" onclick="GetCreateAdminAccount(1)">
+                                    Create Admin
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown" role="presentation">
+                        <button class="nav-link text-muted px-3 dropdown-toggle" id="Records-tab" data-bs-toggle="dropdown"
+                                type="button" role="tab" aria-haspopup="true"
+                                aria-selected="false">
+                            Records
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button class="dropdown-item" id="Search-tab" data-bs-toggle="tab"
+                                        data-bs-target="#Search-tab-pane" type="button" role="tab" aria-controls="Search-tab-pane" aria-selected="false" onclick="GetSearchRecords()">
+                                    Search Records
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#Email-tab-pane" type="button" role="tab" aria-controls="Email-tab-pane" aria-selected="false" onclick="GetEmailSmsLog(0)">
+                                    Email Logs
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#SMS-tab-pane" type="button" role="tab" aria-controls="SMS-tab-pane" aria-selected="false" onclick="GetEmailSmsLog(1)">
+                                    SMS Logs
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#Patient-tab-pane" type="button" role="tab" aria-controls="Patient-tab-pane" aria-selected="false" onclick="GetRecordsTab()">
+                                    Patient History
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="tab"
+                                        data-bs-target="#Block-tab-pane" type="button" role="tab" aria-controls="Block-tab-pane" aria-selected="false" onclick="GetBlockedRequest()">
+                                    Block History
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-start d-lg-none d-block" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h6 class="offcanvas-title" id="offcanvasExampleLabel">
+                    <span class="fw-semibold text-muted" style="font-family:'Comic Sans MS'">
+                        Welcome @Accessor.HttpContext.Session.GetString("_AdminName")
+                    </span>
+                </h6>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="px-0 d-flex flex-column">
+                    <ul class="list-unstyled" id="myTab" role="tablist">
+
+                        <li class="nav-item my-2 " role="presentation">
+                            <button class="nav-link offcanvas-btn active text-muted p-3 w-100" id="home-tab" data-bs-toggle="tab"
+                                    data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                                    aria-selected="true">
+                                Dashboard
+                            </button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-muted px-3" id="provider-location-tab" data-bs-toggle="tab"
+                                    data-bs-target="#provider-location-tab-pane" type="button" role="tab"
+                                    aria-controls="provider-location-tab-pane" aria-selected="false" onclick="ProviderLocation()">
+                                Provider-location
+                            </button>
+                        </li>
+
+                        <li class="nav-item my-2" role="presentation">
+                            <button onclick="GetAdminProfile(0, 1)" class="nav-link offcanvas-btn text-muted p-3 w-100" id="profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                                    aria-selected="false">
+                                Profile
+                            </button>
+                        </li>
+
+                        <li class="nav-item dropdown" role="presentation">
+                            <button class="nav-link text-muted px-3 dropdown-toggle" id="Providers-tab" data-bs-toggle="dropdown"
+                                    type="button" role="tab" aria-haspopup="true"
+                                    aria-selected="false">
+                                Providers
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" id="Provider-tab" data-bs-toggle="tab"
+                                            data-bs-target="#Provider-tab-pane" type="button" role="tab" aria-controls="Provider-tab-pane" aria-selected="false" onclick="GetProvider(0)">
+                                        Provider
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#Scheduling-tab-pane" type="button" role="tab" aria-controls="Scheduling-tab-pane" aria-selected="false" onclick="GetScheduling(1)">
+                                        Scheduling
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#Invoicing-tab-pane" type="button" role="tab" aria-controls="Invoicing-tab-pane" aria-selected="false" onclick="GetAdminInvoicing()">
+                                        Invoicing
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-muted px-3" id="Partners-tab" data-bs-toggle="tab"
+                                    data-bs-target="#Partners-tab-pane" type="button" role="tab"
+                                    aria-controls="Partners-tab-pane" aria-selected="false" onclick="Partners(0)">
+                                Partners
+                            </button>
+                        </li>
+
+                        <li class="nav-item dropdown" role="presentation">
+                            <button class="nav-link text-muted px-3 dropdown-toggle" id="Access-tab" data-bs-toggle="dropdown"
+                                    type="button" role="tab" aria-haspopup="true"
+                                    aria-selected="false">
+                                Access
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" id="Account-tab" data-bs-toggle="tab"
+                                            data-bs-target="#Account-tab-pane" type="button" role="tab" aria-controls="Account-tab-pane" aria-selected="false" onclick="GetAccountAccess()">
+                                        Account Access
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" id="User-tab" data-bs-toggle="tab"
+                                            data-bs-target="#User-tab-pane" type="button" role="tab" aria-controls="User-tab-pane" aria-selected="false" onclick="GetUserAccess(0)">
+                                        User Access
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" id="Admin-tab" data-bs-toggle="tab"
+                                            data-bs-target="#Admin-tab-pane" type="button" role="tab" aria-controls="Admin-tab-pane" aria-selected="false" onclick="GetCreateAdminAccount(1)">
+                                        Create Admin
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown" role="presentation">
+                            <button class="nav-link text-muted px-3 dropdown-toggle" id="Records-tab" data-bs-toggle="dropdown"
+                                    type="button" role="tab" aria-haspopup="true"
+                                    aria-selected="false">
+                                Records
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" id="Search-tab" data-bs-toggle="tab"
+                                            data-bs-target="#Search-tab-pane" type="button" role="tab" aria-controls="Search-tab-pane" aria-selected="false" onclick="GetSearchRecords()">
+                                        Search Records
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#Email-tab-pane" type="button" role="tab" aria-controls="Email-tab-pane" aria-selected="false" onclick="GetEmailSmsLog(0)">
+                                        Email Logs
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#SMS-tab-pane" type="button" role="tab" aria-controls="SMS-tab-pane" aria-selected="false" onclick="GetEmailSmsLog(1)">
+                                        SMS Logs
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#Patient-tab-pane" type="button" role="tab" aria-controls="Patient-tab-pane" aria-selected="false" onclick="GetRecordsTab()">
+                                        Patient History
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="tab"
+                                            data-bs-target="#Block-tab-pane" type="button" role="tab" aria-controls="Block-tab-pane" aria-selected="false" onclick="GetBlockedRequest()">
+                                        Block History
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,104 @@
+﻿@model hellodoc.DAL.ViewModels.ShiftDetailsmodal
+
+<div class="modal fade" id="ViewScheduledModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="font-weight:600">
+            <form id="EditshiftForm" method="post" onsubmit="EditShiftDetails(@Model.Shiftdetailid)">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title text-light fw-semibold fs-5" id="exampleModalLabel"> View Shift</h5>
+                    <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+                </div>
+
+                <div class="modal-body">
+
+                    <select class="form-select mt-3" aria-label="Default select example" id="regionselect" asp-for="@Model.Regionid" disabled>
+                        @{
+                            foreach (var a in Model.regions)
+                            {
+                                <option value="@a.Regionid">@a.Name</option>
+                            }
+                        }
+                    </select>
+
+                    <select class="form-select mt-3" aria-label="Default select example" asp-for="@Model.Physicianid" id="Physicianselect" disabled>
+                        @{
+                            foreach (var a in Model.Physicians)
+                            {
+                                <option value="@a.Physicianid">Dr. @a.Firstname @a.Lastname </option>
+                            }
+                        }
+                    </select>
+
+                    <div class="form-floating mt-3">
+                        <input type="Date" class="form-control dclass" asp-for="Shiftdate" placeholder="Shiftdate" disabled>
+                        <label>Shiftdate</label>
+                        <span asp-validation-for="Shiftdate" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="form-floating mt-3 col-sm-6">
+                            <input type="time" class="form-control dclass" asp-for="Starttime" placeholder="Starttime" disabled>
+                            <label class="mx-2">Starttime</label>
+                            <span asp-validation-for="Starttime" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mt-3 col-sm-6">
+                            <input type="time" class="form-control dclass" asp-for="Endtime" placeholder="Endtime" disabled>
+                            <label class="mx-2">Endtime</label>
+                            <span asp-validation-for="Endtime" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <input type="text" asp-for="@Model.Shiftdetailid" hidden />
+                    <div class="mt-4 mb-4 d-flex justify-content-end">
+                        @if (Model.Shiftdate > DateTime.Today)
+                        {
+                            <button class="mx-1 btn btn-success text-white fw-semibold shadow" onclick="ReturnShift(@Model.Status,@Model.Shiftdetailid)">Return</button>
+                        }
+                        else
+                        {
+                            if (Model.Shiftdate == DateTime.Today && Model.Endtime >= TimeOnly.FromDateTime(DateTime.Now))
+                            {
+                                <button class="mx-1 btn btn-success text-white fw-semibold shadow" onclick="ReturnShift(@Model.Status,@Model.Shiftdetailid)">Return</button>
+                            }
+                        }
+                        @if (Model.Status != 2 && Model.Shiftdate > DateTime.Today)
+                        {
+                            <button type="button" class="btn btn-info text-white mx-1 fw-semibold shadow" onclick="enableFields('dclass','save','cancel','edit')" id="edit">Edit</button>
+                        }
+                        else if (Model.Status != 2 && Model.Shiftdate == DateTime.Today && Model.Endtime >= TimeOnly.FromDateTime(DateTime.Now))
+                        {
+                            <button type="button" class="btn btn-info text-white mx-1 fw-semibold shadow" onclick="enableFields('dclass','save','cancel','edit')" id="edit">Edit</button>
+                        }
+                        <button type="submit" class="btn btn-info text-white mx-1 fw-semibold shadow" id="save" style="display:none;">Save</button>
+                        <button type="reset" class="btn btn-outline-secondary border-secondary mx-1 fw-semibold shadow" id="cancel" style="display:none;" onclick="disabledFields('dclass','save','cancel','edit')">Cancel</button>
+                        <button class="mx-1 btn btn-danger text-white fw-semibold shadow" onclick="deleteShift(@Model.Shiftdetailid)">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function enableFields(classname, save, cancel, edit) {
+        document.getElementById(save).style.display = 'block';
+        document.getElementById(cancel).style.display = 'block';
+        document.getElementById(edit).style.display = 'none';
+        var inputs = document.getElementsByClassName(classname);
+
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+    }
+    function disabledFields(classname, save, cancel, edit) {
+        document.getElementById(save).style.display = 'none';
+        document.getElementById(cancel).style.display = 'none';
+        document.getElementById(edit).style.display = 'block';
+        var inputs = document.getElementsByClassName(classname);
+
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+    }
+</script>

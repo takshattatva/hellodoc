@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - hallodoc.MVC</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/common.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin_login.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin_dashboard.css" asp-append-version="true" />
+
+
+    @**************** icon cdn *************@
+    <script src="https://kit.fontawesome.com/2214bddc60.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    @****************fontawesome icon cdn *************@
+    <script src="https://kit.fontawesome.com/33263bebe0.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/font-awesome-4.7.0/css/font-awesome.min.css" />
+
+    @**************** phone cdn *************@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css"
+          crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+            crossorigin="anonymous"></script>
+
+    @**************** jquery cdn *************@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    @**************** toastr cdn *************@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    @**************** data table cdn *************@
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
+
+
+    @**************** sweet alert cdn *************@
+    <link href="~/sweetalert2-11.10.6/package/dist/sweetalert2.min.css" rel="stylesheet" />
+
+</head>
+<body onload="checkMode()">
+
+    <partial name="_Notification" />
+
+    @RenderBody()
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @**************** validation cdn *************@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/date.js" asp-append-version="true"></script>
+    <script src="~/js/dark-mode.js" asp-append-version="true"></script>
+    <script src="~/js/upload-validations.js" asp-append-version="true"></script>
+    <script src="~/js/upload-all.js" asp-append-version="true"></script>
+    <script src="~/js/passwd-eye.js" asp-append-version="true"></script>
+    <script src="~/sweetalert2-11.10.6/package/dist/sweetalert2.all.min.js" asp-append-version="true"></script>
+    <script src="~/js/admin-dashboard.js" asp-append-version="true"></script>
+    <script src="~/js/provider-dashboard.js" asp-append-version="true"></script>
+
+    @**************** full calender cdn *************@
+    @* <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css"> *@
+    <link rel="stylesheet" href="~/schedulling/material.css">
+
+    @* <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script> *@
+    <script src="~/schedulling/ej2.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+    @* ********* Include Leaflet JavaScript ********* *@
+    @* <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> *@
+    <script src="~/leaflet/leaflet.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

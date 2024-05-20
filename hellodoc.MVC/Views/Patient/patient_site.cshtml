@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Landing Page";
+}
+<link rel="stylesheet" href="~/css/patient_side_all.css" asp-append-version="true" />
+
+<div class="landing-bg-img position-fixed d-flex justify-content-center align-items-center">
+    <img src="~/images/abcd.png" alt="images" class="h-100 d-sm-block d-none">
+</div>
+
+<button class="mode position-absolute btn btn-outline-info border border-2 border-info fs-4 px-2 py-1 rounded fw-bolder me-2 moon-button" id="dark-mode-btn">
+    <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+    <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+</button>
+
+<div class="container login-container d-flex flex-column justify-content-between ms-auto me-auto pt-4 pb-5 ">
+    <a href="#" class="d-flex justify-content-center"></a>
+
+    <div class="login-form mb-5 mt-5">
+        <div class="d-grid gap-2 mb-3 mt-5">
+            <a class="btn btn-info text-white p-2 batan" asp-controller="Patient" asp-action="submit_request" type="button"><b>Submit A Request</b></a>
+        </div>
+        <div class="d-grid gap-2 mb-3">
+            <a class="btn btn-primary text-white p-2 batan" asp-controller="Patient" asp-action="Index" type="button"><b>Registered Patients</b></a>
+        </div>
+    </div>
+
+    <div class="login-footer d-flex justify-content-around fw-bold">
+        <div>
+            <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted">Terms of Conditions</a>
+        </div>
+        <span>|</span>
+        <div>
+            <a style="text-decoration:none" asp-action="Privacy" asp-controller="Patient" class="text-muted">Privacy Policy</a>
+        </div>
+    </div>
+</div>

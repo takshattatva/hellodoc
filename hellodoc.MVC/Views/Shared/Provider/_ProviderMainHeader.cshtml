@@ -1,0 +1,103 @@
+﻿@inject IHttpContextAccessor Accessor
+@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+<input type="text" id="sessionId" asp-for="@Model.sessionId" hidden />
+<input type="text" id="lastStatus" asp-for="@Model.StatusForName" hidden />
+<header>
+    <nav class="navbar header shadow position-sticky top-0 z-3">
+
+        <partial name="Provider/_ProviderUperHeader" />
+
+        <hr class="w-100 m-0 p-0 d-none d-lg-block">
+
+        <div class="collapse w-100 mx-lg-1 lg-show d-lg-block d-none" id="navbarToggleExternalContent">
+            <div class="px-3">
+                <ul class="nav nav-underline" id="myTab" role="tablist">
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active text-muted px-1" id="provider-home-tab" data-bs-toggle="tab"
+                                data-bs-target="#provider-home-tab-pane" type="button" role="tab" aria-controls="provider-home-tab-pane"
+                                aria-selected="true">
+                            Dashboard
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link text-muted px-3" id="provider-invoicing-tab" data-bs-toggle="tab"
+                                data-bs-target="#provider-invoicing-tab-pane" type="button" role="tab"
+                                aria-controls="provider-invoicing-tab-pane" aria-selected="false" onclick="GetProviderInvoicing()">
+                            Invoicing
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button onclick="GetScheduling(3)" class="nav-link text-muted px-3" id="provider-schedule-tab" data-bs-toggle="tab"
+                                data-bs-target="#provider-schedule-tab-pane" type="button" role="tab"
+                                aria-controls="provider-schedule-tab-pane" aria-selected="false">
+                            My Scheduling
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button onclick="GetEditProvider(`@Accessor.HttpContext.Session.GetString("aspNetUserId")`, 3)" class="nav-link text-muted px-3" id="provider-profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#provider-profile-tab-pane" type="button" role="tab" aria-controls="provider-profile-tab-pane"
+                                aria-selected="false">
+                            My Profile
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-start d-lg-none d-block" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h6 class="offcanvas-title" id="offcanvasExampleLabel">
+                    <span class="fw-semibold text-muted" style="font-family:'Comic Sans MS'">
+                        Welcome @Accessor.HttpContext.Session.GetString("_PhysicianName")
+                    </span>
+                </h6>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="px-0 d-flex flex-column">
+                    <ul class="list-unstyled" id="myTab" role="tablist">
+
+                        <li class="nav-item my-1 " role="presentation">
+                            <button class="nav-link offcanvas-btn active text-muted p-3 w-100" id="provider-home-tab" data-bs-toggle="tab"
+                                    data-bs-target="#provider-home-tab-pane" type="button" role="tab" aria-controls="provider-home-tab-pane"
+                                    aria-selected="true">
+                                Dashboard
+                            </button>
+                        </li>
+
+                        <li class="nav-item my-1 " role="presentation">
+                            <button class="nav-link offcanvas-btn text-muted p-3 w-100" id="provider-invoicing-tab" data-bs-toggle="tab"
+                                    data-bs-target="#provider-invoicing-tab-pane" type="button" role="tab"
+                                    aria-controls="provider-invoicing-tab-pane" aria-selected="false" onclick="GetProviderInvoicing()">
+                                Invoicing
+                            </button>
+                        </li>
+
+                        <li class="nav-item my-1 " role="presentation">
+                            <button onclick="GetScheduling(3)" class="nav-link offcanvas-btn text-muted p-3 w-100" id="provider-schedule-tab" data-bs-toggle="tab"
+                                    data-bs-target="#provider-schedule-tab-pane" type="button" role="tab"
+                                    aria-controls="provider-schedule-tab-pane" aria-selected="false">
+                                My Scheduling
+                            </button>
+                        </li>
+
+                        <li class="nav-item my-1" role="presentation">
+                            <button class="nav-link offcanvas-btn text-muted p-3 w-100" id="provider-profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#provider-profile-tab-pane" type="button" role="tab" aria-controls="provider-profile-tab-pane"
+                                    aria-selected="false" onclick="GetEditProvider(`@Accessor.HttpContext.Session.GetString("aspNetUserId")`, 3)">
+                                My Profile
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

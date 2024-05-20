@@ -1,0 +1,75 @@
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+@{
+    ViewData["Title"] = "Provider Dashboard";
+}
+
+<partial name="Provider/_ProviderMainHeader" />
+
+<!-- main-container -->
+<div class="p-sm-2 p-md-5 mt-4 mt-sm-0">
+    <div class="tab-content" id="myTabContent">
+        <div class=" tab-pane fade show active" id="provider-home-tab-pane" role="tabpanel" aria-labelledby="provider-home-tab"
+             tabindex="0">
+            <partial name="Provider/Dashboard/_Provider_Dashboard" />
+        </div>
+
+        <div class="tab-pane fade" id="provider-invoicing-tab-pane" role="tabpanel"
+             aria-labelledby="provider-invoicing-tab" tabindex="0">
+            <div class="container-fluid">
+                <h3 class="mb-3 p-3 p-md-2 ">Invoicing</h3>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="provider-schedule-tab-pane" role="tabpanel" aria-labelledby="provider-schedule-tab" tabindex="0">
+            <div class="container-fluid">
+                <h3 class="mb-3 p-3 p-md-2 ">My Scheduling</h3>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="provider-profile-tab-pane" role="tabpanel" aria-labelledby="provider-profile-tab"
+             tabindex="0">
+            <div class="container-fluid">
+                <h3 class="mb-3 p-3 p-md-2 ">My Profile</h3>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="showProviderCaseModal">
+
+</div>
+
+<div id="loader-container" class="loader-container" style="z-index:150">
+    <div id="loader" class="loader" style="z-index:150"></div>
+</div>
+
+<div class="backdrop" style="z-index:140"></div>
+
+<script>
+    $(document).ready(function () {
+        let timerInterval;
+        Swal.fire({
+            title: "",
+            html: "Please wait for a moment <b></b>...",
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+                const timer = Swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                }, 100);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("I was closed by the timer");
+            }
+        });
+    });
+</script>

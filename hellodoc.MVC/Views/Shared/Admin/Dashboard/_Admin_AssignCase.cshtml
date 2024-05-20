@@ -1,0 +1,58 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="assignModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Assign Request</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" method="post" id="assignCaseForm" onsubmit="AssignCase(@Model.assignCaseModal.RequestId)">
+                <input type="text" asp-for="@Model.assignCaseModal.RequestId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+                <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="small">
+                    To assign this request, search and select another Physician
+                </div>
+
+                <select class="form-select border-info mt-4" aria-label="Narrow search by region" asp-for="@Model.assignCaseModal.RegionId" onchange="FilterAssignModal(this.value,@Model.assignCaseModal.RequestId)">
+                    <option selected disabled>Narrow search by region</option>
+                    @foreach(var obj in Model.regions)
+                    {
+                        <option value="@obj.Regionid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.assignCaseModal.RegionId"></span>
+
+                <select class="form-select border-info mt-4" id="physicianId" asp-for="@Model.assignCaseModal.PhysicianId" aria-label="Select Physician">
+                    <option selected disabled>Select Physician</option>
+                    @foreach(var obj in Model.physicians)
+                    {
+                        <option value="@obj.Physicianid">
+                            @obj.Firstname @obj.Lastname
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.assignCaseModal.PhysicianId"></span>
+
+                <div class="mt-4 form-floating">
+                    <textarea class="primary form-control h-100" id="floatingInputDescription" asp-for="@Model.assignCaseModal.AssignNotes" placeholder="Description" rows="3"></textarea>
+                    <label for="floatingInputDescription" class="text-wrap">Description</label>
+                    <span class="text-danger" asp-validation-for="@Model.assignCaseModal.AssignNotes"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Submit</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

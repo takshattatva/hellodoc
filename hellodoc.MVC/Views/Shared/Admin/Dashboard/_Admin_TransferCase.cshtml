@@ -1,0 +1,57 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="transferModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Transfer Request</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" method="post" id="transferCaseForm" onsubmit="TransferCasetophy(@Model.transferCaseModal.RequestId)">
+                <input type="text" asp-for="@Model.transferCaseModal.RequestId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+                <div class="small">
+                    To transfer this request, search and select another Physician
+                </div>
+
+                <select class="form-select border-info mt-4" aria-label="Narrow search by region" asp-for="@Model.transferCaseModal.RegionId" onchange="FilterTransferModal(this.value,@Model.transferCaseModal.RequestId)">
+                    <option selected disabled>Narrow search by region</option>
+                    @foreach(var obj in Model.regions)
+                    {
+                        <option value="@obj.Regionid">
+                            @obj.Name
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.transferCaseModal.RegionId"></span>
+
+                <select class="form-select border-info mt-4" id="physicianId" asp-for="@Model.transferCaseModal.PhysicianId" aria-label="Select Physician">
+                    <option selected disabled>Select Physician</option>
+                    @foreach(var obj in Model.physicians)
+                    {
+                        <option value="@obj.Physicianid">
+                            @obj.Firstname @obj.Lastname
+                        </option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.transferCaseModal.PhysicianId"></span>
+
+                <div class="mt-4 form-floating">
+                    <textarea class="primary form-control h-100" id="floatingInputDescription" asp-for="@Model.transferCaseModal.TransferNotes" placeholder="Description" rows="3"></textarea>
+                    <label for="floatingInputDescription" class="text-wrap">Description</label>
+                    <span class="text-danger" asp-validation-for="@Model.transferCaseModal.TransferNotes"></span>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn continue-btn btn-outline-info border-info mx-2 fw-semibold">Submit</button>
+                    <button type="button" class="btn cancel-btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<partial name="_ValidationScriptsPartial" />

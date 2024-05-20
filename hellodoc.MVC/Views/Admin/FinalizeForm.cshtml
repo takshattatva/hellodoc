@@ -1,0 +1,66 @@
+﻿@model  hellodoc.DAL.ViewModels.EncounterVm
+
+<style>
+    h1 {
+        text-align: center;
+        color: #0dcaf0;
+    }
+
+    span {
+        font-weight: bolder;
+    }
+
+    .data {
+        margin-bottom: 10px;
+        font-size: large;
+        font-family:Arial;
+    }
+
+    .watermark {
+        position: absolute;
+        z-index: -1;
+        top: 35%;
+        left: 32%;
+        transform: translate(-50%, -50%);
+        width: 350px;
+        height: 350px;
+    }
+</style>
+
+<div class="encounterForm h-100 p-3">
+    <h1>Encounter Form Details Data</h1>
+    <div class="details p-3">
+        <img class="watermark" src="~/images/watermark.png" alt="Watermark">
+        <div class="data"><span>First Name: </span> @Model.FirstName </div>
+        <div class="data"><span>Last Name: </span> @Model.LastName </div>
+        <div class="data"><span>Location: </span> @Model.Location </div>
+        <div class="data"><span>Date of Birth: </span> @Model.BirthDate </div>
+        <div class="data"><span>Date of Request: </span> @Model.Date </div>
+        <div class="data"><span>Phone: </span> @Model.PhoneNumber </div>
+        <div class="data"><span>Email: </span> @Model.Email </div>
+        <div class="data"><span>History of Present Illness or Injury: </span> @Model.HistoryIllness </div>
+        <div class="data"><span>Medical History: </span> @Model.MedicalHistory </div>
+        <div class="data"><span>Medications: </span> @Model.Medications </div>
+        <div class="data"><span>Allergies: </span> @Model.Allergies </div>
+        <div class="data"><span>Temp: </span> @Model.Temp </div>
+        <div class="data"><span>HR: </span> @Model.Hr </div>
+        <div class="data"><span>RR: </span> @Model.Rr </div>
+        <div class="data"><span>Blood Pressure Diastolic: </span> @Model.BpD </div>
+        <div class="data"><span>Blood Pressure Systolic: </span> @Model.BpS </div>
+        <div class="data"><span>O2: </span> @Model.O2 </div>
+        <div class="data"><span>Heent: </span> @Model.Heent </div>
+        <div class="data"><span>Pain: </span> @Model.Pain </div>
+        <div class="data"><span>CV: </span> @Model.Cv </div>
+        <div class="data"><span>Chest: </span> @Model.Chest </div>
+        <div class="data"><span>ABD: </span> @Model.Abd </div>
+        <div class="data"><span>Extremities: </span> @Model.Extr </div>
+        <div class="data"><span>Skin: </span> @Model.Skin </div>
+        <div class="data"><span>Neuro: </span> @Model.Neuro </div>
+        <div class="data"><span>Other: </span> @Model.Other </div>
+        <div class="data"><span>Diagnosis: </span> @Model.Diagnosis </div>
+        <div class="data"><span>Treatment Plan: </span> @Model.TreatmentPlan </div>
+        <div class="data"><span>Medical Dispensed: </span> @Model.MedicationDispensed </div>
+        <div class="data"><span>Procedures: </span> @Model.Procedures </div>
+        <div class="data"><span>FollowUp: </span> @Model.FollowUp </div>
+    </div>
+</div>

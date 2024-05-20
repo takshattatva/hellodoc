@@ -1,0 +1,135 @@
+﻿@model hellodoc.DAL.ViewModels.PatientDashData
+
+@{
+    ViewData["Title"] = "Patient Profile";
+}
+
+<form asp-action="patient_dashboard" method="post" id="PatientProfileForrm" class="container d-flex flex-column shadow gap-4 p-4">
+    <div>
+        <h2 class="ms-auto me-auto mb-3 fw-bold fs-5">General Information</h2>
+        <div>
+            <div class="row">
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputFn" asp-for="@Model.profileData.Firstname" 
+                           placeholder="First Name">
+                    <label for="floatingInputFn" class="ms-2 ">First Name</label>
+                    <span class="text-danger" asp-validation-for="profileData.Firstname"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputLn" asp-for="@Model.profileData.Lastname"
+                           placeholder="Last Name">
+                    <label for="floatingInputLn" class="ms-2 ">Last Name</label>
+                    <span class="text-danger" asp-validation-for="profileData.Lastname"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    @{
+                        string max = DateTime.Now.ToString("yyyy-MM-dd");
+                    }
+                    <input max="@max" type="date" class="input-disable form-control" id="floatingInputBirthDate" asp-for="@Model.profileData.Birthdate"
+                           placeholder="Date of Birth">
+                    <label for="floatingInputBirthDate" class="ms-2 ">Date of Birth</label>
+                    <span class="text-danger" asp-validation-for="profileData.Birthdate"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2 class="ms-auto me-auto mb-3 fw-bold fs-5">Contact Information</h2>
+        <div>
+            <div class="row">
+                <div class="form-floating mb-3 col-12 col-sm-2">
+                    <div class="form-floating">
+                        <select class="input-disable form-select" id="floatingSelect" aria-label="Floating label select example">
+                            <option selected>Type</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="phone">Phone</option>
+                            <option value="landline">Landline</option>
+                        </select>
+                        <label for="floatingSelect">Works with selects</label>
+                    </div>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-4">
+                    <input type="tel" class="input-disable form-control" id="phone" asp-for="@Model.profileData.PhoneNumber" style="height:60px;width:100%"
+                           placeholder="" />
+                    <span class="text-danger" asp-validation-for="profileData.PhoneNumber"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="email" class="form-control" id="floatingInput" asp-for="@Model.profileData.Email"
+                           placeholder="Email Address" disabled >
+                    <label for="floatingInput" class="ms-2 ">Email Address</label>
+                    <span class="text-danger" asp-validation-for="profileData.Email"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2 class="ms-auto me-auto mb-3 fw-bold fs-5">Location Information</h2>
+        <div>
+            <div class="row">
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputStreet" asp-for="@Model.profileData.Street" 
+                           placeholder="Street">
+                    <label for="floatingInputStreet" class="ms-2 ">Street</label>
+                    <span class="text-danger" asp-validation-for="profileData.Street"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputCity" asp-for="@Model.profileData.City" 
+                           placeholder="City">
+                    <label for="floatingInputCity" class="ms-2 ">City</label>
+                    <span class="text-danger" asp-validation-for="profileData.City"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputState" asp-for="@Model.profileData.State" 
+                           placeholder="State">
+                    <label for="floatingInputState" class="ms-2 ">State</label>
+                    <span class="text-danger" asp-validation-for="profileData.State"></span>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="text" class="input-disable form-control" id="floatingInputZip" asp-for="@Model.profileData.Zipcode"
+                           placeholder="Zipcode">
+                    <label for="floatingInputZip" class="ms-2 ">Zipcode</label>
+                    <span class="text-danger" asp-validation-for="profileData.Zipcode"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-3">
+        <button type="button" class="editBtn btn btn-info text-white fw-semibold EditBtn" onclick="enableFields()">Edit </button>
+        <button type="submit" class="submitBtn btn btn-info text-white fw-semibold EditBtn">Submit </button>
+        <button type="button" class="cancelBtn btn btn-outline-secondary border-secondary fw-semibold EditBtn" onclick="disableFields()">Cancel</button>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function disableFields() {
+        document.querySelectorAll('.input-disable').forEach(function (element) {
+            element.disabled = true;
+            document.getElementById('PatientProfileForrm').reset();
+            $('.text-danger').addClass("d-none");
+        });
+        $('.editBtn').removeClass("d-none");
+        $('.submitBtn').addClass("d-none");
+        $('.cancelBtn').addClass("d-none");
+    }
+    function enableFields() {
+        document.querySelectorAll('.input-disable').forEach(function (element) {
+            element.disabled = false;
+            $('.text-danger').removeClass("d-none");
+        });
+        $('.editBtn').addClass("d-none");
+        $('.submitBtn').removeClass("d-none");
+        $('.cancelBtn').removeClass("d-none");
+    }
+    disableFields();
+
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+</script>

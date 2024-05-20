@@ -1,0 +1,165 @@
+﻿@model hellodoc.DAL.ViewModels.AdminCreateRequestVm
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mx-3">
+        <h3 class="fw-semibold">Submit Information</h3>
+        
+        @if (Model.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetDashboard(@Model.StatusForName)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId ==  2)
+        {
+            <a class="btn btn-outline-info fw-bold shadow" onclick="GetProviderDashboard()">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+    </div>
+    
+    <div>
+        <form method="post" enctype="multipart/form-data" class="container d-flex flex-column shadow gap-4 p-4 my-3" id="AdminCreateRequestFormId" onsubmit="sendAdminCreateRequest(@Model.StatusForName,@Model.callId)">
+            <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+            <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+            <div>
+                <h4 class="ms-auto me-auto mb-3">Patient</h4>
+                <div>
+                    <div class="row">
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="@Model.FirstName" type="text" class="form-control bg-transparent" id="floatingInput"
+                                   placeholder="First Name">
+                            <label for="floatingInput" class="ms-2 ">First Name</label>
+                            <span class="text-danger" asp-validation-for="FirstName"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="LastName" type="text" class="form-control bg-transparent" id="floatingInput"
+                                   placeholder="Last Name">
+                            <label for="floatingInput" class="ms-2 ">Last Name</label>
+                            <span class="text-danger" asp-validation-for="LastName"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="Email" type="email" class="form-control bg-transparent emailInp" id="floatingInput"
+                                   placeholder="test@google.com">
+                            <label for="floatingInput" class="ms-2 ">Email</label>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 ">
+                            <input type="tel" asp-for="PhoneNumber" class="telstyle form-control" id="telephone11" placeholder="">
+                            <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            @{
+                                string max = DateTime.Now.ToString("yyyy-MM-dd");
+                            }
+                            <input max="@max" asp-for="DateOfBirth" type="date" class="form-control bg-transparent" id="birthDate"
+                                   placeholder="Date of Birth">
+                            <label for="datePickerId" class="ms-2 ">Date of Birth</label>
+                            <span class="text-danger" asp-validation-for="DateOfBirth"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="ms-auto me-auto mb-3">Location</h4>
+                <div>
+                    <div class="row">
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="Street" type="text" class="form-control bg-transparent" id="streetValue"
+                                   placeholder="Street">
+                            <label for="floatingInput" class="ms-2 ">Street</label>
+                            <span class="text-danger" asp-validation-for="Street"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="City" type="text" class="form-control bg-transparent" id="cityValue"
+                                   placeholder="City">
+                            <label for="floatingInput" class="ms-2 ">City</label>
+                            <span class="text-danger" asp-validation-for="City"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="State" type="text" class="form-control bg-transparent regionInp" id="regionValue"
+                                   placeholder="State">
+                            <label for="floatingInput" class="ms-2 ">State</label>
+                            <span class="text-danger" asp-validation-for="State"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="Zipcode" type="text" class="form-control bg-transparent" id="zipValue"
+                                   placeholder="Zipcode">
+                            <label for="floatingInput" class="ms-2 ">Zipcode</label>
+                            <span class="text-danger" asp-validation-for="Zipcode"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <input asp-for="Room" type="text" class="form-control bg-transparent" id="floatingInput"
+                                   placeholder="Room #/ Suite">
+                            <label for="floatingInput" class="ms-2 ">Room #/ Suite</label>
+                            <span class="text-danger" asp-validation-for="Room"></span>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6">
+                            <select id="regionId" class="form-select p-0 ps-2 mb-2 regionDropdown" aria-label="Default select example" asp-for="RegionId">
+                                <option selected disabled>Select Region</option>
+                                @foreach (var obj in Model.Regions)
+                                {
+                                    <option value="@obj.Regionid">
+                                        @obj.Name
+                                    </option>
+                                }
+                            </select>
+                            <span class="text-danger" asp-validation-for="RegionId"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="ms-auto me-auto mb-3">Notes</h4>
+                <div>
+                    <div class="form-floating mb-3 h-100">
+                        @if (Model.callId == 1)
+                        {
+                            <textarea class="form-control bg-transparent h-100" id="floatingInput"
+                                      placeholder="Textarea" rows="3" asp-for="AdminNotes"></textarea>
+                            <label for="floatingInput" class="text-wrap ">Admin Notes (Optional)</label>
+                            <span class="text-danger" asp-validation-for="AdminNotes"></span>
+                        }
+                        @if (Model.callId == 2)
+                        {
+                            <textarea class="form-control bg-transparent h-100" id="floatingInput"
+                                      placeholder="Textarea" rows="3" asp-for="AdminNotes"></textarea>
+                            <label for="floatingInput" class="text-wrap">Physician Notes (Optional)</label>
+                            <span class="text-danger" asp-validation-for="AdminNotes"></span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3">
+                <button type="submit" class="btn btn-outline-info border-info fw-bold">Submit</button>
+                <button type="reset" class="btn btn-outline-secondary border-secondary fw-bold">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    var input = document.querySelector("#telephone11");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["in", "us", "ca"],
+    });
+</script>
+

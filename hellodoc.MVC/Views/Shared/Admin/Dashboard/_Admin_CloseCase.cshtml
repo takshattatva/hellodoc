@@ -1,0 +1,184 @@
+﻿@model hellodoc.DAL.ViewModels.AdminCloseCaseVm
+
+<style>
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between mb-3">
+        <div class="">
+            <h4>Close Case</h4>
+        </div>
+        <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetDashboard(@Model.statusForName)">
+            <div class="d-flex justify-content-between">
+                <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+            </div>
+        </a>
+    </div>
+
+    <form class="shadow border rounded mt-3 px-4 mb-5 pb-5" method="post" enctype="multipart/form-data" id="closeCaseForm" onsubmit="updateCloseCase()">
+        <div class="container-fluid ">
+            <input type="text" asp-for="@Model.RequestId" hidden />
+            <input type="text" asp-for="@Model.statusForName" id="statusForName" hidden />
+            <div class="text-secondary pt-3 mt-2">Patient Name</div>
+            <div class="d-lg-flex justify-content-between">
+                <div class="text-info fs-4 fw-bold">
+                    @Model.FirstName @Model.LastName
+                    <span class="my-2 text-secondary fs-6">(@Model.Confirmationnumber)</span>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn fw-semibold btn-outline-info border-info mt-lg-0 mt-2">
+                        <span>Create Invoice Through Quickbooks</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between pt-3 pe-0 mb-1">
+                <div>
+                    <h4>Documents</h4>
+                </div>
+            </div>
+            <hr class="d-sm-none d-block">
+
+            <div class="d-sm-block d-none">
+                <div class="container-fluid table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <span class="document-combo">
+                                        <span class="document-name mx-2">
+                                            Document Name
+                                        </span>
+                                    </span>
+                                </th>
+                                <th scope="col">Upload Date <i class="fa-solid fa-arrow-up-long"></i></th>
+                                <th scope="col" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var obj in Model.file)
+                            {
+                                <tr>
+                                    <td class="text-secondary text-wrap">
+                                        <div class="d-flex justify-content-start">
+                                            <span><i class="bi bi-file-earmark-pdf-fill text-danger"></i></span>
+                                            <span class="ms-2">@obj.documentName</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-secondary">
+                                        @obj.uploadDate.ToString("MMM dd,yyyy")
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="~/content/@obj.documentName" download="@obj.documentName" class="btn btn-outline-info fw-bold download-btn">
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-block d-md-none">
+                @foreach (var obj in Model.file)
+                {
+                    <div>
+                        <div class="d-flex justify-content-start">
+                            <span><i class="bi bi-file-earmark-pdf-fill text-danger"></i></span>
+                            <span class="ms-2">@obj.documentName</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        @obj.uploadDate.ToString("MMM dd,yyyy")
+                    </div>
+                    <div class="pb-2">
+                        <a href="~/content/@obj.documentName" download="@obj.documentName" class="btn btn-outline-info downloadAll me-2 w-auto p-2 downloadbtn">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                        <a href="~/content/@obj.documentName" target="_blank" class="btn btn-outline-info fw-bold preview-btn">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                    <hr />
+                }
+            </div>
+
+            <h4 class="mb-4 mt-3">Patient Information</h4>
+            <div class="row">
+                <input type="text" asp-for="@Model.RequestId" hidden />
+
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input asp-for="@Model.FirstName" type="text" class=" form-control" id="floatingInput" placeholder="John" disabled>
+                    <label for="floatingInput" class="ms-2 ">First Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input asp-for="@Model.LastName" type="text" class=" form-control" id="floatingInput" placeholder="Wick" disabled>
+                    <label for="floatingInput" class="ms-2 ">Last Name</label>
+                </div>
+
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input asp-for="@Model.BirthDate" type="date" class=" form-control" id="datePickerId" placeholder="02-10-2002" disabled>
+                    <label for="datePickerId" class="ms-2 ">Date of Birth</label>
+                </div>
+
+                <div class="form-floating mb-3 col-12 col-lg-5 col-sm-4">
+                    <input type="tel" asp-for="@Model.PhoneNumber" class="telstyle input-disable form-control" id="telephone10" placeholder="">
+                    <span class="text-danger" asp-validation-for="@Model.PhoneNumber"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-12 col-lg-1 col-sm-2 ">
+                    <a href="tel:@Model.PhoneNumber">
+                        <button type="button" class="btn btn-outline-info border-info p-3 w-100">
+                            <i class="fa-solid fa-phone"></i>
+                        </button>
+                    </a>
+                </div>
+                <div class="form-floating mb-3 col-12 col-sm-6">
+                    <input type="email" asp-for="@Model.Email" class="form-control" id="floatingInput1" disabled placeholder="test@google.com" aria-label="Email">
+                    <label for="floatingInput" class="ms-2">Email</label>
+                    <span class="text-danger" asp-validation-for="@Model.Email"></span>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end mt-4 pt-4 mb-3">
+                <button class="editBtn btn btn-info me-2 text-white px-3 py-2 fw-semibold" onclick="enableFields()" type="button">Edit</button>
+                <button class="closeCaseBtn btn btn-outline-info border-info fw-semibold" type="button" onclick="PostCloseCase(@Model.RequestId)">Close Case</button>
+                <button class="submitBtn btn btn-info me-2 text-white px-2 py-2 fw-semibold" type="submit">Save</button>
+                <button class="cancelBtn btn btn-outline-secondary border-secondary fw-semibold" onclick="disableFields()" type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    function disableFields() {
+        document.querySelectorAll('.input-disable').forEach(function (element) {
+            element.disabled = true;
+            document.getElementById('closeCaseForm').reset(); // for reseting form
+            $('.text-danger').addClass("d-none");
+        });
+        $('.editBtn').removeClass("d-none");
+        $('.closeCaseBtn').removeClass("d-none");
+        $('.submitBtn').addClass("d-none");
+        $('.cancelBtn').addClass("d-none");
+    }
+    function enableFields() {
+        document.querySelectorAll('.input-disable').forEach(function (element) {
+            element.disabled = false;
+            $('.text-danger').removeClass("d-none");
+        });
+        $('.editBtn').addClass("d-none");
+        $('.closeCaseBtn').addClass("d-none");
+        $('.submitBtn').removeClass("d-none");
+        $('.cancelBtn').removeClass("d-none");
+    }
+    disableFields();
+</script>

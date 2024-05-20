@@ -1,0 +1,425 @@
+﻿@model hellodoc.DAL.ViewModels.ProviderProfileVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+
+    .telstyle {
+        height: 60px;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <div class=" mt-2 d-flex justify-content-between align-items-center">
+        @if (Model.callId == 3)
+        {
+            <h4 class="fw-semibold">My Profile</h4>
+        }
+        else
+        {
+            <h4 class="fw-semibold">Edit Physician Account</h4>
+        }
+        @if (Model.callId == 1)
+        {
+            <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetProvider(0)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+        @if (Model.callId == 2)
+        {
+            <a class="btn btn-outline-info fw-bold h-50 shadow" onclick="GetUserAccess(0)">
+                <div class="d-flex justify-content-between">
+                    <i class="bi bi-caret-left-fill"></i> <span class="d-sm-block d-none">Back</span>
+                </div>
+            </a>
+        }
+
+    </div>
+
+    <div class="shadow border rounded my-3">
+        <div class="mx-3 my-4 ">
+
+            @if (Model.callId == 3)
+            {
+                <div class="d-flex justify-content-end">
+                    <button type="button" id="requestToAdmin" class="btn btn-outline-info border-info fw-semibold" data-bs-toggle="modal" data-bs-target="#requestToAdminModal">Request To Admin</button>
+                </div>
+            }
+
+            <form method="post" id="PhysicianAccountForm" onsubmit="PhysicianAccountEdit(@Model.callId)">
+                <input asp-for="@Model.AspId" id="AspId1" hidden />
+                <input asp-for="@Model.PhysicianId" id="PhysicianId1" hidden />
+                <input asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="mt-3">
+                    <h4 class="my-4">Account Information</h4>
+
+                    <div class="row">
+                        <div class="mb-3 col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating  ">
+                            <input type="text" asp-for="@Model.Username" class="form-control" id="floatingInputUsername" placeholder="User Name" disabled aria-label="User Name">
+                            <label class="ms-2 " for="floatingInputUsername">User Name</label>
+                        </div>
+                        <div class="mb-3 col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating ">
+                            <input asp-for="@Model.Password" type="password" class="form-control"
+                                   id="floatingPassword" placeholder="Password">
+                            <span class="text-danger" asp-validation-for="@Model.Password"></span>
+                            <label for="floatingPassword" class="ms-2">Password</label>
+                            <div class="eye-icon position-absolute top-0 end-0 mx-3 my-2">
+                                <i class="bi bi-eye-slash fs-4 text-muted mt-1 common-cursor-pointer" id="togglePassword" onclick="showPassword()"></i>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3 ">
+                            <select class="form-select form-control d1class" asp-for="@Model.Status" disabled id="status">
+                                <option value="1">Active</option>
+                                <option value="3">Not Active</option>
+                            </select>
+                            <label for="status" class="ms-2 ">Status</label>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3 ">
+                            <select class="form-select form-control d1class" id="Role" asp-for="@Model.RoleId">
+                                @foreach (var obj in Model.Roles)
+                                {
+                                    <option value="@obj.Roleid">
+                                        @obj.Name
+                                    </option>
+                                }
+                            </select>
+                            <label for="Role" class="ms-2 ">Role</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        @if (Model.callId != 3)
+                        {
+                            <button type="button" class="editBtnPhyEdit1 btn btn-info text-white EditBtn fw-semibold d-none" onclick="enableFields(1)">Edit</button>
+                            <button type="submit" class="submitBtnPhyEdit1 btn btn-info text-white SaveBtn me-2 fw-semibold d-none">Save</button>
+                            <button type="reset" class="cancelBtnPhyEdit1 btn btn-outline-secondary border-secondary CancelBtn fw-semibold d-none" onclick="disableFields(1)">Cancel</button>
+                        }
+                        <button type="button" onclick="PhysicianProfileResetPassword(@Model.callId)" id="ResetPassword" class="btn btn-outline-info border-info rounded px-2 py-1 fw-semibold ms-2">Reset Password</button>
+                    </div>
+                </div>
+            </form>
+
+            <form method="post" id="PhysicianAdministratorForm" onsubmit="PhysicianAdministratorEdit(@Model.callId)">
+                <input asp-for="@Model.AspId" id="AspId2" hidden />
+                <input asp-for="@Model.PhysicianId" id="PhysicianId2" hidden />
+                <input asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="pt-4">
+                    <h4 class="mb-4">Physician Information</h4>
+                    <div class="row mb-3">
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3 ">
+                            <input asp-for="@Model.FirstName" type="text" class="d2class form-control " id="floatingInputFirstName"
+                                   placeholder="First Name" aria-label="First Name">
+                            <label class="ms-2 " for="floatingInputFirstName">First name</label>
+                            <span class="text-danger" asp-validation-for="FirstName"></span>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12  form-floating mb-3 ">
+                            <input asp-for="@Model.LastName" type="text" class="d2class form-control " id="floatingInputLast"
+                                   placeholder="Last Name" aria-label="Last Name">
+                            <label class="ms-2  " for="floatingInputLast">Last name</label>
+                            <span class="text-danger" asp-validation-for="LastName"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.Email" type="email" class="form-control " id="ProfileInputemail" disabled value="@Model.Email" placeholder="Email" aria-label="Email">
+                            <label class="ms-2 " for="floatingInputemail">Email</label>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input type="tel" asp-for="@Model.Phonenumber" class="telstyle d2class form-control" id="telephone8" placeholder="">
+                            <span class="text-danger" asp-validation-for="@Model.Phonenumber"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.MedicalLicense" type="text" class="d2class form-control " id="MedicalLicense"
+                                   placeholder="MedicalLicense" aria-label="MedicalLicense">
+                            <span class="text-danger"></span>
+                            <label class="ms-2 " for="MedicalLicense">MedicalLicense #</label>
+                            <span class="text-danger" asp-validation-for="MedicalLicense"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.NPINumber" type="text" class="d2class form-control " id="NPINumber"
+                                   placeholder="NPINumber" aria-label="NPINumber">
+                            <span class="text-danger"></span>
+                            <label class="ms-2 " for="NPINumber">NPI Number</label>
+                            <span class="text-danger" asp-validation-for="NPINumber"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.SyncEmail" type="email" class="d2class form-control " id="SynchronizationEmail"
+                                   placeholder="SynchronizationEmail" aria-label="SynchronizationEmail">
+                            <span class="text-danger"></span>
+                            <label class="ms-2 " for="SynchronizationEmail">Synchronization Email Address</label>
+                            <span class="text-danger" asp-validation-for="SyncEmail"></span>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            @foreach (var obj in Model.PhysicianRegionTables)
+                            {
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input d2class" name="physicianRegions" type="checkbox" @(obj.ExistsInTable ? "checked" : "") id="@obj.Regionid" value="@obj.Regionid">
+                                    <label class="form-check-label" for="@obj.Regionid">@obj.Name</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-flex justify-content-end  justify-content-md-end mt-3 mb-3">
+                        @if (Model.callId != 3)
+                        {
+                            @if (Model.callId == 1)
+                            {
+                                <button type="button" class="btn btn-success text-white fw-semibold" onclick="GetEnterPayrate(`@Model.AspId`, `@Model.PhysicianId`)">Enter Payrate</button>
+                            }
+                            <button type="button" class="editBtnPhyEdit2 btn btn-info text-white EditBtn fw-semibold d-none" onclick="enableFields(2)">Edit</button>
+                            <button type="submit" class="submitBtnPhyEdit2 btn btn-info text-white SaveBtn fw-semibold d-none">Save</button>
+                            <button type="reset" class="cancelBtnPhyEdit2 btn btn-outline-secondary border-secondary CancelBtn fw-semibold d-none" onclick="disableFields(2)">Cancel</button>
+                        }
+                    </div>
+                </div>
+            </form>
+
+            <form method="post" id="PhysicianMailingForm" onsubmit="PhysicianMailingEdit(@Model.callId)">
+                <input asp-for="@Model.AspId" id="AspId3" hidden />
+                <input asp-for="@Model.PhysicianId" hidden />
+
+                <div class="pt-4">
+                    <h4 class="mb-4">Mailing And Billing Information</h4>
+                    <div class="row mb-3">
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.Address1" type="text" class="d3class form-control " id="floatingInputAddress1"
+                                   placeholder="Address1" aria-label="Address1">
+                            <label class="ms-2 " for="floatingInputAddress1">Address1</label>
+                            <span class="text-danger" asp-validation-for="Address1"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.Address2" type="text" class="d3class form-control " id="floatingInputAddress2"
+                                   placeholder="Address2" aria-label="Address2">
+                            <label class="ms-2 " for="floatingInputAddress2">Address2</label>
+                            <span class="text-danger" asp-validation-for="Address2"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.City" type="text" class="d3class form-control " id="floatingInputCity"
+                                   placeholder="City" aria-label="City">
+                            <label class="ms-2 " for="floatingInputCity">City</label>
+                            <span class="text-danger" asp-validation-for="City"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <select class="d3class form-select regionDropdown" id="state" asp-for="@Model.RegionId" aria-label="Region">
+                                @foreach (var obj in Model.Regions)
+                                {
+                                    <option value="@obj.Regionid">
+                                        @obj.Name
+                                    </option>
+                                }
+                            </select>
+                            <label for="state" class="ms-2 ">State</label>
+                            <span class="text-danger" asp-validation-for="RegionId"></span>
+                        </div>
+                        <input type="text" id="longitude" asp-for="@Model.Longitude" hidden />
+                        <input type="text" id="latitude" asp-for="@Model.Latitude" hidden />
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.Zipcode" type="text" class="d3class form-control " id="physicianZipCode" onblur="getcoordinates()"
+                                   placeholder="Zip Code" aria-label="Zip Code">
+                            <label class="ms-2" for="physicianZipCode">Zip</label>
+                            <span class="text-danger" asp-validation-for="Zipcode"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input type="tel" asp-for="@Model.AltPhone" class="telstyle d3class form-control" id="telephone9" placeholder="">
+                            <span class="text-danger" asp-validation-for="@Model.AltPhone"></span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-flex justify-content-end  justify-content-md-end mb-3">
+                        @if (Model.callId != 3)
+                        {
+                            <button type="button" class="editBtnPhyEdit3 btn btn-info text-white EditBtn fw-semibold d-none" onclick="enableFields(3)">Edit</button>
+                            <button type="submit" class="submitBtnPhyEdit3 btn btn-info text-white SaveBtn fw-semibold d-none">Save</button>
+                            <button type="reset" class="cancelBtnPhyEdit3 btn btn-outline-secondary border-secondary CancelBtn fw-semibold d-none" onclick="disableFields(3)">Cancel</button>
+                        }
+                    </div>
+                </div>
+            </form>
+
+            <form method="post" id="PhysicianBusinessInfoForm" onsubmit="return checkFileExtension() && checkFileExtension2() && PhysicianBusinessInfoEdit(@Model.callId)">
+                <input asp-for="@Model.AspId" id="AspId4" hidden />
+                <input asp-for="@Model.PhysicianId" id="PhysicianId4" hidden />
+                <div class="pt-4">
+                    <h4 class="mb-4">Provider Information</h4>
+                    <div class="row mb-3">
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.BusinessName" type="text" class="d4class form-control " id="Businessname"
+                                   placeholder="Businessname" aria-label="Businessname">
+                            <span class="text-danger"></span>
+                            <label class="ms-2 " for="Businessname">Business Name</label>
+                            <span class="text-danger" asp-validation-for="BusinessName"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <input asp-for="@Model.BusinessWebsite" type="text" class="d4class form-control " id="Businesswebsite"
+                                   placeholder="Businesswebsite" aria-label="Businesswebsite">
+                            <label class="ms-2 " for="Businesswebsite">Business website</label>
+                            <span class="text-danger" asp-validation-for="BusinessWebsite"></span>
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3 ">
+                            <div>
+                                <div class="input-group border border-2 rounded d-flex">
+                                    <input asp-for="@Model.Photo" type="file" class="d4class form-control py-3" id="fileUploadInp">
+                                    <button class="btn btn-info text-white" type="button" disabled id="upload-btn" onclick="checkFileExtension()"> <i class="bi bi-cloud-arrow-up text-white me-1"></i> <span class="d-none d-md-inline-block">Profile</span></button>
+                                </div>
+                                <span class="text-danger" id="errormessgespan" asp-validation-for="@Model.Photo"></span>
+                            </div>
+                            @if (Model.PhotoValue != null)
+                            {
+                                <div class="d-flex justify-content-center w-100 mt-2 mb-2">
+                                    <img src="~/content/@Model.PhysicianId/Profile.png" width="200px" alt="Profile">
+                                </div>
+                            }
+                        </div>
+                        <div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 form-floating mb-3">
+                            <div>
+                                <div class="input-group border border-2 rounded d-flex">
+                                    <input asp-for="@Model.Signature" type="file" class="d4class form-control py-3" id="fileUploadInp2">
+                                    <button class="btn btn-info text-white" type="button" id="upload-btn2" disabled onclick="checkFileExtension2()"> <i class="bi bi-cloud-arrow-up text-white me-1"></i> <span class="d-none d-md-inline-block">Sign</span></button>
+                                </div>
+                                <span class="text-danger" id="errormessgespan2" asp-validation-for="@Model.Signature"></span>
+                            </div>
+                            @if (Model.SignatureValue != null)
+                            {
+                                <div class="d-flex justify-content-center w-100 mt-2 mb-2">
+                                    <img src="~/content/@Model.PhysicianId/Signature.png" width="200px" alt="Signature">
+                                </div>
+                            }
+                        </div>
+                        <div class=" col-12 form-floating mb-3">
+                            <textarea asp-for="@Model.AdminNotes" class="form-control d4class" rows="5" placeholder="Admin Notes" id="AdminNotes"></textarea>
+                            <label class="ms-2" for="AdminNotes">Admin Notes</label>
+                            <span class="text-danger" asp-validation-for="AdminNotes"></span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-flex justify-content-end justify-content-md-end mb-3">
+                        @if (Model.callId != 3)
+                        {
+                            <button type="button" class="editBtnPhyEdit4 btn btn-info text-white EditBtn fw-semibold d-none" onclick="enableFields(4)">Edit</button>
+                            <button type="submit" class="submitBtnPhyEdit4 btn btn-info text-white SaveBtn fw-semibold d-none">Save</button>
+                            <button type="reset" class="cancelBtnPhyEdit4 btn btn-outline-secondary border-secondary CancelBtn fw-semibold d-none" onclick="disableFields(4)">Cancel</button>
+                        }
+                    </div>
+                </div>
+            </form>
+
+            <hr class="w-100" />
+
+            <form method="post" id="OnboardingEditForm" onsubmit="return checkOnboardingFiles(1) && checkOnboardingFiles(2) && checkOnboardingFiles(3) && checkOnboardingFiles(4) && UpdateOnBoarding(@Model.callId)">
+                <input asp-for="@Model.AspId" id="AspId5" hidden />
+                <div class="pt-4">
+                    <h4 class="mb-4">Onboarding</h4>
+                    <div class="mb-3 d-md-flex align-items-center justify-content-between onBoardContainer">
+                        <div class="form-check d-flex">
+                            <input class="form-check-input ms-1 p-2 Onboarding" type="checkbox" value="1" id="Onboarding1" @(Model.IsContractorAgreement ? "checked" : "")>
+                            <label class="form-check-label ms-3 fw-bolder" for="Onboarding1">Independent Contractor Agreement</label>
+                        </div>
+                        <span class="text-danger" id="errorSpan1"></span>
+                        <div class="d-flex justify-content-center">
+                            <a type="button" href="~/content/@Model.PhysicianId/Independent_Contractor.pdf" target="_blank" id="OnboardingView1" class="btn btn-outline-secondary border-secondary fw-semibold me-2" style="display:none">View</a>
+                            <input type="file" hidden class="form-control onBoardInpFile" asp-for="@Model.ContractorAgreement" id="inputOnboardFile1" onchange="checkOnboardingFiles(1)">
+                            <label class="input-group-text me-3 input-group-text bg-info text-white fw-semibold" for="inputOnboardFile1">Upload</label>
+                            <span class="text-danger" asp-validation-for="@Model.ContractorAgreement"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-md-flex align-items-center justify-content-between onBoardContainer">
+                        <div class="form-check d-flex">
+                            <input class="form-check-input ms-1 p-2 Onboarding" type="checkbox" value="2" id="Onboarding2" @(Model.IsBackgroundCheck ? "checked" : "")>
+                            <label class="form-check-label ms-3 fw-bolder" for="Onboarding2">Background Check</label>
+                        </div>
+                        <span class="text-danger" id="errorSpan2"></span>
+                        <div class="d-flex justify-content-center">
+                            <a type="button" href="~/content/@Model.PhysicianId/Background.pdf" target="_blank" id="OnboardingView2" class="btn btn-outline-secondary border-secondary fw-semibold me-2" style="display:none">View</a>
+                            <input type="file" hidden class="form-control onBoardInpFile" asp-for="@Model.BackgroundCheck" id="inputOnboardFile2" onchange="checkOnboardingFiles(2)">
+                            <label class="input-group-text me-3 input-group-text bg-info text-white fw-semibold" for="inputOnboardFile2">Upload</label>
+                            <span class="text-danger" asp-validation-for="@Model.BackgroundCheck"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center justify-content-between onBoardContainer">
+                        <div class="form-check d-flex">
+                            <input class="form-check-input ms-1 p-2 Onboarding" type="checkbox" value="3" id="Onboarding3" @(Model.IsHIPAA ? "checked" : "")>
+                            <label class="form-check-label ms-3 fw-bolder" for="Onboarding3">HIPAA Compliance</label>
+                        </div>
+                        <span class="text-danger" id="errorSpan3"></span>
+                        <div class="d-flex justify-content-center">
+                            <a type="button" href="~/content/@Model.PhysicianId/HIPAA.pdf" target="_blank" id="OnboardingView3" class="btn btn-outline-secondary border-secondary fw-semibold me-2" style="display:none">View</a>
+                            <input type="file" hidden class="form-control onBoardInpFile" asp-for="@Model.HIPAA" id="inputOnboardFile3" onchange="checkOnboardingFiles(3)">
+                            <label class="input-group-text me-3 input-group-text bg-info text-white fw-semibold" for="inputOnboardFile3">Upload</label>
+                            <span class="text-danger" asp-validation-for="@Model.HIPAA"></span>
+
+                        </div>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center justify-content-between onBoardContainer">
+                        <div class="form-check d-flex">
+                            <input class="form-check-input ms-1 p-2 Onboarding" type="checkbox" value="4" id="Onboarding4" @(Model.IsNonDisclosure ? "checked" : "")>
+                            <label class="form-check-label ms-3 fw-bolder" for="Onboarding4">Non-disclouser Agreement</label>
+                        </div>
+                        <span class="text-danger" id="errorSpan4"></span>
+                        <div class="d-flex justify-content-center">
+                            <a type="button" href="~/content/@Model.PhysicianId/Non_Disclosure.pdf" target="_blank" id="OnboardingView4" class="btn btn-outline-secondary border-secondary fw-semibold me-2" style="display:none">View</a>
+                            <input type="file" hidden class="form-control onBoardInpFile" asp-for="@Model.NonDisclosure" id="inputOnboardFile4" onchange="checkOnboardingFiles(4)">
+                            <label class="input-group-text me-3 input-group-text bg-info text-white fw-semibold" for="inputOnboardFile4">Upload</label>
+                            <span class="text-danger" asp-validation-for="@Model.NonDisclosure"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center justify-content-between onBoardContainer">
+                        <div class="form-check d-flex">
+                            <input class="form-check-input ms-1 p-2 Onboarding" type="checkbox" value="5" id="Onboarding5" @(Model.IsLicenseDocument ? "checked" : "")>
+                            <label class="form-check-label ms-3 fw-bolder" for="Onboarding5">License Document</label>
+                        </div>
+                        <span class="text-danger" id="errorSpan5"></span>
+                        <div class="d-flex justify-content-center">
+                            <a type="button" href="~/content/@Model.PhysicianId/Licence.pdf" target="_blank" id="OnboardingView5" class="btn btn-outline-secondary border-secondary fw-semibold me-2" style="display:none">View</a>
+                            <input type="file" hidden class="form-control onBoardInpFile" asp-for="@Model.LicenseDocument" id="inputOnboardFile5" onchange="checkOnboardingFiles(5)">
+                            <label class="input-group-text me-3 input-group-text bg-info text-white fw-semibold" for="inputOnboardFile5">Upload</label>
+                            <span class="text-danger" asp-validation-for="@Model.LicenseDocument"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="w-100" />
+                <div class="d-grid gap-2 d-flex justify-content-center justify-content-md-end mb-3">
+                    @if (Model.callId != 3)
+                    {
+                        <button type="submit" id="savebtn" class="btn btn-info text-white me-1 fw-semibold shadow">Save</button>
+                        <button type="button" id="DeleteAccount" class="btn btn-danger fw-semibold shadow" onclick="DeletePhysicianAccount(@Model.PhysicianId, @Model.callId)">Delete Account</button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* Request to Admin  *@
+<div class="modal fade" id="requestToAdminModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <div class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Request To Administrator</div>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form class="p-3" id="requestToAdminFormId" method="post" onsubmit="SendRequestToAdmin()">
+                <input type="text" asp-for="@Model.PhysicianId" hidden />
+
+                <div class="">Need to send message to edit</div>
+                <div class="mt-4 form-floating">
+                    <textarea class="form-control h-100 primary" id="floatingInputRequest" placeholder="Message" rows="3" asp-for="@Model.RequestMessage"></textarea>
+                    <label for="floatingInputRequest" class="text-wrap">Message</label>
+                    <span class="text-danger" asp-validation-for="RequestMessage"></span>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn fw-semibold btn-outline-info border-info continue-btn mx-2">Submit</button>
+                    <button type="button" class="btn fw-semibold btn-outline-secondary border-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<partial name="_ValidationScriptsPartial" />
+<script src="~/js/provider-profile.js" asp-append-version="true"></script>

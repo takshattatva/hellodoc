@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<partial name="Patient/_Header" />
+
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div class="w3-display-middle">
+    <div class="d-flex justify-content-center">
+        <img src="~/images/lock.png" class="w3-jumbo w3-animate-top" style="height: 100px" />
+    </div>
+    <h1 class="w3-jumbo w3-animate-top w3-center text-danger fw-bold"><code class="text-danger">Access Denied</code></h1>
+    <hr class="w3-animate-left text-dark m-auto w-75">
+    <h3 class="w3-center w3-animate-zoom fw-semibold mt-2">You dont have permission to view this page.</h3>
+    <h3 class="w3-center w3-animate-zoom mt-3">🚫🚫🚫🚫</h3>
+    <div class="d-flex justify-content-center mt-4">
+        <a class="w3-center w3-animate-bottom btn btn-outline-info fw-semibold" type="button" asp-action="Index" asp-controller="Patient">Go To Login</a>
+    </div>
+</div>
+
+<div id="loader-container" class="loader-container" style="z-index:150">
+    <div id="loader" class="loader" style="z-index:150"></div>
+</div>
+
+<div class="backdrop" style="z-index:140"></div>

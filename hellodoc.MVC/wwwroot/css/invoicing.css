@@ -1,0 +1,44 @@
+﻿.TimesheetperiodDropdown {
+    scrollbar-width: auto;
+    scrollbar-color: #D3D3D3 #fff; /* scrollbar color and background color */
+}
+
+    .TimesheetperiodDropdown::-webkit-scrollbar {
+        width: 10px; /* scrollbar width */
+        height: 10px; /* scrollbar height */
+    }
+
+    .TimesheetperiodDropdown::-webkit-scrollbar-thumb {
+        background-color: #D3D3D3; /* scrollbar thumb color */
+        border-radius: 10px; /* scrollbar thumb border radius */
+    }
+
+    .TimesheetperiodDropdown::-webkit-scrollbar-track {
+        background-color: #fff; /* scrollbar track color */
+        border-radius: 10px; /* scrollbar track border radius */
+    }
+
+.form-check-input:checked {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+}
+
+.PhysicianDropDown {
+    scrollbar-width: auto;
+    scrollbar-color: #D3D3D3 #fff; /* scrollbar color and background color */
+}
+
+    .PhysicianDropDown::-webkit-scrollbar {
+        width: 10px; /* scrollbar width */
+        height: 10px; /* scrollbar height */
+    }
+
+    .PhysicianDropDown::-webkit-scrollbar-thumb {
+        background-color: #D3D3D3; /* scrollbar thumb color */
+        border-radius: 10px; /* scrollbar thumb border radius */
+    }
+
+    .PhysicianDropDown::-webkit-scrollbar-track {
+        background-color: #fff; /* scrollbar track color */
+        border-radius: 10px; /* scrollbar track border radius */
+    }

@@ -1,0 +1,30 @@
+﻿@model hellodoc.DAL.ViewModels.ModalVm
+
+<div class="modal fade" id="clearModalId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content pt-4 pb-4 border rounded-3">
+            <form id="clearCaseForm" onsubmit="ClearCase(@Model.clearCaseModel.RequestId)">
+                <input type="text" asp-for="@Model.clearCaseModel.RequestId" hidden />
+                <input type="text" asp-for="@Model.StatusForName" id="statusForName" hidden />
+                <div class="container d-flex flex-column pt-4 pb-4">
+                    <div class="container d-flex justify-content-center">
+                        <i class="fa-solid fa-circle-exclamation text-warning border-warning" style="font-size: 100px;border-radius: 100%;padding: 10px;border:2px solid yellow;"></i>
+                    </div>
+                    <div class="container d-flex justify-content-center fs-3 fw-semibold mt-1">
+                        Confirmation for clear case
+                    </div>
+                </div>
+                <div class="container  pb-5 text-center">
+                    Are sure you want to clear this request? Once clear this <br />
+                    request then you are not able to see this request
+                </div>
+                <div class="d-flex justify-content-center pb-4">
+                    <input type="text" asp-for="@Model.clearCaseModel.RequestId" id="clearRequestId" hidden />
+                    <input type="text" asp-for="@Model.StatusForName" id="statusForNameId" hidden />
+                    <button type="submit" class="btn btn-outline-info border-info me-2 fw-semibold" data-bs-dismiss="modal">Clear</button>
+                    <button type="button" class="btn btn-outline-secondary border-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

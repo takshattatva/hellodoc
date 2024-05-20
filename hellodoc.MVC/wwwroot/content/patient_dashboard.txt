@@ -1,0 +1,385 @@
+@model Data.Dash.PatientDashData
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@{
+    Layout = null;
+}
+@functions {
+    public string GetStatusString(int statusId)
+    {
+        switch (statusId)
+        {
+            case 1: return "New";
+            case 2: return "Accepted";
+            default: return "Unknown";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <style>
+        .bg {
+            background-image: url();
+        }
+
+        .dark-mode {
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        .night {
+            height: 40px;
+            width: 40px;
+            top: 4%;
+            left: 97%;
+            border: 1px solid #00bce7;
+            border-radius: 5px;
+            background: none;
+        }
+
+        .moon {
+            color: #00bce7;
+        }
+
+        .logout {
+            height: 40px;
+            width: fit-content;
+            top: 4%;
+            left: 92%;
+            border: 1px solid #00bce7;
+            border-radius: 5px;
+            background: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+            .logout:hover {
+                background-color: #00d0ff1a;
+                color: #fff;
+            }
+
+        .wlc {
+            top: 4%;
+            left: 76%;
+            font-weight: 500;
+            font-size: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nitem:hover {
+            color: #00bce7 !important;
+        }
+
+        .nitem.active {
+            color: #00bce7 !important;
+        }
+
+        .nitem.deactive {
+            color: #00bce7 !important;
+        }
+        #myTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            #myTable tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            #myTable td {
+                border-bottom: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            #myTable tr:hover td {
+                background-color: #7e7e7e83;
+            }
+
+                #myTable tr:hover td:first-child {
+                    border-top-left-radius: 5px;
+                    border-bottom-left-radius: 5px;
+                }
+
+                #myTable tr:hover td:last-child {
+                    border-top-right-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                }
+    </style>
+</head>
+
+<body onload="modefunction()">
+    <div class="container-fluid">
+        <header>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="ms-3 d-flex align-items-center">
+                    <div class="ms-3 d-md-none d-block">
+                        <p>
+                            <a style="color: #00bce7;top:3%;left:3%;background: none;border: 1px solid #00bce7;border-radius: 5px;width: fit-content;" class="btn position-absolute" data-bs-toggle="collapse" href="#collapsewithlink" role="button" aria-expanded="false" aria-controls="collapsewithlink">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                                </svg>
+                            </a>
+                        </p>
+                        <div class="collapse" id="collapsewithlink">
+                            <div class="card card-body">
+                                <ul class="nav nav-underline">
+                                    <li class="nav-item mx-2">
+                                        <a asp-action="patient_dashboard" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" aria-current="page">Dashboard</a>
+                                    </li>
+                                    <li class="nav-item mx-3">
+                                        <a asp-action="patient_profile" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")">Profile</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="d-md-none d-block ms-5 align-items-center justify-content-between">
+                            <img src="~/images/hellodoc.png" alt="" class="ms-5" style="height: 12vh;">
+                        </div>
+                    </div>
+                    <div class="d-md-block d-none">
+                        <img src="~/images/hellodoc.png" alt="" class="ms-5" style="height: 90px;">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="d-xl-block d-none position-absolute" style="right:10%;top: 3%;">
+                        <pre style="font-weight: 500;font-size:22px;font-family:Verdana, Geneva, Tahoma, sans-serif;">Welcome <strong style="font-weight: bold;">@Accessor.HttpContext.Session.GetString("_sessionUserName")</strong></pre>
+                    </div>
+                    <div class="position-absolute me-4" style="right: 8%;top: 3%;">
+                        <a class="logout position-absolute" asp-action="Logout">
+                            <span style="color:#00bce7 ;font-weight: bold;" class="d-xl-block d-none">Logout</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="color: #00bce7;"
+                                 fill="currentColor" class="bi bi-box-arrow-right d-xl-none d-block mt-1" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                <path fill-rule="evenodd"
+                                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="position-absolute ms-5" style="right: 3%;top: 3%;">
+                        <button onclick="moonfunction()" class="night position-absolute">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: #00bce7;" width="20" height="20"
+                                 fill="currentColor" class="bi bi-moon moon" viewBox="0 0 16 16">
+                                <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class=" d-md-flex d-none justify-content-start mx-4 my-2">
+                <ul class="nav nav-underline">
+                    <li class="nav-item mx-2">
+                        <a asp-action="patient_dashboard" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" aria-current="page">Dashboard</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a asp-action="patient_profile" asp-controller="Patient" class="nav-link nitem @(ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <div class="py-md-5">
+            <div class="px-4 pt-4 mb-4 h4">
+                <p style="font-weight: bold;">Medical History</p>
+            </div>
+            <div style="width: 98%;background-color: #c9c9c941;border-radius: 5px;" class="ms-3 box-shadow justify-content-center shadow align-items-center">
+                    <div class="container-fluid d-none d-sm-block shadow p-3 rounded-3">
+                        <div class="text-end py-3">
+                            <a class="btn btn-outline-info fw-bold border border-2 border-info" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                <span class="d-none d-sm-block">Create New Request</span>
+                                <span class="d-block d-sm-none"><i class="bi bi-plus text-info fw-bold fs-5"></i></span>
+                            </a>
+                        </div>
+                        <table id="myTable">
+                            <tr class="d-none d-md-table-row fw-semibold">
+                                <td scope="col" class="px-3">Created Date<i class="bi bi-arrow-down"></i></td>
+                                <td scope="col" class="">Current Status</td>
+                                <td scope="col" class="">Document</td>
+                            </tr>
+                            @foreach (var obj in Model.dashboardData)
+                            {
+                                <tr class="align-middle">
+                                    <td scope="row">
+                                        @obj.CreatedDate.ToString("MMM")   @obj.CreatedDate.Day, @obj.CreatedDate.Year
+                                    </td>
+
+                                    <td>
+                                        @GetStatusString(obj.Status)
+                                    </td>
+
+                                    <td class="">
+                                        @if (obj.DocumentCount > 0)
+                                        {
+                                            <a class="btn btn-outline-info fw-bold" asp-controller="Patient" asp-route-rid=@obj.RequestId asp-action="view_doc">
+                                                <span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="color:#00bce7" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                                                        <path d="M5.523 12.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 6.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z" />
+                                                        <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.7 11.7 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103" />
+                                                    </svg>
+                                                </span>
+                                                <span>@obj.DocumentCount</span>
+                                            </a>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="mx-2 border rounded shadow">
+                        <div class="accordion container-fluid d-block d-sm-none " id="accordionPanelsStayOpenExample">
+                            <div class="text-end py-3">
+                                <a href="#" class="btn btn-outline-info fw-bold border border-2 border-info" data-bs-toggle="modal" data-bs-target="#myModal1">
+                                    <span class="d-none d-sm-block">Create New Request</span>
+                                    <span class="d-block d-sm-none"><i class="bi bi-plus text-info fw-bold fs-5"></i></span>
+                                </a>
+                            </div>
+                            <hr class="m-0">
+
+                            @{
+                                var counter = 1;
+                            }
+
+                            @foreach (var obj in Model.dashboardData)
+                            {
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item" style="background-color:transparent">
+                                    <h2 class="accordion-header" id="flush-heading@(counter)">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                                    aria-controls="flush-collapse@(counter)" style="background-color:transparent">
+                                                <i class="bi bi-clock text-info me-2"></i> <span class="accordion-heading fw-bolder" >
+                                                    Created Date:
+                                                    <span class="accordion-value fw-normal">
+                                                        @obj.CreatedDate.ToString("MMM")
+                                                        @obj.CreatedDate.Day,
+                                                        @obj.CreatedDate.Year
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                             aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body main-flex">
+                                                <div class="inner-flex">
+                                                    <i class="bi bi-person-circle text-info"></i>
+                                                    <span class="accordion-heading-inner fw-bolder">
+                                                        Provider:
+                                                        <span class="accordion-value-inner">
+                                                            -
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="inner-flex">
+                                                    <i class="bi bi-check-circle text-info"></i> <span class="accordion-heading-inner fw-bolder">
+                                                        Current Status:
+                                                        <span class="accordion-value-inner">
+                                                            @obj.Status
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="inner-flex d-flex justify-content-center">
+                                                    @if (obj.DocumentCount > 0)
+                                                    {
+                                                        <a class="btn btn-outline-info fw-bold" asp-controller="Patient" asp-route-rid=@obj.RequestId asp-action="view_doc">
+                                                            <span><i class="bi bi-file-earmark fw-bold"></i></span>
+                                                            <span>@obj.DocumentCount Documents</span>
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                counter++;
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-dark fixed-bottom d-flex justify-content-end py-2 px-3">
+            <span class="text-light">
+                Terms of
+                Conditions | Privacy policy
+            </span>
+        </footer>
+
+@* ***************************************************Create request Modal*************************************************** *@
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <div class="modal-dark modal-title" id="exampleModalLongTitle" style="color:white">Create New Request</div>
+                    <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" style="color:white"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="" id="redirect-value" value="submit_for_me">
+                    <div class="modal-body">
+                        <span class="modal-head">Here, I want to create new request for ...</span>
+                        <div class="modal-flex d-flex justify-content-center my-3">
+                            <a class="btn common-btn create-request-active border border-1 border-info btn-hover" style="font-weight:800;" asp-action="submit_for_me" asp-controller="Patient"> Me </a> @* onclick="toggleButton(this,'submit_for_me')" *@
+                            <a class="btn common-btn ms-2 border border-1 border-info" style="font-weight:800;" asp-action="submit_for_other" asp-controller="Patient"> Some One Else</a> @* onclick="toggleButton(this,'submit_for_other')" *@
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @* <button type="button" class="btn btn-info continue-btn" data-bs-dismiss="modal" onclick="redirect()" style="font-weight:700;border:1px solid #00bce7">Continue</button> *@
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="font-weight:700;border:1px solid #00bce7">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@* ***************************************************Create request Modal*************************************************** *@
+        <script>
+            $('.nav-item').on('click', function () {
+                $('.active-link').removeClass('active-link');
+                $(this).addClass('active-link');
+            });
+        </script>
+        <script>
+            function modefunction() {
+                var x = document.documentElement;
+                var y = localStorage.getItem('theme');
+                if (y == 'light' || y == null) {
+                    x.setAttribute('data-bs-theme', 'light');
+                }
+                else {
+                    x.setAttribute('data-bs-theme', 'dark');
+                }
+            }
+
+            function moonfunction() {
+                var x = document.documentElement;
+                var y = localStorage.getItem('theme');
+
+                if (y == "light" || y == null) {
+                    localStorage.setItem('theme', 'dark');
+                    x.setAttribute('data-bs-theme', 'dark');
+                }
+                else {
+                    localStorage.setItem('theme', 'light');
+                    x.setAttribute('data-bs-theme', 'light');
+                }
+            }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>

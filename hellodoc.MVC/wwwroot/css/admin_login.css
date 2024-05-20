@@ -1,0 +1,40 @@
+.main-container {
+    height: 100vh;
+}
+
+.login-container {
+    height: 95vh;
+    max-width: 500px;
+}
+
+.login-bg-img {
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.2;
+}
+
+.landing-bg-img {
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.moon-button {
+    right: 1%;
+    top: 2%
+}
+
+.hellodoc-img {
+    height:20vh
+}
+.batan {
+    color: #fff;
+    transition: .3s;
+}
+
+    .batan:hover {
+        box-shadow: 5px 5px #99bdff;
+        transition: .3s;
+    }

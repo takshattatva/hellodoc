@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+<header>
+    <nav class="navbar shadow p-0">
+        <div class="container-fluid">
+            <div>
+                <button class="navbar-toggler d-inline-block d-sm-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a href="#">
+                    <img src="~/images/hellodoc.png" alt="logo" height="90px">
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-1 gap-sm-3">
+                <div class="d-none d-sm-block d-flex align-items-center">
+                    <h5>
+                        Welcome
+                        <strong>
+                            @Accessor.HttpContext.Session.GetString("_sessionUserName")
+                        </strong>
+                    </h5>
+                </div>
+                <a asp-action="Logout" class="btn btn-outline-info border border-2 border-info fw-bold">
+                    <span class="d-none d-sm-block">Logout</span>
+                    <span class="d-block d-sm-none"><i class="fa-solid fa-right-from-bracket"></i></span>
+                </a>
+                <button class="btn btn-outline-info border border-2 border-info fs-5 px-2 py-1 rounded fw-bolder me-2"
+                        id="dark-mode-btn">
+                    <i id="moon" class="fa-solid fa-moon spin-icon"></i>
+                    <i id="sun" class="fa-solid fa-sun spin-icon d-none"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>

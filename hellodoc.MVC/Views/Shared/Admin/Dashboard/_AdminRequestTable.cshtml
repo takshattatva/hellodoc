@@ -1,0 +1,548 @@
+﻿@functions {
+    public string GetTableColorClass(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "green";
+            case 2: return "orange";
+            case 3: return "blue";
+            case 4: return "pink";
+            default: return "green";
+        }
+    }
+
+    public string GetRequestBy(int RequstTypeId)
+    {
+        switch (RequstTypeId)
+        {
+            case 1: return "Patient";
+            case 2: return "Family/Friend";
+            case 3: return "Business";
+            case 4: return "Concierge";
+            default: return "Vip";
+        }
+    }
+}
+
+@if (Model.RequestListAdminDash.Count > 0)
+{
+    <div class="table-responsive d-none d-lg-block">
+        <table class="table adminTable" id="adminTable">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+
+                    @if (@Model.StatusForName != 9)
+                    {
+                        <th scope="col">Date Of Birth</th>
+                    }
+
+                    @if (@Model.StatusForName != 6 && @Model.StatusForName != 3 && @Model.StatusForName != 9)
+                    {
+                        <th scope="col">Requestor</th>
+                    }
+                    @if (@Model.StatusForName == 3)
+                    {
+                        <th scope="col">Region</th>
+                    }
+
+                    @if (@Model.StatusForName == 1)
+                    {
+                        <th scope="col">Requested date</th>
+                    }
+                    else
+                    {
+                        <th scope="col">Physican Name</th>
+                    }
+
+                    @if (@Model.StatusForName != 1)
+                    {
+                        <th scope="col">Date Of Service</th>
+                    }
+
+                    @if (@Model.StatusForName != 3)
+                    {
+                        <th scope="col">Phone</th>
+                    }
+
+                    <th scope="col">Address</th>
+
+                    @if (@Model.StatusForName != 6 && @Model.StatusForName != 9)
+                    {
+                        <th scope="col">Notes</th>
+                    }
+
+                    <th scope="col">Chat With</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.RequestListAdminDash)
+                {
+                    <tr class="align-middle table-@{
+                    @GetTableColorClass(obj.RequestTypeId)
+}">
+
+                        <td scope="row">
+                            <div class="d-flex justify-content-between">
+                                <span>@obj.Name</span>
+                                <a href="mailto:@obj.Email">
+                                    <button class="btn btn-outline-light w-auto p-1"><i class="fa-solid fa-envelopes-bulk"></i></button>
+                                </a>
+                            </div>
+                        </td>
+
+                        @if (@Model.StatusForName != 9)
+                        {
+                            <td>
+                                @(obj.DateOfBirth.ToString("MMM, dd yyyy"))
+                            </td>
+                        }
+
+                        @if (@Model.StatusForName != 6 && @Model.StatusForName != 3 && @Model.StatusForName != 9)
+                        {
+                            <td>
+                                @obj.Requestor
+                            </td>
+                        }
+                        @if (@Model.StatusForName == 3)
+                        {
+                            <td>
+                                @obj.Region
+                            </td>
+                        }
+
+                        @if (@Model.StatusForName == 1)
+                        {
+                            <td>
+                                @obj.RequestDate (@obj.totalHours:@obj.totalMinutes:@obj.totalSeconds)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @obj.Physician
+                            </td>
+                        }
+
+                        @if (@Model.StatusForName != 1)
+                        {
+                            <td>
+                                DOS
+                            </td>
+                        }
+
+                        @if (@Model.StatusForName != 3)
+                        {
+                            <td>
+                                @if (obj.Mobile != null)
+                                {
+                                    <a href="tel:@obj.Mobile" class="text-decoration-none">
+                                        <button class="btn btn-outline-light d-none d-md-block fw-semibold">
+                                            <div class="d-flex justify-content-between">
+                                                <i class="fa-solid fa-phone me-2 mt-1"></i>
+                                                @obj.Mobile
+                                            </div>
+                                        </button>
+                                    </a>
+                                    <small class="">( Patient )</small>
+                                }
+                                @if (obj.Phone != null && obj.RequestTypeId != 1)
+                                {
+                                    <a href="tel:@obj.Phone" class="text-decoration-none">
+                                        <button class="btn btn-outline-light d-none d-md-block fw-semibold">
+                                            <div class="d-flex justify-content-between">
+                                                <i class="fa-solid fa-phone me-2 mt-1"></i>
+                                                @obj.Phone
+                                            </div>
+                                        </button>
+                                    </a>
+                                    @if (@obj.RequestTypeId == 1)
+                                    {
+                                        <small class="">( Patient )</small>
+                                    }
+                                    @if (@obj.RequestTypeId == 2)
+                                    {
+                                        <small class="">( Family/Friend )</small>
+                                    }
+                                    @if (@obj.RequestTypeId == 3)
+                                    {
+                                        <small class="">( Concierge )</small>
+                                    }
+                                    @if (@obj.RequestTypeId == 4)
+                                    {
+                                        <small class="">( Business Partner )</small>
+                                    }
+                                }
+                            </td>
+                        }
+
+                        <td>
+                            @obj.Address
+                        </td>
+
+                        @if (@Model.StatusForName != 6 && @Model.StatusForName != 9)
+                        {
+                            <td>
+                                @obj.Notes
+                            </td>
+                        }
+
+                        <td>
+                            <div class="d-flex gap-1">
+                                @if (obj.UserId != null)
+                                {
+                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PatientAspId`)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        <i class="fa-solid fa-user fs-6"></i>
+                                        <span> Patient</span>
+                                    </button>
+                                }
+                                @if (obj.PhyAspId != null)
+                                {
+                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        <i class="fa-solid fa-user-doctor fs-6"></i>
+                                        <span> Provider</span>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+
+                        <td class="text-center">
+                            <div class="dropstart">
+                                <button class="btn btn-outline-light fw-bolder pointer" type="button" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
+
+                                <ul class="dropdown-menu pointer">
+                                    @if (@Model.StatusForName == 1)
+                                    {
+                                        <li><a class="dropdown-item" onclick="AssignModal(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-signature"></i><span class="ms-3">Assign Case</span></a></li>
+                                        <li><a class="dropdown-item" onclick="CancelModal(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-xmark"></i><span class="ms-3">Cancel Case</span></a></li>
+                                    }
+                                    <li><a class="dropdown-item" onclick="ViewCaseRecords(@Model.StatusForName, @obj.RequestId, 1)"><i class="bi bi-journal-bookmark-fill"></i><span class="ms-3">View Case</span></a></li>
+                                    <li><a class="dropdown-item" onclick="ViewNotes(@obj.RequestId, @Model.StatusForName, 1)"><i class="fa-solid fa-file-invoice"></i><span class="ms-3">View Notes</span></a></li>
+                                    @if (@Model.StatusForName == 1)
+                                    {
+                                        <li><a class="dropdown-item" onclick="BlockModal(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-ban"></i><span class="ms-3">Block Patient</span></a></li>
+                                    }
+                                    @if (@Model.StatusForName != 1)
+                                    {
+                                        <li><a class="dropdown-item" onclick="ViewDocuments(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-arrow-up"></i><span class="ms-3">View Upload</span></a></li>
+                                    }
+                                    @if (@Model.StatusForName == 2)
+                                    {
+                                        <li><a class="dropdown-item" onclick="TransferModal(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-file-code"></i><span class="ms-3">Transfer</span></a></li>
+                                    }
+                                    @if (@Model.StatusForName == 2 || @Model.StatusForName == 3 || @Model.StatusForName == 7 || @Model.StatusForName == 8)
+                                    {
+                                        <li><a class="dropdown-item" onclick="ClearModel(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-circle-xmark"></i><span class="ms-3">Clear Case</span></a></li>
+                                    }
+                                    @if (@Model.StatusForName == 2)
+                                    {
+                                        <li><a class="dropdown-item" onclick="SendAgreementModal(@obj.RequestId, @obj.RequestTypeId, @Model.StatusForName,1)"><i class="fa-solid fa-handshake"></i><span class="ms-3">Send Agreement</span></a></li>
+                                    }
+                                    @if (@Model.StatusForName != 1 && @Model.StatusForName != 2 && @Model.StatusForName != 9)
+                                    {
+                                        <li><a class="dropdown-item" onclick="SendOrder(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-cart-plus"></i><span class="ms-3">Orders</span></a></li>
+                                        @if (obj.isFinalized == true)
+                                        {
+                                            <li><a class="dropdown-item" onclick="DownloadEncounter(@obj.RequestId,1)"><i class="fa-solid fa-file-waveform"></i><span class="ms-3">Encounter</span></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" onclick="AdminEncounter(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-waveform"></i><span class="ms-3">Encounter</span></a></li>
+                                        }
+                                    }
+                                    @if (@Model.StatusForName == 3 || @Model.StatusForName == 7 || @Model.StatusForName == 8)
+                                    {
+                                        <li><a class="dropdown-item" onclick="CloseCase(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-house-medical-circle-check"></i><span class="ms-3">Close Case</span></a></li>
+                                    }
+                                </ul>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mx-2 border rounded shadow">
+        <div class="accordion container-fluid d-block d-lg-none p-0" id="accordionPanelsStayOpenExample">
+            <table class="adminTable w-100">
+                <thead>
+                    <tr>
+                        <th class="d-none"></th>
+                        <th class="d-none"></th>
+                    </tr>
+                </thead>
+
+                @{
+                    var counter = 1;
+                }
+
+                <tbody>
+
+                    @foreach (var obj in Model.RequestListAdminDash)
+                    {
+                        <tr class="d-flex flex-column">
+                            <td>
+                                <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+                                <div class="accordion-button collapsed d-flex flex-column" data-bs-toggle="collapse"
+                                     data-bs-target="#flush-collapse@(counter)" aria-expanded="true"
+                                     aria-controls="flush-collapse@(counter)">
+
+                                    <div class="w-100 d-flex justify-content-between m-1">
+                                        <div class="">
+                                            <b>@obj.Name</b>
+                                        </div>
+                                        <div class="d-flex">
+                                            <small>@GetRequestBy(obj.RequestTypeId) <i class="bi bi-circle-fill @GetTableColorClass(obj.RequestTypeId)-icon"></i></small>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 d-flex justify-content-between m-1 align-items-center">
+                                        <div class="text-wrap col-6">
+                                            @obj.Address
+                                        </div>
+                                        <div class="col-6 d-flex justify-content-end">
+                                            <a class="btn rounded-pill btn-outline-info" type="button" href="https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(@obj.Address).ToString()}" ;" target="_blank" style="height: 10%">
+                                                <i class="fa-solid fa-earth-americas"></i>
+                                                <small class="">Map Location</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 d-flex justify-content-between m-1">
+                                        @if (Model.StatusForName == 1)
+                                        {
+                                            <div class="">
+                                                <b>
+                                                    <i class="bi bi-clock text-info pe-1"></i>
+                                                    Wait Time: @obj.RequestDate (@obj.totalHours:@obj.totalMinutes)
+                                                </b>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="m-0 p-0 text-muted" />
+                            </td>
+
+                            <td>
+                                <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                     aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample@(counter)">
+                                    <div class="d-flex justify-content-end" style="margin-top: -20px;">
+                                        <button class="btn rounded-pill border-primary text-primary z-3 mx-3" style="background-color:rgba(255, 255, 255, 0.719);" type="button" onclick="ViewCaseRecords(@Model.StatusForName, @obj.RequestId,1)"><i class="bi bi-journal-bookmark-fill me-2"></i>View Case</button>
+                                    </div>
+                                    <div class="accordion-body main-flex">
+                                        @if (Model.StatusForName != 9)
+                                        {
+                                            <div class="inner-flex">
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    <i class="bi bi-calendar-date text-info"></i>
+                                                    Date of Birth:
+                                                    <span class="accordion-value-inner">
+                                                        @obj.DateOfBirth
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        <div class="inner-flex">
+                                            <i class="bi bi-envelope text-info"></i>
+                                            <span class="accordion-heading-inner fw-bolder">
+                                                Email:
+                                                <span class="accordion-value-inner">
+                                                    @obj.Email
+                                                </span>
+                                            </span>
+                                        </div>
+                                        @if (Model.StatusForName == 1 || Model.StatusForName == 2 || Model.StatusForName == 4 || Model.StatusForName == 5 || Model.StatusForName == 6 || Model.StatusForName == 9)
+                                        {
+                                            <div class="inner-flex">
+                                                <i class="bi bi-telephone text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Patient Contact:
+                                                    <span class="accordion-value-inner">
+                                                        @obj.Phone
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (Model.StatusForName == 1 || Model.StatusForName == 2 || Model.StatusForName == 4 || Model.StatusForName == 5)
+                                        {
+                                            <div class="inner-flex">
+                                                <i class="bi bi-person-circle text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Requestor:
+                                                    <span class="accordion-value-inner">
+                                                        @GetRequestBy(obj.RequestTypeId), @obj.Requestor
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (Model.StatusForName == 2 || Model.StatusForName == 4 || Model.StatusForName == 5 || Model.StatusForName == 3 || Model.StatusForName == 7 || Model.StatusForName == 8)
+                                        {
+                                            <div class="inner-flex">
+                                                <i class="bi bi-person-circle text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Transfer note:
+                                                    <span class="accordion-value-inner">
+                                                        @obj.Notes
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (Model.StatusForName != 1)
+                                        {
+                                            <div class="inner-flex">
+                                                <i class="bi bi-person-circle text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Date of Service :
+                                                    <span class="accordion-value-inner">
+                                                        ---------
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div class="inner-flex">
+                                                <i class="bi bi-person-circle text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Physician name :
+                                                    <span class="accordion-value-inner">
+                                                        @obj.Physician
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        @if (Model.StatusForName == 3 || Model.StatusForName == 7 || Model.StatusForName == 8)
+                                        {
+                                            <div class="inner-flex">
+                                                <i class="bi bi-person-circle text-info"></i>
+                                                <span class="accordion-heading-inner fw-bolder">
+                                                    Region :
+                                                    <span class="accordion-value-inner">
+                                                        ---------
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        }
+                                        <div class="row gap-3 mt-4 d-flex flex-wrap justify-content-around">
+                                            <div class="d-flex text-center">
+                                                <a href="mailto:@obj.Email" class="w-100"><button class="col-5 p-2 btn rounded-pill btn-success"><i class="fa-solid fa-envelope-open-text me-2"></i>Email</button></a>
+                                            </div>
+                                            @if (Model.StatusForName == 3 || Model.StatusForName == 7 || Model.StatusForName == 8)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-danger" type="button" onclick="CloseCase(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-house-medical-circle-check me-2"></i>Close case</button>
+                                            }
+                                            @if (Model.StatusForName == 1)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-info" type="button" onclick="AssignModal(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-signature me-2"></i>Assign Case</button>
+                                                <button class="col-5 p-2 btn rounded-pill btn-danger" type="button" onclick="CancelModal(@obj.RequestId,  @Model.StatusForName,1)"><i class="fa-solid fa-xmark me-2"></i>Cancel Case</button>
+                                            }
+                                            @if (Model.StatusForName == 2)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-warning" type="button" onclick="SendAgreementModal(@obj.RequestId, @obj.RequestTypeId, @Model.StatusForName,1)"><i class="fa-solid fa-handshake me-2"></i>Send Agreement</button>
+                                            }
+                                            <button class="col-5 p-2 btn rounded-pill btn-success" type="button" onclick="ViewNotes(@obj.RequestId, @Model.StatusForName, 1)"><i class="fa-solid fa-file-invoice me-2"></i>View Notes</button>
+                                            @if (Model.StatusForName == 1)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-danger" type="button" onclick="BlockModal(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-ban me-2"></i>Block Patient</button>
+                                            }
+                                            @if (@Model.StatusForName == 2)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-info" type="button" onclick="TransferModal(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-file-code me-2"></i>Transfer</button>
+                                            }
+                                            @if (@Model.StatusForName != 1)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-success" type="button" onclick="ViewDocuments(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-arrow-up me-2"></i>View Uploads</button>
+                                            }
+                                            @if (@Model.StatusForName == 2 || @Model.StatusForName == 3 || @Model.StatusForName == 7 || @Model.StatusForName == 8)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-warning" type="button" onclick="ClearModel(@obj.RequestId, @Model.StatusForName)"><i class="fa-solid fa-circle-xmark me-2"></i>Clear Case</button>
+                                            }
+                                            @if (@Model.StatusForName != 1 && @Model.StatusForName != 2 && @Model.StatusForName != 9)
+                                            {
+                                                @if (obj.isFinalized == true)
+                                                {
+                                                    <button class="col-5 p-2 btn rounded-pill btn-success" type="button" onclick="DownloadEncounter(@obj.RequestId,1)"><i class="fa-solid fa-file-waveform me-2"></i>Encounter</button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="col-5 p-2 btn rounded-pill btn-success" type="button" onclick="AdminEncounter(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-file-waveform me-2"></i>Encounter</button>
+                                                }
+                                            }
+                                            @if (@Model.StatusForName == 4 || @Model.StatusForName == 5 || @Model.StatusForName == 6)
+                                            {
+                                                <button class="col-5 p-2 btn rounded-pill btn-warning" type="button" onclick="SendOrder(@obj.RequestId, @Model.StatusForName,1)"><i class="fa-solid fa-cart-plus me-2"></i>Orders</button>
+                                            }
+                                            @if (@Model.StatusForName != 1 && @Model.StatusForName != 2)
+                                            {
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="fw-bold ms-2">Chat with : </span>
+                                                    @if (obj.UserId != null)
+                                                    {
+                                                        <button class="btn btn-outline-primary shadow-none d-flex align-items-center gap-2 w-auto" onclick="CreateConnection(@obj.RequestId,`@obj.PatientAspId`)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                            <i class="fa-solid fa-user fs-6"></i>
+                                                            <span> Patient</span>
+                                                        </button>
+                                                    }
+                                                    @if (obj.PhyAspId != null)
+                                                    {
+                                                        <button class="btn btn-outline-primary shadow-none d-flex align-items-center gap-2 w-auto" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                            <i class="fa-solid fa-user-doctor fs-6"></i>
+                                                            <span> Provider</span>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center align-items-center fw-bold mt-5">
+        <span class="d-md-block d-none fw-bold fs-2">No records has been added yet.</span>
+        <span class="d-md-none d-block fw-semibold fs-4">No records has been added yet.</span>
+    </div>
+    <br />
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="d-md-block d-none"><img src="~/images/no_records_found.png" /></div>
+        <div class="d-md-none d-block"><img src="~/images/no_records_found.png" height="60px" /></div>
+    </div>
+}
+
+<partial name="Chat/_Chat_OffCanvas" />
+
+<script>
+    $(document).ready(function () {
+
+        $('.adminTable').DataTable({
+            "initComplete": function (settings, json) {
+
+                $('#my-search-input').val(settings.oPreviousSearch.sSearch);
+
+                $('#my-search-input').on('keyup', function () {
+                    var searchValue = $(this).val();
+                    settings.oPreviousSearch.sSearch = searchValue;
+                    settings.oApi._fnReDraw(settings);
+                });
+            },
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
+            "pageLength": 5,
+
+            language: {
+                oPaginate: {
+                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
+                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
+
+                }
+            }
+        });
+        //$('.dataTables_length').hide();
+        $('.dataTables_filter').hide();
+    });
+</script>

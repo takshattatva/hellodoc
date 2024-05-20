@@ -1,0 +1,132 @@
+﻿@model hellodoc.DAL.ViewModels.SchedulingVm
+
+<style>
+    .form-check-input:checked {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="modal fade" id="createShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title text-light fw-semibold fs-5" id="exampleModalLongTitle">Add New Shift </h5>
+                <i type="button" class="fa-solid fa-xmark h4" aria-label="Close" data-bs-dismiss="modal"></i>
+            </div>
+            <form method="post" class="row p-3" id="createShiftForm" onsubmit="createShiftPost(@Model.callId)">
+                <input type="text" asp-for="@Model.callId" id="callId" hidden />
+
+                <div class="form-floating my-3">
+                    <select asp-for="@Model.ScheduleModel.Regionid" class="p-2 px-2 form-select w-100 " id="selectregion" onchange="FilterAssignModal(this.value)">
+                        <option value="" selected disabled>Regions</option>
+                        @foreach (var region in Model.regions)
+                        {
+                            <option value="@region.Regionid">@region.Name - (@region.Abbreviation)</option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Regionid"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select p-2" asp-for="@Model.ScheduleModel.Physicianid" id="physicianId" aria-label="Default select example">
+                        <option value="" selected disabled>Physician</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Physicianid"></span>
+                </div>
+
+                <div class="col-md-12 form-floating mb-3">
+                    <input id="StartDate" asp-for="@Model.ScheduleModel.Startdate" class="form-control rounded vcs" type="date" placeholder=Suchtext autocomplete=off>
+                    <label class="ms-2" for="floatingInput">Starting Date</label>
+                    <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Startdate"></span>
+                </div>
+                <div class="col-md-6 form-floating mb-3">
+                    <input id="StartTime" asp-for="@Model.ScheduleModel.Starttime" class="form-control rounded vcs" type="time" placeholder=Suchtext autocomplete=off>
+                    <label class="ms-2" for="floatingInput">Start</label>
+                    <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Starttime"></span>
+                </div>
+                <div class="col-md-6 form-floating mb-3">
+                    <input id="EndTime" asp-for="@Model.ScheduleModel.Endtime" class="form-control rounded vcs" type="time" placeholder=Suchtext autocomplete=off>
+                    <label class="ms-2" for="floatingInput">End</label>
+                    <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Endtime"></span>
+                    <span class="errorbox text-danger"></span>
+                </div>
+
+                <div class="form-check form-switch col-md-6 d-flex align-items-center justify-content-start mb-3 mx-3">
+                    <input class="form-check-input" asp-for="@Model.ScheduleModel.Isrepeat" id="Isrepeat" type="checkbox" role="switch" onchange="toggleCheckboxes()">
+                    <label class="form-check-label mx-2" for="Isrepeat">Repet</label>
+                </div>
+
+                <label class="my-2" for="Sunday">Repeat Days</label>
+                <input type="hidden" asp-for="@Model.ScheduleModel.checkWeekday" id="checkWeekday" />
+
+                <div class="col-md-12 row form-floating">
+
+                    <div class="col-md-4">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every disabled" disabled type="checkbox" name="Sunday" value="0">
+                            <label class="form-check-label ms-2" for="Sunday">Every Sunday</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 ">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Monday" value="1">
+                            <label class="form-check-label ms-2" for="Monday">Every Monday</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Tuesday" value="2">
+                            <label class="form-check-label ms-2" for="Tuesday">Every Tuesday</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Wednesday" value="3">
+                            <label class="form-check-label ms-2" for="Wednesday">Every Wednesday</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Thursday" value="4">
+                            <label class="form-check-label ms-2" for="Thursday">Every Thursday</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Friday" value="5">
+                            <label class="form-check-label ms-2" for="Friday">Every Friday</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 ">
+                        <div class="form-check mx-2 d-flex align-items-center">
+                            <input onchange="menubox()" class="form-check-input Every" disabled type="checkbox" name="Saturday" value="6">
+                            <label class="form-check-label ms-2" for="Saturday">Every Saturday</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12 form-floating  my-2">
+                    <select asp-for="@Model.ScheduleModel.Repeatupto" class="form-select form-select-sm mt-3 p-2" id="Refile" disabled data-allow-clear="true" tabindex="-1" data-control="select2" data-placeholder=" ">
+                        <option selected hidden>Reapet End</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+
+                <input type="hidden" id="checkWeekday" />
+
+                <div class="col-12 d-flex justify-content-end mt-3 mb-2">
+                    <input type="submit" value="Save" class="btn btn-outline-info border-info mx-2 fw-semibold" />
+                    <button type="button" class="btn btn-outline-secondary border-secondary fw-semibold hover_white m-0" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+<script src="~/js/create-shift.js" asp-append-version="true"></script>
+

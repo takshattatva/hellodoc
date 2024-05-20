@@ -1,0 +1,103 @@
+﻿@model hellodoc.DAL.ViewModels.AdminAccountAccessVm
+
+<div class="container">
+    <h4 class="mb-4 fw-semibold">Account Access</h4>
+
+    <div class="border rounded shadow p-3">
+        <div class="d-flex justify-content-end align-items-center mb-3">
+
+            <button type="button" class="btn btn-info shadow" onclick="GetCreateAccess()">
+                <span class="d-md-block d-none fw-semibold">Create Access</span>
+                <span class="d-block d-md-none"><i class="fa-solid fa-plus-minus fs-4"></i></span>
+            </button>
+        </div>
+        <div class="table-responsive d-lg-block d-none">
+            <table class="table table-hover">
+                <thead class="bg-body-tertiary ">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Account Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var obj in Model.AccountAccess)
+                    {
+                        <tr class="align-middle">
+
+                            <td>
+                                <span class="document-name">@obj.name</span>
+                            </td>
+                            <td>@obj.accounttype</td>
+                            <td>
+                                <button type="button" class="fw-semibold btn btn-outline-info" onclick="GetEditAccess(@obj.accounttypeid,@obj.roleid)">Edit</button>
+                                <button type="button" class="fw-semibold btn btn-outline-danger" onclick="DeleteAccountAccess(@obj.roleid)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="border rounded shadow d-block d-lg-none">
+            <div class="accordion container-fluid p-0" id="accordionPanelsStayOpenExample">
+                <table class="w-100">
+                    <thead>
+                        <tr>
+                            <th class="d-none"></th>
+                            <th class="d-none"></th>
+                        </tr>
+                    </thead>
+                    @{
+                        var counter = 1;
+                    }
+                    <tbody>
+                        @foreach (var obj in Model.AccountAccess)
+                        {
+                            <tr class="d-flex flex-column">
+                                <td>
+                                    <h2 class="accordion-header" id="flush-heading@(counter)"></h2>
+
+                                    <div class="accordion-button collapsed d-flex flex-column pb-0" data-bs-toggle="collapse"
+                                         data-bs-target="#flush-collapse@(counter)" aria-expanded="false"
+                                         aria-controls="flush-collapse@(counter)">
+
+                                        <div class="w-100 ">
+                                            <span class="fw-bolder">
+                                                @obj.name
+                                            </span>
+                                        </div>
+                                        <div class="w-100">
+                                            <div class="">
+                                                <span class="fw-bolder">Account Type: </span> @obj.accounttype
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div id="flush-collapse@(counter)" class="accordion-collapse collapse"
+                                         aria-labelledby="flush-heading@(counter)" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body main-flex pt-2">
+
+                                            <div class="inner-flex d-flex justify-content-end">
+                                                <button type="button" class="fw-semibold btn btn-outline-info" onclick="GetEditAccess(@obj.accounttypeid,@obj.roleid)"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <button type="button" class="fw-semibold btn btn-outline-danger ms-2"><i class="fa-solid fa-trash-can"></i></button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
