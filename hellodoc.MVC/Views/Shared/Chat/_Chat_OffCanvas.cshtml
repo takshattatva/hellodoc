@@ -161,24 +161,24 @@
         }
     }
 
-    const fullscreenExitButton = document.querySelector('.smallscreen');
+    if (typeof fullscreenExitButton === 'undefined') {
+        const fullscreenExitButton = document.querySelector('.smallscreen');
 
-    if (fullscreenExitButton) {
-        fullscreenExitButton.addEventListener('click', () => {
-            var current_height = document.getElementById('offcanvasRight').classList;
-            if (!current_height.contains('custom-height')) {
-                $('#offcanvasRight').addClass('custom-height');
-                $('#small_screen_icon').addClass('d-none');
-                $('#full_screen_icon').removeClass('d-none');
-            }
-            else {
-                $('#offcanvasRight').removeClass('custom-height');
-                $('#small_screen_icon').removeClass('d-none');
-                $('#full_screen_icon').addClass('d-none');
-            }
-        });
-    } else {
-        Swal.fire("Oops", "Element with class \"smallscreen\" not found", "error");
-
+        if (fullscreenExitButton) {
+            fullscreenExitButton.addEventListener('click', () => {
+                var current_height = document.getElementById('offcanvasRight').classList;
+                if (!current_height.contains('custom-height')) {
+                    $('#offcanvasRight').addClass('custom-height');
+                    $('#small_screen_icon').addClass('d-none');
+                    $('#full_screen_icon').removeClass('d-none');
+                } else {
+                    $('#offcanvasRight').removeClass('custom-height');
+                    $('#small_screen_icon').removeClass('d-none');
+                    $('#full_screen_icon').addClass('d-none');
+                }
+            });
+        } else {
+            Swal.fire("Oops", "Element with class \"smallscreen\" not found", "error");
+        }
     }
 </script>
