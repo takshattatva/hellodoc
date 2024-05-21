@@ -61,7 +61,18 @@
     }
 }
 /* *************************** status css *************************** */
-
+.bottomarrow {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute !important;
+    border-left: 15px solid transparent !important;
+    border-right: 15px solid transparent !important;
+    border-bottom: none !important;
+    height: 0px !important;
+    width: 0px !important;
+}
 .new {
     background-color: rgba(2, 2, 255, 0.1);
     border-color: rgba(2, 2, 146) !important;
@@ -70,9 +81,12 @@
 
     .new:hover, .new.active {
         background-color: rgba(2, 2, 146);
-        border-color: rgba(2, 2, 146) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .new.active + .bottomarrow {
+            border-top: 12px solid rgba(2, 2, 146);
+        }
 
 .Pending {
     background-color: rgba(167, 239, 248, 0.10);
@@ -82,9 +96,12 @@
 
     .Pending:hover, .Pending.active {
         background-color: rgb(0, 92, 104);
-        border-color: rgb(41, 179, 197) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .Pending.active + .bottomarrow {
+            border-top: 12px solid rgb(0, 92, 104);
+        }
 
 .Active {
     background-color: rgba(138, 253, 215, 0.10);
@@ -94,9 +111,12 @@
 
     .Active:hover, .Active.active {
         background-color: rgb(2, 54, 37);
-        border-color: rgb(19, 99, 55) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .Active.active + .bottomarrow {
+            border-top: 12px solid rgb(2, 54, 37);
+        }
 
 .Conclude {
     background-color: rgba(252, 87, 238, 0.10);
@@ -106,9 +126,12 @@
 
     .Conclude:hover, .Conclude.active {
         background-color: rgb(99, 3, 91);
-        border-color: rgb(129, 22, 124) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .Conclude.active + .bottomarrow {
+            border-top: 12px solid rgb(99, 3, 91);
+        }
 
 .ToClose {
     background-color: rgba(68, 156, 228, 0.10);
@@ -118,9 +141,12 @@
 
     .ToClose:hover, .ToClose.active {
         background-color: rgb(3, 47, 83);
-        border-color: rgb(16, 100, 133) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .ToClose.active + .bottomarrow {
+            border-top: 12px solid rgb(3, 47, 83);
+        }
 
 .Unpaid {
     background-color: rgba(164, 46, 233, 0.10);
@@ -130,9 +156,12 @@
 
     .Unpaid:hover, .Unpaid.active {
         background-color: rgb(44, 1, 70);
-        border-color: rgb(86, 26, 134) !important;
+        border-color: transparent !important;
         color: white;
     }
+        .Unpaid.active + .bottomarrow {
+            border-top: 12px solid rgb(44, 1, 70);
+        }
 
 html[data-bs-theme="dark"] nav.header {
     background-color: rgb(42, 50, 56) !important;

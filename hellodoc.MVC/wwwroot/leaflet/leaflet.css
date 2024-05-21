@@ -272,7 +272,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* general typography */
 .leaflet-container {
-	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-family: 'Comic Sans MS';
 	font-size: 12px;
 	font-size: 0.75rem;
 	line-height: 1.5;
@@ -339,9 +339,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-	font: bold 18px 'Lucida Console', Monaco, monospace;
+	font: bold 18px 'Comic Sans MS';
 	text-indent: 1px;
-	}
+}
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
 	font-size: 22px;
@@ -532,11 +532,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	text-align: center;
 	width: 24px;
 	height: 24px;
-	font: 16px/24px Tahoma, Verdana, sans-serif;
+	font: 16px/24px 'Comic Sans MS';
 	color: #757575;
 	text-decoration: none;
 	background: transparent;
-	}
+}
 .leaflet-container a.leaflet-popup-close-button:hover,
 .leaflet-container a.leaflet-popup-close-button:focus {
 	color: #585858;

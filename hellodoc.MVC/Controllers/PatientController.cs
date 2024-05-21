@@ -6,6 +6,9 @@ using hellodoc.BAL.Interface;
 using System.Diagnostics;
 using hellodoc.MVC.Auth;
 using System.Collections;
+using Microsoft.Extensions.Caching.Memory;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace hellodoc.DAL.Controllers
 {

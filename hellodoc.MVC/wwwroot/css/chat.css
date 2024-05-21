@@ -1,0 +1,143 @@
+﻿#chats {
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+    color: black;
+}
+
+.offcanvas-body {
+    position: relative;
+}
+
+#userMessage {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 60px);
+    border-radius: 0;
+}
+
+input:focus {
+    box-shadow: none !important;
+    border-color: #0dcaf0 !important;
+}
+
+#sendMessage {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    border-radius: 0;
+}
+
+.message-container {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 75%;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+}
+
+.right-align {
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.left-align {
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: 15px;
+}
+
+.right-align .content {
+    background-color: #98FF98;
+    border-radius: 7.5px 0 7.5px 7.5px;
+    padding: 8px 10px;
+    position: relative;
+}
+
+    .right-align .content::after {
+        content: "";
+        position: absolute;
+        top: 0px;
+        right: -8px;
+        width: 0;
+        height: 0;
+        border-width: 0 0 25px 15px;
+        border-style: solid;
+        border-color: transparent transparent transparent #98FF98;
+    }
+
+.left-align .content {
+    background-color: #8EEBEC;
+    border-radius: 0 7.5px 7.5px 7.5px;
+    padding: 8px 10px;
+    position: relative;
+}
+
+    .left-align .content::after {
+        content: "";
+        position: absolute;
+        top: 0px;
+        left: -13px;
+        width: 0;
+        height: 0;
+        border-width: 21px 0 0 23px;
+        border-style: solid;
+        border-color: #8EEBEC transparent transparent transparent;
+    }
+
+.content {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+    .content div {
+        margin: 2px 0;
+    }
+
+    .content .time {
+        font-size: x-small;
+        text-align: start;
+        font-size:11px;
+    }
+
+.right-align .content .time {
+    text-align: end;
+}
+
+.custom-height {
+    top: 400px !important;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.date-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 15px;
+    margin: 6px 0px 6px 0px;
+    font-weight:550;
+    color:initial!important;
+}
+
+    .date-section::before {
+        content: "";
+        border-bottom: 2px solid #00bce7;
+        width: 33%;
+        height: 12px;
+        margin-right: 12px;
+    }
+
+    .date-section::after {
+        content: "";
+        border-bottom: 2px solid #00bce7;
+        width: 33%;
+        height: 12px;
+        margin-left:12px;
+    }

@@ -41,7 +41,6 @@ namespace SignalRChat.Hubs
 
         public override Task OnConnectedAsync()
         {
-            //string? aspnetID = _sessionUtils.GetUser(_httpContextAccessor.HttpContext!.Session) == null ? null : _sessionUtils.GetUser(_httpContextAccessor.HttpContext!.Session).AspNetUserId.ToString();
             string? aspnetID = _httpContextAccessor.HttpContext.Session.GetString("aspNetUserId");
 
             string Requestid = Context.GetHttpContext().Request.Query["Reqid"];

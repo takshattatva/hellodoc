@@ -1,7 +1,7 @@
 ﻿<div class="container-fluid">
     <div class="row nav" id="myTab" role="tablist">
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-4 mb-3 nav-item" onclick="TableRecords([1])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-4 mb-3 nav-item position-relative" onclick="TableRecords([1])" role="presentation">
             <div class="border rounded p-1 p-sm-3 active new" id="new-tab" data-bs-toggle="tab"
                  data-bs-target="#new-tab-pane" type="button" role="tab" aria-controls="new-tab-pane"
                  aria-selected="true">
@@ -13,9 +13,10 @@
                     <h4>@Model.countRequest.NewRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="TableRecords([2])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4 position-relative" onclick="TableRecords([2])" role="presentation">
             <div class="border rounded p-1 p-sm-3 Pending" id="Pending-tab" data-bs-toggle="tab"
                  data-bs-target="#Pending-tab-pane" type="button" role="tab"
                  aria-controls="Pending-tab-pane" aria-selected="false">
@@ -27,9 +28,10 @@
                     <h4>@Model.countRequest.PendingRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="TableRecords([4,5])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4 position-relative" onclick="TableRecords([4,5])" role="presentation">
             <div class="border rounded p-1 p-sm-3 Active" id="Active-tab" data-bs-toggle="tab"
                  data-bs-target="#Active-tab-pane" type="button" role="tab"
                  aria-controls="Active-tab-pane" aria-selected="false">
@@ -41,9 +43,10 @@
                     <h4>@Model.countRequest.ActiveRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="TableRecords([6])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4 position-relative" onclick="TableRecords([6])" role="presentation">
             <div class="border rounded p-1 p-sm-3 Conclude" id="Conclude-tab" data-bs-toggle="tab"
                  data-bs-target="#Conclude-tab-pane" type="button" role="tab"
                  aria-controls="Conclude-tab-pane" aria-selected="false">
@@ -55,9 +58,10 @@
                     <h4>@Model.countRequest.ConcludeRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="TableRecords([3, 7, 8])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4 position-relative" onclick="TableRecords([3, 7, 8])" role="presentation">
             <div class="border rounded p-1 p-sm-3 ToClose" id="ToClose-tab" data-bs-toggle="tab"
                  data-bs-target="#ToClose-tab-pane" type="button" role="tab"
                  aria-controls="ToClose-tab-pane" aria-selected="false">
@@ -69,9 +73,10 @@
                     <h4>@Model.countRequest.ToCloseRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
-        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4" onclick="TableRecords([9])" role="presentation">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mb-3 col-4 position-relative" onclick="TableRecords([9])" role="presentation">
             <div class="border rounded p-1 p-sm-3 Unpaid" id="Unpaid-tab" data-bs-toggle="tab"
                  data-bs-target="#Unpaid-tab-pane" type="button" role="tab"
                  aria-controls="Unpaid-tab-pane" aria-selected="false">
@@ -83,6 +88,7 @@
                     <h4>@Model.countRequest.UnpaidRequest</h4>
                 </div>
             </div>
+            <div class="d-none d-lg-block bottomarrow"></div>
         </div>
 
     </div>

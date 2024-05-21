@@ -203,7 +203,7 @@
         var note = $('.notes');
         var approved = $('.approve');
 
-        if (bonus.val() == "" || note.val() == "") {
+        if (bonus.val() == "" || note.val() == "" || bonus.val()<0 || note.val().trim == "") {
             approved.prop('disabled', true);
         }
         else {

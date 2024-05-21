@@ -63,16 +63,14 @@
             </div>
         </form>
     </div>
-    <footer class="bg-dark bg-gradient fixed-bottom py-2 px-3">
-        <div class="d-flex justify-content-between">
-            <div class="text-start">
-                <img src="~/images/hellodoc_footer.png" height="30px">
+    <footer class="border-top footer bottom-flixed position-absolute w-100 bottom-0 text-muted">
+        <div class="d-none d-sm-flex justify-content-end align-items-center bg-footer w-100" style="height: 50px;">
+            <div class="m-3">
+                <a href="#" class="text-white text-decoration-none fw-semibold">Terms of Conditions</a>
             </div>
-            <div class="text-end">
-                <a class="text-light" style="text-decoration:none" asp-action="Privacy" asp-controller="Patient">
-                    Terms of
-                    Conditions | Privacy policy
-                </a>
+            <span class="text-white m-3 text-decoration-none fw-semibold">|</span>
+            <div class="m-3 me-5">
+                <a href="#" class="text-white text-decoration-none fw-semibold">Privacy Policy</a>
             </div>
         </div>
     </footer>

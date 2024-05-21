@@ -1579,7 +1579,7 @@ namespace hellodoc.BAL.Repository
                                                                currentTime >= sd.Starttime &&
                                                                currentTime <= sd.Endtime &&
                                                                sd.Isdeleted.Equals(deletedBit)) &&
-                                                               p.Isdeleted == null).Count() == 0 ? "Active" : "Not Active",
+                                                               p.Isdeleted == null).Count() == 0 ? "Bussy" : "Available",
                 Status = (short)x.Status,
                 Isdeleted = x.Isdeleted == null ? null : x.Isdeleted,
                 IsNotificationStopped = _context.Physiciannotifications.FirstOrDefault(i => i.Physicianid == x.Physicianid)?.Isnotificationstopped != null && _context.Physiciannotifications.FirstOrDefault(i => i.Physicianid == x.Physicianid)?.Isnotificationstopped?[0] == true,
@@ -2367,7 +2367,6 @@ namespace hellodoc.BAL.Repository
             var role = _context.Roles.FirstOrDefault(x => x.Roleid == accountAccess.roleid);
             if (role != null)
             {
-                role.Name = accountAccess.name;
                 role.Accounttype = (short)accountAccess.accounttypeid;
                 role.Createdby = "Admin";
                 role.Modifieddate = DateTime.Now;

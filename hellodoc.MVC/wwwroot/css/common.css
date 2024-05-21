@@ -10,3 +10,13 @@
     .spin-icon:hover {
         transform: rotate(360deg);
     }
+    
+    
+    /*footer color*/
+.bg-footer {
+    background-color: rgba(56, 56, 56, 0.7);
+}
+    /*Tabs color*/
+.nav-underline .nav-link.active, .nav-underline .show > .nav-link {
+    color: #00bce7 !important;
+}

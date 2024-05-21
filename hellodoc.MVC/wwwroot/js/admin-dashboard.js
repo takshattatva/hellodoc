@@ -1,11 +1,19 @@
 function showLoader() {
-    document.querySelector(".loader-container").style.display = "flex";
-    document.querySelector(".backdrop").style.display = "flex";
+    var loaderContainer = document.querySelector(".loader-container");
+    var backdrop = document.querySelector(".backdrop");
+    if (loaderContainer && backdrop) {
+        loaderContainer.style.display = "flex";
+        backdrop.style.display = "flex";
+    }
 }
 
 function hideLoader() {
-    document.querySelector(".loader-container").style.display = "none";
-    document.querySelector(".backdrop").style.display = "none";
+    var loaderContainer = document.querySelector(".loader-container");
+    var backdrop = document.querySelector(".backdrop");
+    if (loaderContainer && backdrop) {
+        loaderContainer.style.display = "none";
+        backdrop.style.display = "none";
+    }
 }
 
 hideLoader();
