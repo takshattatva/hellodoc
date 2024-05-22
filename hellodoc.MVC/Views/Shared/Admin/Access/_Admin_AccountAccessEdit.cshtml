@@ -1,12 +1,5 @@
 ﻿@model hellodoc.DAL.ViewModels.AdminAccountAccessVm
 
-<style>
-    .form-check-input:checked {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-    }
-</style>
-
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mx-3">
         <h4 class="fw-semibold">Edit Role</h4>
@@ -18,7 +11,6 @@
     </div>
 
     <form method="post" id="AccountEditForm" onsubmit="SetEditAccessAccount(document.getElementById('Role').value,document.getElementById('inputroleid').value)">
-
         <div class="m-3 p-3 border rounded shadow">
             <h5>Details</h5>
             <div class="row mt-1">
@@ -57,16 +49,12 @@
                     }
                 </div>
             </div>
-
             <div class="d-grid gap-2 d-flex justify-content-center  justify-content-md-end m-4 pt-4 ">
                 <button type="submit" class="btn text-white btn-info fw-semibold">Save</button>
                 <button type="reset" id="cancelBtnPhyEdit1" class="btn CancelBtn btn-outline-secondary border-secondary fw-semibold">Cancel</button>
             </div>
-
         </div>
-
     </form>
 </div>
-
 
 <partial name="_ValidationScriptsPartial" />

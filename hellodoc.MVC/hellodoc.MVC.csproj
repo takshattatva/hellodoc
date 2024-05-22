@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\admin-profile.js" />
+    <Content Remove="wwwroot\js\service-worker.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\admin-profile.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\service-worker.js" />
   </ItemGroup>
 
   <ItemGroup>

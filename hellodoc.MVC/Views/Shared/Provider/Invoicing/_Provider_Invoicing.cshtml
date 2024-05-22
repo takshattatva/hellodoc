@@ -205,34 +205,6 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $('.ReimbursementTable').DataTable({
-            "initComplete": function (settings, json) {
-
-                $('#my-search-input2').val(settings.oPreviousSearch.sSearch);
-
-                $('#my-search-input2').on('keyup', function () {
-                    var searchValue = $(this).val();
-                    settings.oPreviousSearch.sSearch = searchValue;
-                    settings.oApi._fnReDraw(settings);
-                });
-            },
-            "pageLength": 5,
-            pagingType: "full",
-
-            language: {
-                oPaginate: {
-                    sNext: '<i class="bi bi-caret-right-fill text-info"></i>',
-                    sPrevious: '<i class="bi bi-caret-left-fill text-info"></i>'
-
-                }
-            }
-        });
-        $('.dataTables_length').hide();
-        $('.dataTables_filter').hide();
-    });
-</script>
 
 <script>
     timePeriodForSelect();
@@ -276,4 +248,5 @@
         dropdown.querySelector("option[value='" + currentMonthOption + "']").selected = true;
     }
 </script>
+<script src="~/js/invoicing.js" asp-append-version="true"></script>
 

@@ -128,5 +128,17 @@ namespace hellodoc.DAL.ViewModels
         [Required]
         [StringLength(150, ErrorMessage = "Only 150 Characaters are Accepted")]
         public string? FollowUp { get; set; }
+
+        public string? PhyFname { get; set; }
+
+        public string? PhyLname { get; set; }
+
+        public string? PhyLocation { get; set; }
+
+        public DateTime? FinalizeDate { get; set; }
+
+        public string? PhyEmail { get; set; }
+
+        public string? PhyPhoneNumber { get; set; }
     }
 }

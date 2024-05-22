@@ -129,3 +129,8 @@ a:hover .fa-people-group {
     background-color: #0dcaf0 !important;
     border-color: #0dcaf0 !important;
 }
+
+.create-request-active {
+    background-color: #00bce7 !important;
+    color: white !important;
+}

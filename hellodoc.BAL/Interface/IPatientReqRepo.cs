@@ -48,6 +48,10 @@ namespace hellodoc.BAL.Interface
 
         void UploadFileByMeAndOther(PatientReqData model, int reqId);
 
+        bool SubmitForMe(PatientReqData model);
+
+        bool SubmitForOther(PatientReqData model);
+
         #endregion
 
 

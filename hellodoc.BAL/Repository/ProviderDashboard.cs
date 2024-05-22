@@ -236,6 +236,7 @@ namespace hellodoc.BAL.Repository
             if (encounter != null)
             {
                 encounter.IsFinalized = new BitArray(1, true);
+                encounter.Date = DateTime.Now;
                 _context.SaveChanges();
             }
             else

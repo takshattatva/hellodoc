@@ -1,12 +1,5 @@
 ﻿@model hellodoc.DAL.ViewModels.SchedulingVm
 
-<style>
-    .form-check-input:checked {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-    }
-</style>
-
 <div class="modal fade" id="createShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content border-0">
@@ -36,17 +29,17 @@
                 </div>
 
                 <div class="col-md-12 form-floating mb-3">
-                    <input id="StartDate" asp-for="@Model.ScheduleModel.Startdate" class="form-control rounded vcs" type="date" placeholder=Suchtext autocomplete=off>
+                    <input id="StartDate" asp-for="@Model.ScheduleModel.Startdate" class="form-control rounded" type="date" placeholder=Suchtext autocomplete=off>
                     <label class="ms-2" for="floatingInput">Starting Date</label>
                     <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Startdate"></span>
                 </div>
                 <div class="col-md-6 form-floating mb-3">
-                    <input id="StartTime" asp-for="@Model.ScheduleModel.Starttime" class="form-control rounded vcs" type="time" placeholder=Suchtext autocomplete=off>
+                    <input id="StartTime" asp-for="@Model.ScheduleModel.Starttime" class="form-control rounded" type="time" placeholder=Suchtext autocomplete=off>
                     <label class="ms-2" for="floatingInput">Start</label>
                     <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Starttime"></span>
                 </div>
                 <div class="col-md-6 form-floating mb-3">
-                    <input id="EndTime" asp-for="@Model.ScheduleModel.Endtime" class="form-control rounded vcs" type="time" placeholder=Suchtext autocomplete=off>
+                    <input id="EndTime" asp-for="@Model.ScheduleModel.Endtime" class="form-control rounded" type="time" placeholder=Suchtext autocomplete=off>
                     <label class="ms-2" for="floatingInput">End</label>
                     <span class="text-danger" asp-validation-for="@Model.ScheduleModel.Endtime"></span>
                     <span class="errorbox text-danger"></span>

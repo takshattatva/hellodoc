@@ -139,6 +139,7 @@ namespace hellodoc.DAL.ViewModels
         [Required(ErrorMessage = "Admin Note is Required")]
         public string? AdminNotes { get; set; }
 
+        [Required(ErrorMessage = "Note is Required")]
         public string? PhysicianNotes { get; set; }
 
         public List<Requeststatuslog> TransferNotes { get; set; }

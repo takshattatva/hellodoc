@@ -3,6 +3,7 @@ using hellodoc.DAL.Models;
 using hellodoc.DAL.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;
 using System.Net.Mail;
@@ -11,13 +12,18 @@ namespace hellodoc.BAL.Repository
 {
     public class PatientReqRepo : IPatientReqRepo
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HellodocDbContext _db;
         private readonly IHostingEnvironment _environment;
+        private readonly IRegisterRepo _iregister;
 
-        public PatientReqRepo(HellodocDbContext db, IHostingEnvironment environment)
+
+        public PatientReqRepo(HellodocDbContext db, IHostingEnvironment environment, IHttpContextAccessor httpContextAccessor, IRegisterRepo iregister)
         {
             _db = db;
             _environment = environment;
+            _httpContextAccessor = httpContextAccessor;
+            _iregister = iregister;
         }
 
         #region Check Mail During Patient Request
@@ -331,29 +337,197 @@ namespace hellodoc.BAL.Repository
         /// <param name="reqId"></param>
         public void UploadFileByMeAndOther(PatientReqData model, int reqId)
         {
-            string path = _environment.WebRootPath;
-            string filePath = "content/" + model.Upload.FileName;
-            string fullPath = Path.Combine(path, filePath);
-
-            IFormFile file1 = model.Upload;
-            FileStream stream = new FileStream(fullPath, FileMode.Create);
-
-            if (file1 != null && stream != null)
+            using (var transaction = _db.Database.BeginTransaction())
             {
-                file1.CopyTo(stream);
+                try
+                {
+                    string path = _environment.WebRootPath;
+                    string filePath = "content/" + model.Upload.FileName;
+                    string fullPath = Path.Combine(path, filePath);
+
+                    IFormFile file1 = model.Upload;
+                    FileStream stream = new FileStream(fullPath, FileMode.Create);
+
+                    if (file1 != null && stream != null)
+                    {
+                        file1.CopyTo(stream);
+                    }
+
+                    var fileName = model.Upload?.FileName;
+                    var doctType = model.Upload?.ContentType;
+
+                    var reqWiseFileData = new Requestwisefile()
+                    {
+                        Requestid = reqId,
+                        Filename = fileName,
+                        Ip = doctType,
+                    };
+                    _db.Add(reqWiseFileData);
+                    _db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("File is not uploaded", ex);
+                }
             }
-
-            var fileName = model.Upload?.FileName;
-            var doctType = model.Upload?.ContentType;
-
-            var reqWiseFileData = new Requestwisefile()
+        }
+        //***************************************************************************************************************************************************
+        /// <summary>
+        /// Submit For Me Update Records
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool SubmitForMe(PatientReqData model)
+        {
+            using (var transaction = _db.Database.BeginTransaction())
             {
-                Requestid = reqId,
-                Filename = fileName,
-                Ip = doctType,
-            };
-            _db.Add(reqWiseFileData);
-            _db.SaveChanges();
+                try
+                {
+                    int userId = (int)(_httpContextAccessor.HttpContext.Session.GetInt32("Userid"));
+                    int count = _db.Requests.Where(x => x.Createddate.Date == DateTime.Now.Date).Count() + 1;
+                    string? abbr = _db.Regions.FirstOrDefault(x => x.Regionid == model.RegionId).Abbreviation;
+                    model.Requesttypeid = 1;
+                    User? user = _db.Users.FirstOrDefault(i => i.Userid == userId);
+
+                    if (user != null)
+                    {
+                        var r = new Request()
+                        {
+                            Requesttypeid = model.Requesttypeid,
+                            Userid = user == null ? null : user.Userid,
+                            Firstname = user.Firstname,
+                            Lastname = user.Lastname,
+                            Email = user.Email,
+                            Phonenumber = user.Mobile,
+                            Status = 1,
+                            Createddate = DateTime.Now,
+                            Confirmationnumber = abbr + DateTime.Now.Day.ToString("D2") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Year.ToString().Substring(2, 2) + user.Lastname.Remove(2).ToUpper() + user.Firstname.Remove(2).ToUpper() + count.ToString("D4"),
+                            Relationname = "Self",
+                        };
+                        _db.Add(r);
+                        _db.SaveChanges();
+
+                        int reqId = r.Requestid;
+                        string emailid = r.Email;
+
+                        var rc = new Requestclient()
+                        {
+                            Requestid = reqId,
+                            Email = emailid,
+                            Firstname = user.Firstname,
+                            Lastname = user.Lastname,
+                            Phonenumber = model.Phonenumber,
+                            Notes = model.Notes,
+                            Street = model.Street,
+                            City = model.City,
+                            State = model.State,
+                            Zipcode = model.Zipcode,
+                            Address = model.Hotelname,
+                            Location = model.City,
+                            Intdate = user.Intdate,
+                            Strmonth = user.Strmonth,
+                            Intyear = user.Intyear,
+                            Regionid = model.RegionId,
+                        };
+                        _db.Add(rc);
+                        _db.SaveChanges();
+
+                        if (model.Upload != null)
+                        {
+                            UploadFileByMeAndOther(model, reqId);
+                        }
+                    }
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        //***************************************************************************************************************************************************
+        public bool SubmitForOther(PatientReqData model)
+        {
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    int userId = (int)(_httpContextAccessor.HttpContext.Session.GetInt32("Userid"));
+                    int count = _db.Requests.Where(x => x.Createddate.Date == DateTime.Now.Date).Count() + 1;
+                    string? abbr = _db.Regions.FirstOrDefault(x => x.Regionid == model.RegionId).Abbreviation;
+                    model.Requesttypeid = 2;
+
+                    User? user = _db.Users.FirstOrDefault(i => i.Userid == userId);
+
+                    var r = new Request()
+                    {
+                        Userid = null,
+                        Requesttypeid = model.Requesttypeid,
+                        Firstname = user.Firstname,
+                        Lastname = user.Lastname,
+                        Phonenumber = user.Mobile,
+                        Email = user.Email,
+                        Relationname = model.OtherRelation,
+                        Status = 1,
+                        Createddate = DateTime.Now,
+                        Confirmationnumber = abbr + DateTime.Now.Day.ToString("D2") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Year.ToString().Substring(2, 2) + user.Lastname.Remove(2).ToUpper() + user.Firstname.Remove(2).ToUpper() + count.ToString("D4"),
+                    };
+                    _db.Requests.Add(r);
+                    _db.SaveChanges();
+
+                    int reqId = r.Requestid;
+                    model.Requestid = r.Requestid;
+                    var rc = new Requestclient()
+                    {
+                        Requestid = reqId,
+                        Firstname = model.Firstname,
+                        Lastname = model.Lastname,
+                        Email = model.Email,
+                        Phonenumber = model.Phonenumber,
+                        Notes = model.Notes,
+                        Intdate = model.Birthdate.Day,
+                        Strmonth = model.Birthdate.Month.ToString(),
+                        Intyear = model.Birthdate.Year,
+                        Street = model.Street,
+                        City = model.City,
+                        State = model.State,
+                        Zipcode = model.Zipcode,
+                        Address = model.Hotelname,
+                        Location = model.City,
+                        Regionid = model.RegionId,
+                    };
+                    _db.Requestclients.Add(rc);
+                    _db.SaveChanges();
+
+                    if (model.Upload != null)
+                    {
+                        UploadFileByMeAndOther(model, reqId);
+                    }
+
+                    Aspnetuser? aspnetuser = _db.Aspnetusers.FirstOrDefault(i => i.Email == model.Email);
+                    if (aspnetuser == null)
+                    {
+                        var reciever = model.Email;
+                        var subject = "Create Patient Account !!!";
+                        var here = "https://localhost:7052/Patient/patient_create_account?pid=" + _iregister.Encrypt(model.Requestid.ToString());
+                        var message = $"We trust this message finds you in good spirits.For Create Account click <a href=\"{here}\">here</a>";
+
+                        AddToEmailLog(model);
+                        EmailSender(reciever, subject, message);
+                    }
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         #endregion

@@ -1214,6 +1214,7 @@ namespace hellodoc.BAL.Repository
             var rc = _context.Requestclients.FirstOrDefault(i => i.Requestid == requestid);
             var enc = _context.Encounters.FirstOrDefault(i => i.RequestId == requestid);
             var userId = (int)_context.Requests.FirstOrDefault(i => i.Requestid == requestid).Userid;
+            var r = _context.Requests.Include(x => x.Physician).FirstOrDefault(x => x.Requestid == requestid);
 
             var birthDate = Convert.ToInt32(rc.Intdate);
             var birthMonth = Convert.ToInt32(rc.Strmonth);
@@ -1257,6 +1258,12 @@ namespace hellodoc.BAL.Repository
                     MedicationDispensed = enc.MedicationDispensed,
                     Procedures = enc.Procedures,
                     FollowUp = enc.FollowUp,
+                    PhyFname = r.Physician.Firstname,
+                    PhyLname = r.Physician.Lastname,
+                    PhyLocation = r.Physician.City,
+                    PhyEmail = r.Physician.Email,
+                    PhyPhoneNumber = r.Physician.Mobile,
+                    FinalizeDate = enc.Date,
                 };
                 return AdminEncounter;
             }

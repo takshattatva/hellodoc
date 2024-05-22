@@ -15,6 +15,8 @@ namespace SignalRChat.Hubs
             _httpContextAccessor = httpContextAccessor;
         }
 
+        #region Send Message OnConnection
+
         public async Task SendMessage(string requestId, string receiverId, string message)
         {
             var senderConnectionId = Context.ConnectionId;
@@ -38,6 +40,11 @@ namespace SignalRChat.Hubs
             // Send the message to the sender as well
             await Clients.Client(senderConnectionId).SendAsync("ReceiveMessage", "You", message);
         }
+
+        #endregion
+
+
+        #region OnConnection
 
         public override Task OnConnectedAsync()
         {
@@ -69,5 +76,7 @@ namespace SignalRChat.Hubs
             }
             return base.OnConnectedAsync();
         }
+
+        #endregion
     }
 }

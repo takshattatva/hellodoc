@@ -20,3 +20,13 @@
 .nav-underline .nav-link.active, .nav-underline .show > .nav-link {
     color: #00bce7 !important;
 }
+/************************************************** ChechBox Color ***********************************************************************************/
+.form-check-input:checked {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+}
+/************************************************** Telephone Booth ***********************************************************************************/
+.telstyle {
+    height: 60px;
+    width: 100%;
+}

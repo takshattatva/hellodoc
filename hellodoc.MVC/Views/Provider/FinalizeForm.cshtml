@@ -1,66 +1,193 @@
-﻿@model  hellodoc.DAL.ViewModels.EncounterVm
+﻿@model hellodoc.DAL.ViewModels.EncounterVm
 
-<style>
-    h1 {
-        text-align: center;
-        color: #0dcaf0;
-    }
+<link rel="stylesheet" href="~/css/FinalizeForm.css" asp-append-version="true" />
 
-    span {
-        font-weight: bolder;
-    }
-
-    .data {
-        margin-bottom: 10px;
-        font-size: large;
-        font-family:Arial;
-    }
-
-    .watermark {
-        position: absolute;
-        z-index: -1;
-        top: 35%;
-        left: 32%;
-        transform: translate(-50%, -50%);
-        width: 350px;
-        height: 350px;
-    }
-</style>
-
+<header>
+    <nav class="navbar p-0 m-0 shadow nav-container">
+        <div class="container-fluid">
+            <div class="text-center ms-2">
+                <img src="~/images/hellodoc.png" alt="images" height="90px">
+            </div>
+        </div>
+    </nav>
+</header>
 <div class="encounterForm h-100 p-3">
-    <h1>Encounter Form Details Data</h1>
-    <div class="details p-3">
-        <img class="watermark" src="~/images/watermark.png" alt="Watermark">
-        <div class="data"><span>First Name: </span> @Model.FirstName </div>
-        <div class="data"><span>Last Name: </span> @Model.LastName </div>
-        <div class="data"><span>Location: </span> @Model.Location </div>
-        <div class="data"><span>Date of Birth: </span> @Model.BirthDate </div>
-        <div class="data"><span>Date of Request: </span> @Model.Date </div>
-        <div class="data"><span>Phone: </span> @Model.PhoneNumber </div>
-        <div class="data"><span>Email: </span> @Model.Email </div>
-        <div class="data"><span>History of Present Illness or Injury: </span> @Model.HistoryIllness </div>
-        <div class="data"><span>Medical History: </span> @Model.MedicalHistory </div>
-        <div class="data"><span>Medications: </span> @Model.Medications </div>
-        <div class="data"><span>Allergies: </span> @Model.Allergies </div>
-        <div class="data"><span>Temp: </span> @Model.Temp </div>
-        <div class="data"><span>HR: </span> @Model.Hr </div>
-        <div class="data"><span>RR: </span> @Model.Rr </div>
-        <div class="data"><span>Blood Pressure Diastolic: </span> @Model.BpD </div>
-        <div class="data"><span>Blood Pressure Systolic: </span> @Model.BpS </div>
-        <div class="data"><span>O2: </span> @Model.O2 </div>
-        <div class="data"><span>Heent: </span> @Model.Heent </div>
-        <div class="data"><span>Pain: </span> @Model.Pain </div>
-        <div class="data"><span>CV: </span> @Model.Cv </div>
-        <div class="data"><span>Chest: </span> @Model.Chest </div>
-        <div class="data"><span>ABD: </span> @Model.Abd </div>
-        <div class="data"><span>Extremities: </span> @Model.Extr </div>
-        <div class="data"><span>Skin: </span> @Model.Skin </div>
-        <div class="data"><span>Neuro: </span> @Model.Neuro </div>
-        <div class="data"><span>Other: </span> @Model.Other </div>
-        <div class="data"><span>Diagnosis: </span> @Model.Diagnosis </div>
-        <div class="data"><span>Treatment Plan: </span> @Model.TreatmentPlan </div>
-        <div class="data"><span>Medical Dispensed: </span> @Model.MedicationDispensed </div>
-        <div class="data"><span>Procedures: </span> @Model.Procedures </div>
-        <div class="data"><span>FollowUp: </span> @Model.FollowUp </div>
+    <h1 style="font-family:'Comic Sans MS'" class="text-center primary">Encounter Form Details Data</h1>
+    <div class="p-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="2" class="text-center fw-bold bg-body-secondary">Patient Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="column1" width="50%">First Name</td>
+                    <td class="column2" width="50%">@Model.FirstName</td>
+                </tr>
+                <tr>
+                    <td class="column1">Last Name</td>
+                    <td class="column2">@Model.LastName</td>
+                </tr>
+                <tr>
+                    <td class="column1">Location</td>
+                    <td class="column2">@Model.Location</td>
+                </tr>
+                <tr>
+                    <td class="column1">Date of Birth</td>
+                    <td class="column2">@Model.BirthDate</td>
+                </tr>
+                <tr>
+                    <td class="column1">Date of Request</td>
+                    <td class="column2">@Model.Date</td>
+                </tr>
+                <tr>
+                    <td class="column1">Contact</td>
+                    <td class="column2">@Model.PhoneNumber</td>
+                <tr>
+                    <td class="column1">Email</td>
+                    <td class="column2">@Model.Email</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th colspan="2" class="text-center fw-bold bg-body-secondary">Provider Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="column1" width="50%">First Name</td>
+                    <td class="column2" width="50%">@Model.PhyFname</td>
+                </tr>
+                <tr>
+                    <td class="column1">Last Name</td>
+                    <td class="column2">@Model.PhyLname</td>
+                </tr>
+                <tr>
+                    <td class="column1">Location</td>
+                    <td class="column2">@Model.PhyLocation</td>
+                </tr>
+                <tr>
+                    <td class="column1">Date of Finalized</td>
+                    <td class="column2">@Model.FinalizeDate</td>
+                </tr>
+                <tr>
+                    <td class="column1">Contact</td>
+                    <td class="column2">@Model.PhyPhoneNumber</td>
+                <tr>
+                    <td class="column1">Email</td>
+                    <td class="column2">@Model.PhyEmail</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-hover mt-5">
+            <thead>
+                <tr>
+                    <th colspan="2" class="text-center fw-bold bg-body-secondary">Clinical Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="column1" width="50%">History of Present Illness or Injury</td>
+                    <td class="column2" width="50%">@Model.HistoryIllness</td>
+                </tr>
+                <tr>
+                    <td class="column1">Medical History</td>
+                    <td class="column2">@Model.MedicalHistory</td>
+                </tr>
+                <tr>
+                    <td class="column1">Medications</td>
+                    <td class="column2">@Model.Medications</td>
+                </tr>
+                <tr>
+                    <td class="column1">Allergies</td>
+                    <td class="column2">@Model.Allergies</td>
+                </tr>
+                <tr>
+                    <td class="column1">Body Tempareture</td>
+                    <td class="column2">@Model.Temp</td>
+                </tr>
+                <tr>
+                    <td class="column1">Heart Rate</td>
+                    <td class="column2">@Model.Hr</td>
+                </tr>
+                <tr>
+                    <td class="column1">Respiratory Rate</td>
+                    <td class="column2">@Model.Rr</td>
+                </tr>
+                <tr>
+                    <td class="column1">Blood Pressure Diastolic</td>
+                    <td class="column2">@Model.BpD</td>
+                </tr>
+                <tr>
+                    <td class="column1">Blood Pressure Systolic</td>
+                    <td class="column2">@Model.BpS</td>
+                </tr>
+                <tr>
+                    <td class="column1">Oxygen</td>
+                    <td class="column2">@Model.O2</td>
+                </tr>
+                <tr>
+                    <td class="column1">Heent</td>
+                    <td class="column2">@Model.Heent</td>
+                </tr>
+                <tr>
+                    <td class="column1">Pain</td>
+                    <td class="column2">@Model.Pain</td>
+                </tr>
+                <tr>
+                    <td class="column1">Curriculum Vitae</td>
+                    <td class="column2">@Model.Cv</td>
+                </tr>
+                <tr>
+                    <td class="column1">Chest</td>
+                    <td class="column2">@Model.Chest</td>
+                </tr>
+                <tr>
+                    <td class="column1">Abdominal</td>
+                    <td class="column2">@Model.Abd</td>
+                </tr>
+                <tr>
+                    <td class="column1">Extremities</td>
+                    <td class="column2">@Model.Extr</td>
+                </tr>
+                <tr>
+                    <td class="column1">Skin</td>
+                    <td class="column2">@Model.Skin</td>
+                </tr>
+                <tr>
+                    <td class="column1">Neuro</td>
+                    <td class="column2">@Model.Neuro</td>
+                </tr>
+                <tr>
+                    <td class="column1">Other</td>
+                    <td class="column2">@Model.Other</td>
+                </tr>
+                <tr>
+                    <td class="column1">Diagnosis</td>
+                    <td class="column2">@Model.Diagnosis</td>
+                </tr>
+                <tr>
+                    <td class="column1">Treatment Plan</td>
+                    <td class="column2">@Model.TreatmentPlan</td>
+                </tr>
+                <tr>
+                    <td class="column1">Medical Dispensed</td>
+                    <td class="column2">@Model.MedicationDispensed</td>
+                </tr>
+                <tr>
+                    <td class="column1">Procedures</td>
+                    <td class="column2">@Model.Procedures</td>
+                </tr>
+                <tr>
+                    <td class="column1">FollowUp</td>
+                    <td class="column2">@Model.FollowUp</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

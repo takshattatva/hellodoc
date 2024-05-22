@@ -1,17 +1,5 @@
 ﻿@model hellodoc.DAL.ViewModels.ProviderProfileVm
 
-<style>
-    .form-check-input:checked {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-    }
-
-    .telstyle {
-        height: 60px;
-        width: 100%;
-    }
-</style>
-
 <div class="container">
     <div class=" mt-2 d-flex justify-content-between align-items-center">
         <h4 class="fw-semibold">Create Provider Account</h4>
@@ -31,7 +19,6 @@
                 </div>
             </a>
         }
-
     </div>
 
     <div class="shadow border rounded my-3">
@@ -71,7 +58,6 @@
                             <span class="text-danger" asp-validation-for="@Model.RoleId"></span>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="pt-4">

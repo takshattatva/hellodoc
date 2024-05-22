@@ -184,17 +184,20 @@
             <partial name="Patient/Profile/_PatientProfile" />
         </div>
     </div>
-
-    <partial name="Patient/_Footer" />
+    <footer class="border-top fixed-bottom  w-100 bottom-0 text-muted">
+        <div class="d-none d-sm-flex justify-content-end align-items-center bg-footer w-100" style="height: 50px;">
+            <div class="m-3">
+                <a href="#" class="text-white text-decoration-none">Terms of Conditions</a>
+            </div>
+            <span class="text-white m-3 text-decoration-none fw-semibold">|</span>
+            <div class="m-3 me-5">
+                <a href="#" class="text-white text-decoration-none">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
 </div>
 
-<style>
-    .create-request-active {
-        background-color: #00bce7 !important;
-        color: white !important;
-    }
-</style>
-
+@* Crete Request By Me or Other Modal *@
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

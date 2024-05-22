@@ -30,7 +30,7 @@ namespace hellodoc.DAL.Controllers
             _ijwtservice = ijwtservice;
 
         }
-
+        
         #region Session X-pire Logout
 
         //***************************************************************************************************************************************************
@@ -330,62 +330,16 @@ namespace hellodoc.DAL.Controllers
         [HttpPost]
         public IActionResult submit_for_me(PatientReqData model)
         {
-            int userId = (int)(HttpContext.Session.GetInt32("Userid"));
-            int count = _context.Requests.Where(x => x.Createddate.Date == DateTime.Now.Date).Count() + 1;
-            string? abbr = _context.Regions.FirstOrDefault(x => x.Regionid == model.RegionId).Abbreviation;
-            model.Requesttypeid = 1;
-            User? user = _context.Users.FirstOrDefault(i => i.Userid == userId);
-
-            if (user != null)
+            if (_ipatientreq.SubmitForMe(model))
             {
-                var r = new Request()
-                {
-                    Requesttypeid = model.Requesttypeid,
-                    Userid = user == null ? null : user.Userid,
-                    Firstname = user.Firstname,
-                    Lastname = user.Lastname,
-                    Email = user.Email,
-                    Phonenumber = user.Mobile,
-                    Status = 1,
-                    Createddate = DateTime.Now,
-                    Confirmationnumber = abbr + DateTime.Now.Day.ToString("D2") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Year.ToString().Substring(2, 2) + user.Lastname.Remove(2).ToUpper() + user.Firstname.Remove(2).ToUpper() + count.ToString("D4"),
-                    Relationname = "Self",
-                };
-                _context.Add(r);
-                _context.SaveChanges();
-
-                int reqId = r.Requestid;
-                string emailid = r.Email;
-
-                var rc = new Requestclient()
-                {
-                    Requestid = reqId,
-                    Email = emailid,
-                    Firstname = user.Firstname,
-                    Lastname = user.Lastname,
-                    Phonenumber = model.Phonenumber,
-                    Notes = model.Notes,
-                    Street = model.Street,
-                    City = model.City,
-                    State = model.State,
-                    Zipcode = model.Zipcode,
-                    Address = model.Hotelname,
-                    Location = model.City,
-                    Intdate = user.Intdate,
-                    Strmonth = user.Strmonth,
-                    Intyear = user.Intyear,
-                    Regionid = model.RegionId,
-                };
-                _context.Add(rc);
-                _context.SaveChanges();
-
-                if (model.Upload != null)
-                {
-                    _ipatientreq.UploadFileByMeAndOther(model, reqId);
-                }
+                TempData["success"] = "Request Created";
+                return RedirectToAction("patient_dashboard");
             }
-            TempData["add"] = "Request Created";
-            return RedirectToAction("patient_dashboard");
+            else
+            {
+                TempData["success"] = "Request Not Created";
+                return RedirectToAction("patient_dashboard");
+            }
         }
         //***************************************************************************************************************************************************
         /// <summary>
@@ -409,72 +363,16 @@ namespace hellodoc.DAL.Controllers
         [HttpPost]
         public IActionResult submit_for_other(PatientReqData model)
         {
-            int userId = (int)(HttpContext.Session.GetInt32("Userid"));
-            int count = _context.Requests.Where(x => x.Createddate.Date == DateTime.Now.Date).Count() + 1;
-            string? abbr = _context.Regions.FirstOrDefault(x => x.Regionid == model.RegionId).Abbreviation;
-            model.Requesttypeid = 2;
-
-            User? user = _context.Users.FirstOrDefault(i => i.Userid == userId);
-
-            var r = new Request()
+            if (_ipatientreq.SubmitForOther(model))
             {
-                Userid = null,
-                Requesttypeid = model.Requesttypeid,
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Phonenumber = user.Mobile,
-                Email = user.Email,
-                Relationname = model.OtherRelation,
-                Status = 1,
-                Createddate = DateTime.Now,
-                Confirmationnumber = abbr + DateTime.Now.Day.ToString("D2") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Year.ToString().Substring(2, 2) + user.Lastname.Remove(2).ToUpper() + user.Firstname.Remove(2).ToUpper() + count.ToString("D4"),
-            };
-            _context.Requests.Add(r);
-            _context.SaveChanges();
-
-            int reqId = r.Requestid;
-            model.Requestid = r.Requestid;
-            var rc = new Requestclient()
-            {
-                Requestid = reqId,
-                Firstname = model.Firstname,
-                Lastname = model.Lastname,
-                Email = model.Email,
-                Phonenumber = model.Phonenumber,
-                Notes = model.Notes,
-                Intdate = model.Birthdate.Day,
-                Strmonth = model.Birthdate.Month.ToString(),
-                Intyear = model.Birthdate.Year,
-                Street = model.Street,
-                City = model.City,
-                State = model.State,
-                Zipcode = model.Zipcode,
-                Address = model.Hotelname,
-                Location = model.City,
-                Regionid = model.RegionId,
-            };
-            _context.Requestclients.Add(rc);
-            _context.SaveChanges();
-
-            if (model.Upload != null)
-            {
-                _ipatientreq.UploadFileByMeAndOther(model, reqId);
+                TempData["success"] = "Request Created and Mail Sent";
+                return RedirectToAction("patient_dashboard");
             }
-
-            Aspnetuser? aspnetuser = _context.Aspnetusers.FirstOrDefault(i => i.Email == model.Email);
-            if (aspnetuser == null)
+            else
             {
-                var reciever = model.Email;
-                var subject = "Create Patient Account !!!";
-                var here = "https://localhost:7052/Patient/patient_create_account?pid=" + _iregister.Encrypt(model.Requestid.ToString());
-                var message = $"We trust this message finds you in good spirits.For Create Account click <a href=\"{here}\">here</a>";
-
-                _ipatientreq.AddToEmailLog(model);
-                _ipatientreq.EmailSender(reciever, subject, message);
+                TempData["success"] = "Request Not Created";
+                return RedirectToAction("patient_dashboard");
             }
-
-            TempData["success"] = "Request Added";
-            return RedirectToAction("patient_dashboard");
         }
 
         #endregion

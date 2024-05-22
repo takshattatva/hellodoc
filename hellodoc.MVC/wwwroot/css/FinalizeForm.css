@@ -1,0 +1,14 @@
+﻿.column1 {
+    font-weight: bolder;
+    font-family: 'Linux Libertine G';
+    word-spacing: 3px;
+}
+.column2 {
+    font-weight:500;
+    font-family: Courier New, Courier, monospace;
+}
+.bg-body-secondary {
+    font-weight: bold;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: rgba(159, 166, 178, 0.7);
+}

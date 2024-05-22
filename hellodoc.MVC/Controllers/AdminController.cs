@@ -1,4 +1,5 @@
 ﻿using hellodoc.BAL.Interface;
+using hellodoc.BAL.Repository;
 using hellodoc.DAL.Models;
 using hellodoc.DAL.ViewModels;
 using hellodoc.MVC.Auth;

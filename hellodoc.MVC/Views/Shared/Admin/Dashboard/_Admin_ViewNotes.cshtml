@@ -105,20 +105,20 @@
                     <div class=" col-12 form-floating mb-3 ">
                         @if (Model.viewNotesData.callId == 1 || Model.viewNotesData.callId == 2)
                         {
-                            <textarea class="form-control h-100 dclass primary" id="floatingInput1" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.AdminNotes"></textarea>
-                            <label for="floatingInput1" class="text-wrap ms-2 primary h6">Aditional Notes by Admin</label>
+                            <textarea required class="form-control h-100 dclass primary" id="floatingNote" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.AdminNotes" onkeyup="validateNote()"></textarea>
+                            <label for="floatingNote" class="text-wrap ms-2 primary h6">Aditional Notes by Admin</label>
                             <span class="text-danger" asp-validation-for="@Model.viewNotesData.AdminNotes"></span>
                         }
                         @if (Model.viewNotesData.callId == 3 || Model.viewNotesData.callId == 4)
                         {
-                            <textarea class="form-control h-100 dclass primary" id="floatingInput2" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.PhysicianNotes"></textarea>
-                            <label for="floatingInput2" class="text-wrap ms-2 primary h6">Aditional Notes by Physician</label>
+                            <textarea required class="form-control h-100 dclass primary" id="floatingNote" placeholder="Textarea" rows="5" asp-for="@Model.viewNotesData.PhysicianNotes" onkeyup="validateNote()"></textarea>
+                            <label for="floatingNote" class="text-wrap ms-2 primary h6">Aditional Notes by Physician</label>
                             <span class="text-danger" asp-validation-for="@Model.viewNotesData.PhysicianNotes"></span>
                         }
                     </div>
                 </div>
                 <div class="d-grid gap-2 d-flex justify-content-center justify-content-md-end m-4 pt-1">
-                    <button type="submit" class="btn btn-outline-info border-info fw-bold">Save Changes</button>
+                    <button type="submit" id="savechanges" class="btn btn-outline-info border-info fw-bold" disabled>Save Changes</button>
                 </div>
             </div>
         </div>
@@ -126,3 +126,16 @@
 </div>
 
 <partial name="_ValidationScriptsPartial" />
+<script>
+    function validateNote() {
+        var note = $('#floatingNote');
+        var save = $('#savechanges');
+
+        if (note.val().trim() == "") {
+            save.prop('disabled', true);
+        }
+        else {
+            save.prop('disabled', false);
+        }
+    }
+</script>

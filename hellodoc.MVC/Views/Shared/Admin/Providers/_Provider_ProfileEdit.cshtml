@@ -1,17 +1,5 @@
 ﻿@model hellodoc.DAL.ViewModels.ProviderProfileVm
 
-<style>
-    .form-check-input:checked {
-        background-color: #0dcaf0 !important;
-        border-color: #0dcaf0 !important;
-    }
-
-    .telstyle {
-        height: 60px;
-        width: 100%;
-    }
-</style>
-
 <div class="container">
     <div class=" mt-2 d-flex justify-content-between align-items-center">
         @if (Model.callId == 3)
@@ -419,7 +407,6 @@
         </div>
     </div>
 </div>
-
 
 <partial name="_ValidationScriptsPartial" />
 <script src="~/js/provider-profile.js" asp-append-version="true"></script>
