@@ -192,14 +192,14 @@
                             <div class="d-flex gap-1">
                                 @if (obj.UserId != null)
                                 {
-                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PatientAspId`)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PatientAspId`), showbackdrop()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                         <i class="fa-solid fa-user fs-6"></i>
                                         <span> Patient</span>
                                     </button>
                                 }
                                 @if (obj.PhyAspId != null)
                                 {
-                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                    <button class="btn btn-outline-light shadow-none d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId), showbackdrop()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                         <i class="fa-solid fa-user-doctor fs-6"></i>
                                         <span> Provider</span>
                                     </button>

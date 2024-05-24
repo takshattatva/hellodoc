@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\admin-profile.js" />
-    <Content Remove="wwwroot\js\service-worker.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="chocolatey" Version="2.2.2" />
     <PackageReference Include="EPPlus" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.19" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />

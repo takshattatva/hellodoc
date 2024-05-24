@@ -85,13 +85,13 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.AdminAspId`,0)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.AdminAspId`,0), showbackdrop()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                             <i class="fa-solid fa-user fs-6"></i>
                                             <span>Admin</span>
                                         </button>
                                         @if (obj.PhysicianId > 0)
                                         {
-                                            <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                            <button class="btn btn-outline-info shadow-none fw-semibold border-info d-flex align-items-center gap-2" onclick="CreateConnection(@obj.RequestId,`@obj.PhyAspId`,@obj.PhysicianId), showbackdrop()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                                 <i class="fa-solid fa-user-doctor fs-6"></i>
                                                 <span> Provider</span>
                                             </button>
