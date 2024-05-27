@@ -1,4 +1,6 @@
-﻿@functions {
+﻿@model hellodoc.DAL.ViewModels.AdminDashboardVm
+
+@functions {
     public string GetTableColorClass(int RequstTypeId)
     {
         switch (RequstTypeId)
@@ -95,7 +97,7 @@
                         @if (@Model.StatusForName != 9)
                         {
                             <td>
-                                @(obj.DateOfBirth.ToString("MMM, dd yyyy"))
+                                @(obj.DateOfBirth?.ToString("MMM dd, yyyy"))
                             </td>
                         }
 
@@ -127,8 +129,15 @@
 
                         @if (@Model.StatusForName != 1)
                         {
-                            <td>
-                                DOS
+                            <td class="text-center">
+                                @if (@obj.DateOfService != null)
+                                {
+                                    @obj.DateOfService?.ToString("MMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
                             </td>
                         }
 
@@ -395,7 +404,14 @@
                                                 <span class="accordion-heading-inner fw-bolder">
                                                     Date of Service :
                                                     <span class="accordion-value-inner">
-                                                        ---------
+                                                        @if (@obj.DateOfService != null)
+                                                        {
+                                                            @obj.DateOfService?.ToString("MMM dd, yyyy")
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>-</span>
+                                                        }
                                                     </span>
                                                 </span>
                                             </div>

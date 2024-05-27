@@ -109,6 +109,7 @@ namespace hellodoc.BAL.Repository
 
             request.Status = 2;
             request.Modifieddate = DateTime.Now;
+            request.Accepteddate = DateTime.Now;
             _context.SaveChanges();
         }
 

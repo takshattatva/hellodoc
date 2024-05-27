@@ -27,7 +27,7 @@ namespace hellodoc.DAL.ViewModels
 
         public DateTime? BirthDate { get; set; }
 
-        public DateTime? Date { get; set; }
+        public string? Date { get; set; }
 
         public string? Email { get; set; }
 

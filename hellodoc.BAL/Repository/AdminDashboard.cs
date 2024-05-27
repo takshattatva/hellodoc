@@ -92,6 +92,7 @@ namespace hellodoc.BAL.Repository
                 PhyAspId = r.Physician.Aspnetuserid,
                 PatientAspId = r.User.Aspnetuserid,
                 UserId = r.Userid,
+                DateOfService = r.Accepteddate,
 
             }).ToList();
             return GetRequestData;
@@ -1233,7 +1234,7 @@ namespace hellodoc.BAL.Repository
                     BirthDate = new DateTime(birthYear, birthMonth, birthDate),
                     Email = rc.Email,
                     PhoneNumber = rc.Phonenumber,
-                    Date = enc.Date,
+                    Date = r.Accepteddate?.ToString("yyyy-MM-dd"),
                     HistoryIllness = enc.HistoryIllness,
                     MedicalHistory = enc.MedicalHistory,
                     Medications = enc.Medications,
@@ -1278,6 +1279,7 @@ namespace hellodoc.BAL.Repository
                     LastName = rc.Lastname,
                     Location = rc.Street + ", " + rc.City + ", " + rc.State + ", " + rc.Zipcode,
                     BirthDate = new DateTime(birthYear, birthMonth, birthDate),
+                    Date = r.Accepteddate?.ToString("yyyy-MM-dd"),
                     Email = rc.Email,
                     PhoneNumber = rc.Phonenumber,
                 };
@@ -3336,7 +3338,7 @@ namespace hellodoc.BAL.Repository
                 {
                     patientname = (requestClient?.Firstname ?? "") + " " + (requestClient?.Lastname ?? ""),
                     requestor = request.Firstname + " " + request.Lastname,
-                    dateOfService = null,
+                    dateOfService = request.Accepteddate?.ToString("MMM dd, yyyy"),
                     closeCaseDate = null,
                     email = requestClient?.Email,
                     contact = requestClient?.Phonenumber,

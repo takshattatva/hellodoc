@@ -20,7 +20,6 @@
     <None Include="Views\Shared\Admin\Invoicing\_Invoicing.cshtml" />
     <None Include="Views\Shared\Chat\_Chat_OffCanvas.cshtml" />
     <None Include="wwwroot\js\admin-profile.js" />
-    <None Include="wwwroot\js\signalr\dist\browser\signalr.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -197,6 +197,12 @@
     </footer>
 </div>
 
+<div id="loader-container" class="loader-container" style="z-index:150">
+    <div id="loader" class="loader" style="z-index:150"></div>
+</div>
+
+<div class="backdrop" style="z-index:140"></div>
+
 @* Crete Request By Me or Other Modal *@
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
      aria-hidden="true">
@@ -224,6 +230,16 @@
     </div>
 </div>
 
+<script src="~/js/dashboard-modal.js" asp-append-version="true"></script>
+
 <partial name="Chat/_Chat_OffCanvas" />
 
-<script src="~/js/dashboard-modal.js" asp-append-version="true"></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setupSignalRConnection();
+    });
+</script>

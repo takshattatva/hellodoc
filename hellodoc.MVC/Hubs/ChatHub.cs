@@ -57,17 +57,17 @@ namespace SignalRChat.Hubs
             string? aspId = _httpContextAccessor.HttpContext!.Session.GetString("aspNetUserId");
             //var senderName = _context.Aspnetusers.FirstOrDefault(x => x.Id == aspId).Username;
             var anu = _context.Aspnetusers.Include(x => x.Users).Include(x => x.Admins).Include(x => x.PhysicianAspnetusers).FirstOrDefault(x => x.Id == aspId);
-            if (anu.Users != null) 
+            if (anu.Users.Count > 0 ) 
             {
                 var senderName = anu.Users.FirstOrDefault().Firstname + " " + anu.Users.FirstOrDefault().Lastname;
                 await Clients.Client(receiverConnectionId).SendAsync("ReceivePushNotification", message, senderName);
             }
-            else if (anu.Admins != null)
+            else if (anu.Admins.Count > 0)
             {
                 var senderName = anu.Admins.FirstOrDefault().Firstname + " " + anu.Admins.FirstOrDefault().Lastname;
                 await Clients.Client(receiverConnectionId).SendAsync("ReceivePushNotification", message, senderName);
             }
-            else if (anu.PhysicianAspnetusers != null)
+            else if (anu.PhysicianAspnetusers.Count > 0)
             {
                 var senderName = anu.PhysicianAspnetusers.FirstOrDefault().Firstname + " " + anu.PhysicianAspnetusers.FirstOrDefault().Lastname;
                 await Clients.Client(receiverConnectionId).SendAsync("ReceivePushNotification", message, senderName);

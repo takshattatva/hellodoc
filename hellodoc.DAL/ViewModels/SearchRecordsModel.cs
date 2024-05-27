@@ -30,7 +30,7 @@ namespace hellodoc.DAL.ViewModels
 
         public string? requestor { get; set; }
 
-        public DateTime? dateOfService { get; set; }
+        public string? dateOfService { get; set; }
 
         public DateTime? closeCaseDate { get; set; }
 

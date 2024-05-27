@@ -74,7 +74,7 @@ namespace hellodoc.DAL.ViewModels
 
         public string Physician { get; set; }
 
-        public DateTime DateOfService { get; set; }
+        public DateTime? DateOfService { get; set; }
 
         public string Region { get; set; }
 
